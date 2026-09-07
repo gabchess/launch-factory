@@ -2,7 +2,7 @@
 
 **Status: TBD — Gabe.**
 
-No standalone commercial license text is attached for Launch Factory v0.1.1. Do not infer an open-source license from readable source files.
+No standalone commercial license text is attached for Launch Factory v0.2.0. Do not infer an open-source license from readable source files.
 
 `license_status` in manifests: `tbd-gabe`.
 
