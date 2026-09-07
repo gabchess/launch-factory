@@ -1,0 +1,18 @@
+{
+  "fixture": true,
+  "clips": [
+    {
+      "id": "qd-loom-01",
+      "label": "Quorum Desk walkthrough",
+      "duration_s": 160,
+      "path": "FIXTURE://loom/quorum-desk-v010"
+    },
+    {
+      "id": "qd-ui-01",
+      "label": "START-HERE screen capture",
+      "duration_s": 25,
+      "path": "FIXTURE://ui/start-here"
+    }
+  ],
+  "notes": "No real media bytes \u2014 pointers only for Launch Factory asset index."
+}
