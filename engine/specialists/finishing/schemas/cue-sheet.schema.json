@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "duration_ms",
+    "brief_reference",
+    "audio_mode",
+    "motion_rules",
+    "cues"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "motion-cues/v1"
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "resolved"
+      ]
+    },
+    "duration_ms": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "brief_reference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audio_mode": {
+      "enum": [
+        "music_sfx",
+        "speech",
+        "silent"
+      ]
+    },
+    "motion_rules": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "cues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "asset_id",
+          "source_in_ms",
+          "start_ms",
+          "end_ms",
+          "gain_db",
+          "fade_in_ms",
+          "fade_out_ms"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "music",
+              "sfx",
+              "speech"
+            ]
+          },
+          "asset_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_in_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "start_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "gain_db": {
+            "type": "number"
+          },
+          "fade_in_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "fade_out_ms": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+Fictional fixture product can group tasks by label.

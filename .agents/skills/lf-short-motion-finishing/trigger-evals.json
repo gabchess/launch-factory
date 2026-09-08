@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "prompt": "Polish this approved ten-second motion edit with quiet music and timed SFX.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "The video lead needs kinetic type and an exact cue sheet for the approved cut.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Review speech Caption JSON and the actual provider manifest for this motion edit.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Write a blog article about captions.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Approve the new paid avatar script without showing the human.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Choose a new product positioning strategy.",
+      "should_trigger": false
+    }
+  ]
+}

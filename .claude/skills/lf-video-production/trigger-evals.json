@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "prompt": "Use lf-video-production for the supplied Launch Factory packet.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Review this Launch Factory video lead stage with its exact artifact hash.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "The Launch Factory operator selected lf-video-production; complete its requested stage.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Explain Python list comprehensions.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Change my desktop background.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Approve and publish every campaign without the human reviewer.",
+      "should_trigger": false
+    }
+  ]
+}

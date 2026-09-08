@@ -1,0 +1,58 @@
+{
+  "schema_version": "motion-cues/v1",
+  "status": "planned",
+  "duration_ms": 10000,
+  "brief_reference": "Illustrative ten-second finishing plan; actual human brief must be attached",
+  "audio_mode": "music_sfx",
+  "motion_rules": [
+    "masked_word_reveal",
+    "anticipation_before_contact",
+    "short_settle"
+  ],
+  "cues": [
+    {
+      "id": "bed",
+      "kind": "music",
+      "asset_id": "music-selection-pending",
+      "source_in_ms": 0,
+      "start_ms": 0,
+      "end_ms": 10000,
+      "gain_db": -24,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800
+    },
+    {
+      "id": "paper",
+      "kind": "sfx",
+      "asset_id": "paper-selection-pending",
+      "source_in_ms": 0,
+      "start_ms": 650,
+      "end_ms": 950,
+      "gain_db": -16,
+      "fade_in_ms": 10,
+      "fade_out_ms": 80
+    },
+    {
+      "id": "contact",
+      "kind": "sfx",
+      "asset_id": "click-selection-pending",
+      "source_in_ms": 0,
+      "start_ms": 4000,
+      "end_ms": 4150,
+      "gain_db": -18,
+      "fade_in_ms": 5,
+      "fade_out_ms": 50
+    },
+    {
+      "id": "resolve",
+      "kind": "sfx",
+      "asset_id": "chime-selection-pending",
+      "source_in_ms": 0,
+      "start_ms": 6550,
+      "end_ms": 7250,
+      "gain_db": -20,
+      "fade_in_ms": 10,
+      "fade_out_ms": 200
+    }
+  ]
+}

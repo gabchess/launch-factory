@@ -1,0 +1,53 @@
+{
+  "schema_version": "specialist-request/v1",
+  "task_id": "fixture-review",
+  "campaign_id": "fixture-campaign",
+  "product_id": "fictional-fixture",
+  "source_revision": "fixture-r1",
+  "deliverable": "linkedin_post",
+  "stage": "review",
+  "voice_profile": "fixture-plain",
+  "requested_reviewer": "gabe",
+  "sources": [
+    {
+      "id": "fact",
+      "path": "source.txt",
+      "sha256": "cfd85f640f634f33ee36ab036edd17cdfa27dd1a7ddc666e39a1e97a4e954413",
+      "product_id": "fictional-fixture",
+      "kind": "fact"
+    },
+    {
+      "id": "voice",
+      "path": "voice.txt",
+      "sha256": "2094e24e50e1f887e7c67e2dff687df502ff29e9b97ee077f23ac6702138608d",
+      "product_id": "fictional-fixture",
+      "kind": "voice"
+    }
+  ],
+  "claims": [
+    {
+      "id": "c1",
+      "source_id": "fact",
+      "quote": "Fictional fixture product can group tasks by label.",
+      "start": 0,
+      "end": 51
+    }
+  ],
+  "voice_source_ids": [
+    "voice"
+  ],
+  "artifacts": [
+    {
+      "id": "linkedin",
+      "path": "linkedin.md",
+      "sha256": "7a1d7c5573f935bd1b6e1e1f72067d1b8ff5ba71b160adf695069d847c0bd9bf",
+      "version": 1,
+      "product_id": "fictional-fixture",
+      "depends_on": [
+        "fact"
+      ]
+    }
+  ],
+  "target_asset_id": "linkedin",
+  "changed_ids": []
+}
