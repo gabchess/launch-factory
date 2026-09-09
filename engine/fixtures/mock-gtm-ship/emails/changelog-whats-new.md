@@ -1,10 +1,10 @@
-# What's new — Quorum Desk v0.1.0 (FIXTURE email)
+# What's new: Quorum Desk v0.1.0 (FIXTURE email)
 
-Subject: Quorum Desk is live — decide the next move on live opportunities
+Subject: Quorum Desk is live: decide the next move on live opportunities
 
 Hi team,
 
-We shipped **Quorum Desk v0.1.0**, an installable Augment that helps you decide what a live B2B opportunity deserves next.
+We shipped **Quorum Desk v0.1.0**, an installable workflow pack that helps you decide what a live B2B opportunity deserves next.
 
 **In this release**
 - Reconstruct the buyer decision system from your notes and exports
@@ -19,4 +19,4 @@ We shipped **Quorum Desk v0.1.0**, an installable Augment that helps you decide 
 
 Install from the release folder (`augment/`). Start with: “Tell me what opportunity we are actually in.”
 
-— Product (fixture)
+Product (fixture)

@@ -1,7 +1,7 @@
-# GitHub outline (FIXTURE) — Quorum Desk v0.1.0
+# GitHub outline (FIXTURE): Quorum Desk v0.1.0
 
 ## Summary
-Ship Quorum Desk Buyer Decision Augment v0.1.0 as an installable dual-host pack.
+Ship Quorum Desk Buyer Decision project v0.1.0 as an installable dual-host pack.
 
 ## Contents
 - START-HERE + HOST-MATRIX + PROVENANCE + LICENSE-STATUS

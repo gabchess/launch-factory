@@ -1,4 +1,4 @@
-# FIXTURE outline — FEATURE_NAME
+# FIXTURE outline: FEATURE_NAME
 
 - FEATURE_NAME lets teams schedule posts
 - PLACEHOLDER_BENEFIT for SMB and Agency segments (segment truth TBD)

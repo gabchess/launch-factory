@@ -1,0 +1,160 @@
+{
+  "record_id": "rec_demo-release",
+  "schema_version": "release-record/v1",
+  "release_folder": {
+    "path": "engine/fixtures/demo-release",
+    "files": [
+      {
+        "path": "FIXTURE_LABEL.md",
+        "sha256": "2b8c16b4861c9a1300c31bf84f9325942d1af2b6ca336664b10f11a408f2966d",
+        "bytes": 405
+      },
+      {
+        "path": "cadence_binder.json",
+        "sha256": "370bf7f9397b068eac39f03ea2bd6fe6dc55a8ad64ae17e328c7b23b1134a4cf",
+        "bytes": 1708
+      },
+      {
+        "path": "claim_ledger.json",
+        "sha256": "ce2f962f91d677f3479d8dfd0acbef1990833cd0833c3fe418a9652cf87f581b",
+        "bytes": 921
+      },
+      {
+        "path": "release_campaign.json",
+        "sha256": "7d510c600cf369ddb18d43d7822265d484758870eb997fed82cd92339217bdd7",
+        "bytes": 2321
+      },
+      {
+        "path": "sources/footage_index.json",
+        "sha256": "e4eaa2a69b764dea63e85067c5dcb66250358d0a1b32458eb0688cef0898df77",
+        "bytes": 238
+      },
+      {
+        "path": "sources/github_outline.md",
+        "sha256": "04a4bbed0e35bec03cf6069e29b1b1bdc387ec21252b339e25bbad9e1c3e92cd",
+        "bytes": 237
+      },
+      {
+        "path": "sources/loom_transcript.txt",
+        "sha256": "cd97de70e95c4fd5331694b11af72283eaca94cd5a022c787ed86e14d5b73bfd",
+        "bytes": 229
+      }
+    ]
+  },
+  "ingest": {
+    "state": "complete",
+    "at": "2026-09-07T22:14:51+00:00"
+  },
+  "claims": {
+    "allowed": [
+      {
+        "claim_id": "c1",
+        "text": "FEATURE_NAME lets teams schedule posts",
+        "status": "source_stated",
+        "evidence": [
+          {
+            "source": "github_outline",
+            "path": "sources/github_outline.md",
+            "span_start": 0,
+            "span_end": 80,
+            "quote": "FEATURE_NAME lets teams schedule posts"
+          }
+        ]
+      },
+      {
+        "claim_id": "c2",
+        "text": "FEATURE_NAME helps teams do PLACEHOLDER_BENEFIT",
+        "status": "source_stated",
+        "evidence": [
+          {
+            "source": "loom_transcript",
+            "path": "sources/loom_transcript.txt",
+            "span_start": 0,
+            "span_end": 120,
+            "quote": "FEATURE_NAME helps teams do PLACEHOLDER_BENEFIT"
+          }
+        ]
+      }
+    ],
+    "forbidden": [
+      {
+        "claim_id": "f1",
+        "text": "unlimited seats for $0",
+        "reason": "pricing invention — fixture forbidden list seed"
+      }
+    ],
+    "held": [
+      {
+        "claim_id": "h1",
+        "text": "PLACEHOLDER_BENEFIT quantified savings",
+        "gap": "no approved source states an amount; held, not invented"
+      }
+    ]
+  },
+  "claims_lock": {
+    "state": "drafted",
+    "locked_at": null
+  },
+  "slots": [
+    {
+      "slot": 1,
+      "name": "social_video",
+      "state": "held",
+      "hold_reason": "social video — no real footage; HOLD until encode track (ADR 0013)"
+    },
+    {
+      "slot": 2,
+      "name": "blog",
+      "state": "drafted",
+      "hold_reason": null
+    },
+    {
+      "slot": 3,
+      "name": "email_segments",
+      "state": "drafted",
+      "hold_reason": null
+    },
+    {
+      "slot": 4,
+      "name": "changelog",
+      "state": "drafted",
+      "hold_reason": null
+    },
+    {
+      "slot": 5,
+      "name": "login_animation",
+      "state": "held",
+      "hold_reason": "login animation — no real Lottie/asset source; HOLD (ADR 0013)"
+    },
+    {
+      "slot": 6,
+      "name": "in_app_popup",
+      "state": "held",
+      "hold_reason": "in-app popup — no real popup source; HOLD (ADR 0013)"
+    },
+    {
+      "slot": 7,
+      "name": "campaign_plan",
+      "state": "held",
+      "hold_reason": "campaign plan — drafts after Claims Lock; fixture held at drafted-claims stage"
+    }
+  ],
+  "voice_check": {
+    "brief": "knowledge/voice-bank-brief.md (interim — ADR 0015)",
+    "label": "interim",
+    "results": []
+  },
+  "validations": [],
+  "gates": [],
+  "package_path": null,
+  "run_log": [
+    {
+      "at": "2026-09-07T22:14:51+00:00",
+      "entry": "init_release: ingested engine/fixtures/demo-release"
+    },
+    {
+      "at": "2026-09-07T22:14:51+00:00",
+      "entry": "fixture example: claims drafted from fixture ledger; slots 2/3/4 drafted; 1/5/6/7 held"
+    }
+  ]
+}

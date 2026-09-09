@@ -1,4 +1,4 @@
-# Schemas — pointer only (Option B)
+# Schemas: pointer only (Option B)
 
 Canonical schemas live at:
 
@@ -8,4 +8,4 @@ Canonical schemas live at:
 
 (product-root `launch-factory/engine/schemas/`)
 
-Do **not** fork or paste a second schema set here. One SoT under `engine/`. Claude ZIP and any host vendor must point at or thin-copy that same set — never a divergent third tree.
+Do **not** fork or paste a second schema set here. One SoT under `engine/`. Claude ZIP and any host vendor must point at or thin-copy that same set: never a divergent third tree.

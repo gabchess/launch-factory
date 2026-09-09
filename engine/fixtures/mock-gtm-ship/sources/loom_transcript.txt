@@ -1,6 +1,6 @@
-# Loom transcript (FIXTURE) — Quorum Desk v0.1.0 walkthrough
+# Loom transcript (FIXTURE): Quorum Desk v0.1.0 walkthrough
 
-[00:00] Engineer: Today we shipped Quorum Desk — a buyer-decision Augment for live B2B opportunities.
+[00:00] Engineer: Today we shipped Quorum Desk, a buyer-decision workflow pack for live B2B opportunities.
 [00:20] It reconstructs the buyer's decision system from notes, email, and CRM exports you provide.
 [00:45] Every claim is tagged: observed, buyer-stated, inferred, assumed, unknown, disputed, or disconfirmed.
 [01:10] The ruling is one of: advance, validate, recover, hold, disqualify, exit.

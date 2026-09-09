@@ -1,6 +1,6 @@
 # License status
 
-**Status: TBD — Gabe.**
+**Status: TBD, Gabe.**
 
 No standalone commercial license text is attached for Launch Factory v0.2.0. Do not infer an open-source license from readable source files.
 
