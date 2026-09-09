@@ -1,0 +1,9 @@
+{
+  "name": "launch-factory",
+  "description": "One release source in, claim-traced launch assets out, with a human gate on every draft. Never publishes, sends, or schedules.",
+  "version": "0.3.0",
+  "license": "MIT",
+  "homepage": "https://github.com/gabchess/launch-factory",
+  "repository": "https://github.com/gabchess/launch-factory",
+  "keywords": ["marketing", "launch", "content", "changelog", "campaign"]
+}
