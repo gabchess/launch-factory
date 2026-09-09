@@ -1,12 +1,14 @@
 # License status
 
-**Status: TBD, Gabe.**
+**Status: MIT.** The full text is in [LICENSE](LICENSE).
 
-No standalone commercial license text is attached for Launch Factory v0.2.0. Do not infer an open-source license from readable source files.
+Launch Factory is released under the MIT License: use it, fork it, modify it, ship it commercially. Keep the copyright notice, and understand it comes with no warranty.
 
-`license_status` in manifests: `tbd-gabe`.
+`license_status` in manifests: `mit`.
 
-Distribution, resale, support, update, refund, and use terms must come from separately supplied commercial terms when Gabe sets them.
+## What the license does not cover
+
+The MIT grant covers this repository's own code, prompts, schemas, and documentation. It does not extend to anything this repository does not own.
 
 The Python validation tools use `jsonschema`; `pytest` runs their tests, as listed in
 `requirements.txt`. The n8n preparation code runs in your own n8n installation, with
@@ -17,4 +19,7 @@ Media providers, agent hosts, and optional rendering tools need your own install
 account access, and applicable terms. Following the tool instructions and running a
 successful local production doesn't transfer credentials, credits, or provider access to
 you. Third-party reference packs and private production media aren't included in the
-portable recipe. This document grants no new redistribution rights.
+portable recipe.
+
+Source material you feed in, and the assets a run produces from it, are yours, governed by
+whatever terms already apply to that material. Launch Factory makes no claim on either.
