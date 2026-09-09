@@ -1,0 +1,189 @@
+{
+  "schema_version": "channel-production-preparation-request/v1",
+  "batch_id": "fixture-channel-batch",
+  "review_mode": "consolidated_end",
+  "requests": [
+    {
+      "schema_version": "specialist-request/v1",
+      "task_id": "fixture-blog",
+      "campaign_id": "fixture-campaign",
+      "product_id": "fixture-product",
+      "source_revision": "fixture-r1",
+      "deliverable": "blog",
+      "stage": "draft",
+      "voice_profile": "fixture-plain",
+      "requested_reviewer": "gabe",
+      "sources": [
+        {
+          "id": "fixture-fact",
+          "path": "sources/feature.txt",
+          "sha256": "0a30f9a34b9c8455d306adaa14a560003cc9781bdcb7f1c74fb7d97d66eb8d26",
+          "product_id": "fixture-product",
+          "kind": "fact"
+        },
+        {
+          "id": "fixture-voice",
+          "path": "voice/sample.txt",
+          "sha256": "b7cce02243d29c7e67ec86a451a928bbf4e93b0f493b00af76d8f40d2da8ad02",
+          "product_id": "fixture-product",
+          "kind": "voice"
+        }
+      ],
+      "claims": [
+        {
+          "id": "fixture-c1",
+          "source_id": "fixture-fact",
+          "quote": "The fictional sample compares an asking price with a user-supplied limit.",
+          "start": 0,
+          "end": 73
+        }
+      ],
+      "voice_source_ids": [
+        "fixture-voice"
+      ],
+      "artifacts": [],
+      "changed_ids": []
+    },
+    {
+      "schema_version": "specialist-request/v1",
+      "task_id": "fixture-email_segments",
+      "campaign_id": "fixture-campaign",
+      "product_id": "fixture-product",
+      "source_revision": "fixture-r1",
+      "deliverable": "email_segments",
+      "stage": "draft",
+      "voice_profile": "fixture-plain",
+      "requested_reviewer": "gabe",
+      "sources": [
+        {
+          "id": "fixture-fact",
+          "path": "sources/feature.txt",
+          "sha256": "0a30f9a34b9c8455d306adaa14a560003cc9781bdcb7f1c74fb7d97d66eb8d26",
+          "product_id": "fixture-product",
+          "kind": "fact"
+        },
+        {
+          "id": "fixture-voice",
+          "path": "voice/sample.txt",
+          "sha256": "b7cce02243d29c7e67ec86a451a928bbf4e93b0f493b00af76d8f40d2da8ad02",
+          "product_id": "fixture-product",
+          "kind": "voice"
+        }
+      ],
+      "claims": [
+        {
+          "id": "fixture-c1",
+          "source_id": "fixture-fact",
+          "quote": "The fictional sample compares an asking price with a user-supplied limit.",
+          "start": 0,
+          "end": 73
+        }
+      ],
+      "voice_source_ids": [
+        "fixture-voice"
+      ],
+      "artifacts": [],
+      "changed_ids": []
+    },
+    {
+      "schema_version": "specialist-request/v1",
+      "task_id": "fixture-changelog",
+      "campaign_id": "fixture-campaign",
+      "product_id": "fixture-product",
+      "source_revision": "fixture-r1",
+      "deliverable": "changelog",
+      "stage": "draft",
+      "voice_profile": "fixture-plain",
+      "requested_reviewer": "gabe",
+      "sources": [
+        {
+          "id": "fixture-fact",
+          "path": "sources/feature.txt",
+          "sha256": "0a30f9a34b9c8455d306adaa14a560003cc9781bdcb7f1c74fb7d97d66eb8d26",
+          "product_id": "fixture-product",
+          "kind": "fact"
+        },
+        {
+          "id": "fixture-voice",
+          "path": "voice/sample.txt",
+          "sha256": "b7cce02243d29c7e67ec86a451a928bbf4e93b0f493b00af76d8f40d2da8ad02",
+          "product_id": "fixture-product",
+          "kind": "voice"
+        }
+      ],
+      "claims": [
+        {
+          "id": "fixture-c1",
+          "source_id": "fixture-fact",
+          "quote": "The fictional sample compares an asking price with a user-supplied limit.",
+          "start": 0,
+          "end": 73
+        }
+      ],
+      "voice_source_ids": [
+        "fixture-voice"
+      ],
+      "artifacts": [],
+      "changed_ids": []
+    },
+    {
+      "schema_version": "specialist-request/v1",
+      "task_id": "fixture-in_app_popup",
+      "campaign_id": "fixture-campaign",
+      "product_id": "fixture-product",
+      "source_revision": "fixture-r1",
+      "deliverable": "in_app_popup",
+      "stage": "draft",
+      "voice_profile": "fixture-plain",
+      "requested_reviewer": "gabe",
+      "sources": [
+        {
+          "id": "fixture-fact",
+          "path": "sources/feature.txt",
+          "sha256": "0a30f9a34b9c8455d306adaa14a560003cc9781bdcb7f1c74fb7d97d66eb8d26",
+          "product_id": "fixture-product",
+          "kind": "fact"
+        },
+        {
+          "id": "fixture-voice",
+          "path": "voice/sample.txt",
+          "sha256": "b7cce02243d29c7e67ec86a451a928bbf4e93b0f493b00af76d8f40d2da8ad02",
+          "product_id": "fixture-product",
+          "kind": "voice"
+        }
+      ],
+      "claims": [
+        {
+          "id": "fixture-c1",
+          "source_id": "fixture-fact",
+          "quote": "The fictional sample compares an asking price with a user-supplied limit.",
+          "start": 0,
+          "end": 73
+        }
+      ],
+      "voice_source_ids": [
+        "fixture-voice"
+      ],
+      "artifacts": [],
+      "changed_ids": []
+    }
+  ],
+  "source_texts": [
+    {
+      "path": "sources/feature.txt",
+      "text": "The fictional sample compares an asking price with a user-supplied limit."
+    },
+    {
+      "path": "voice/sample.txt",
+      "text": "Start with the reader action. Keep the next step clear."
+    }
+  ],
+  "email_segments": [
+    "lead_smb",
+    "lead_agency",
+    "lead_reseller_affiliate",
+    "customer_smb",
+    "customer_agency"
+  ],
+  "revisions": []
+}
