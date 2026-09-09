@@ -25,7 +25,7 @@ AskUserQuestion.
 
 Read the source directly (Read/Glob for local paths, WebFetch for a URL).
 Never fetch a URL through backtick command substitution in a shell one-liner
-(`$(curl ...)`) — a failed fetch returns an empty string silently instead of
+(`$(curl ...)`): a failed fetch returns an empty string silently instead of
 an error. Use the WebFetch tool, or a checked `curl` call whose exit code you
 inspect.
 
