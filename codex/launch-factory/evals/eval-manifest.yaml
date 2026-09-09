@@ -1,0 +1,9 @@
+format: cd-augment-eval/v1
+product: launch-factory
+version: 0.2.0
+cases: core-transfer-cases.yaml
+claim_boundary: >
+  Case definitions are authored, not executed. Model behavior, cross-host
+  (Codex/Claude) parity, and Reviewer-gate effectiveness have not been tested in
+  live host runs. Structural scripts remain STRUCTURAL_INTEGRITY_ONLY.
+  Slots 1/5/6 remain HOLD.

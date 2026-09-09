@@ -1,0 +1,22 @@
+[FIXTURE TRANSCRIPT — reviewer email seed]
+
+The email opens on the pain of an approval-queue item that names a post
+without showing it: the approver cannot tell which version it refers to,
+whether the client already commented elsewhere, or whether sign-off has
+already happened.
+
+It observes that none of that context lives in the task itself, so the
+approver goes hunting for the post, its feedback, and its stage before
+deciding. That search takes longer than the decision does.
+
+Product fact: in TaskLink, the task and social posts are linked. Opening
+the task shows the post itself rather than a summary card, so an approver
+starts from the item awaiting judgment instead of searching for it.
+
+Your approvers see what needs a decision instead of hunting for it first.
+
+It closes with a call to action to open TaskLink.
+
+Voice notes for generation: short stacked questions to dramatize the pain;
+second person; concrete nouns (drafts, client comments, sign-off); a
+one-sentence product resolution; terse call to action.

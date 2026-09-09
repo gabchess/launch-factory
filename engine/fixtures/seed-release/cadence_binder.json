@@ -1,0 +1,94 @@
+{
+  "campaign_id": "camp_seed_001",
+  "fixture_label": "reviewer-email-seed",
+  "cells": [
+    {
+      "order": 1,
+      "channel": "changelog",
+      "artifact_slot": 4,
+      "utm": {
+        "utm_source": "changelog",
+        "utm_medium": "product",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "TaskLink bullets from tl1-tl4 only"
+    },
+    {
+      "order": 2,
+      "channel": "email_interrupt",
+      "artifact_slot": 3,
+      "utm": {
+        "utm_source": "hubspot_sandbox",
+        "utm_medium": "email",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "Reviewer-register email; draft only; UTM pattern from seed"
+    },
+    {
+      "order": 3,
+      "channel": "story_video",
+      "artifact_slot": null,
+      "utm": {
+        "utm_source": "social",
+        "utm_medium": "video",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "HELD — no real footage (slot 1 held)"
+    },
+    {
+      "order": 4,
+      "channel": "linkedin_written",
+      "artifact_slot": 2,
+      "utm": {
+        "utm_source": "linkedin",
+        "utm_medium": "social",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "derive from blog / not separate written-social asset"
+    },
+    {
+      "order": 5,
+      "channel": "x_written",
+      "artifact_slot": 2,
+      "utm": {
+        "utm_source": "x",
+        "utm_medium": "social",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "derive from blog / not separate written-social asset"
+    },
+    {
+      "order": 6,
+      "channel": "threads_written",
+      "artifact_slot": 2,
+      "utm": {
+        "utm_source": "threads",
+        "utm_medium": "social",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "derive from blog / not separate written-social asset"
+    },
+    {
+      "order": 7,
+      "channel": "instagram_video",
+      "artifact_slot": null,
+      "utm": {
+        "utm_source": "instagram",
+        "utm_medium": "video",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "HELD — no real footage"
+    },
+    {
+      "order": 8,
+      "channel": "tiktok_video",
+      "artifact_slot": null,
+      "utm": {
+        "utm_source": "tiktok",
+        "utm_medium": "video",
+        "utm_campaign": "camp_seed_001"
+      },
+      "notes": "HELD — no real footage"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launch-factory.local/schemas/claim_ledger.schema.json",
+  "title": "ClaimLedger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["campaign_id", "allowed", "forbidden", "needs_disclaimer", "evidence", "kill_switch"],
+  "properties": {
+    "campaign_id": { "type": "string", "minLength": 1 },
+    "allowed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "text"],
+        "properties": {
+          "claim_id": { "type": "string", "minLength": 1 },
+          "text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "forbidden": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "text", "reason"],
+        "properties": {
+          "claim_id": { "type": "string" },
+          "text": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "needs_disclaimer": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "text", "disclaimer"],
+        "properties": {
+          "claim_id": { "type": "string" },
+          "text": { "type": "string" },
+          "disclaimer": { "type": "string" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "source", "path", "span_start", "span_end", "quote"],
+        "properties": {
+          "claim_id": { "type": "string" },
+          "source": { "enum": ["loom_transcript", "github_outline", "footage_index"] },
+          "path": { "type": "string" },
+          "span_start": { "type": "integer", "minimum": 0 },
+          "span_end": { "type": "integer", "minimum": 0 },
+          "quote": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "kill_switch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["armed", "reason"],
+      "properties": {
+        "armed": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

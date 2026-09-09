@@ -1,0 +1,118 @@
+{
+  "id": "camp_seed_001",
+  "title": "TaskLink — reviewer email seed (pre-Claims-Lock)",
+  "folder_id": "fixtures/seed-release",
+  "status": "claims_gate",
+  "fixture_label": "reviewer-email-seed",
+  "sources": {
+    "loom": "sources/reviewer_email_transcript.txt",
+    "transcript": "sources/reviewer_email_transcript.txt",
+    "github_outline": "sources/tasklink_outline.md",
+    "footage": [
+      "sources/footage_index.json"
+    ]
+  },
+  "claim_ledger_ref": "claim_ledger.json",
+  "voice_pack_ref": "voice-pack.md",
+  "segments": {
+    "leads": [
+      "SMB",
+      "Agency",
+      "Reseller_Affiliate"
+    ],
+    "customers": [
+      "SMB",
+      "Agency"
+    ],
+    "affiliate_rules": "TBD from the customer legal — do not invent affiliate claims in copy"
+  },
+  "artifacts": [
+    {
+      "slot": 1,
+      "type": "social_video",
+      "version": 1,
+      "path": null,
+      "validation": "pending",
+      "reviewer_status": "held",
+      "held": true,
+      "hold_reason": "NO video — no real Loom/UI footage; Demo Assets must not enter Claim Ledger (ADR 0001)"
+    },
+    {
+      "slot": 2,
+      "type": "blog",
+      "version": 1,
+      "path": "adapters/02_blog.md",
+      "validation": "pending",
+      "reviewer_status": "not_submitted",
+      "held": false,
+      "hold_reason": null
+    },
+    {
+      "slot": 3,
+      "type": "email_segments",
+      "version": 1,
+      "path": "adapters/03_email_segments.md",
+      "validation": "pending",
+      "reviewer_status": "not_submitted",
+      "held": false,
+      "hold_reason": null
+    },
+    {
+      "slot": 4,
+      "type": "changelog",
+      "version": 1,
+      "path": "adapters/04_changelog.md",
+      "validation": "pending",
+      "reviewer_status": "not_submitted",
+      "held": false,
+      "hold_reason": null
+    },
+    {
+      "slot": 5,
+      "type": "login_animation",
+      "version": 1,
+      "path": null,
+      "validation": "pending",
+      "reviewer_status": "held",
+      "held": true,
+      "hold_reason": "No real login footage/Lottie source — held for claim-safety"
+    },
+    {
+      "slot": 6,
+      "type": "in_app_popup",
+      "version": 1,
+      "path": null,
+      "validation": "pending",
+      "reviewer_status": "held",
+      "held": true,
+      "hold_reason": "No real popup graphic/copy source — held for claim-safety"
+    },
+    {
+      "slot": 7,
+      "type": "campaign_plan",
+      "version": 1,
+      "path": null,
+      "validation": "pending",
+      "reviewer_status": "held",
+      "held": true,
+      "hold_reason": "Campaign Plan drafts from the same Claims Lock — Reviewer Claims Lock not yet recorded (ADR 0016)"
+    }
+  ],
+  "cadence_ref": "cadence_binder.json",
+  "reviewer": {
+    "seat": "Reviewer VP Marketing",
+    "surface": "Notion + Drive pack (reviewer email seed)",
+    "wip": 1
+  },
+  "hubspot_sandbox": {
+    "draft_ids": [],
+    "status": "not_started"
+  },
+  "still_needs_human": [
+    "Reviewer Claims Lock approve on this ledger",
+    "Customer style guide / past newsletters for full voice encode",
+    "Real footage for social_video / login / popup (or keep held)",
+    "Segment / affiliate legal rules",
+    "Final publish (never auto)"
+  ]
+}
