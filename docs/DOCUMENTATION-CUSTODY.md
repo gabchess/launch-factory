@@ -2,24 +2,22 @@
 
 ## Customer-facing docs (this release)
 
-Paths listed in `documentation-manifest.json` at product root. Edit only through the maintainer process; do not silently diverge claim ceilings across surfaces.
+The paths are listed in `documentation-manifest.json` at the product root. Edit them
+through the maintainer process, and keep claim ceilings consistent across every surface
+that states them.
 
-## Alignment rule
+## Keep these aligned
 
-These must stay lockstep on HITL / non-goals:
+These files must stay in lockstep on human-review and non-goal language:
 
-1. `START-HERE.md` — What Launch Factory is not
-2. `codex/launch-factory/SKILL.md` — Trust / Do-not
+1. `START-HERE.md` ("Boundaries")
+2. `codex/launch-factory/SKILL.md` ("Trust / Do-not")
 3. `codex/launch-factory/knowledge/capability-and-authority.md`
 4. `docs/TRUST-PRIVACY-AND-AUTHORITY.md`
-5. `docs/VALIDATION-AND-LIMITS.md` + `HOST-MATRIX.md`
-6. `codex/launch-factory/README.md` — claim ceiling / self_check
-
-## Runtime vs maintainer
-
-- **Ship:** product root, `docs/`, `codex/`, `claude/` (ZIP when present), `engine/` (customer-visible SoT pointer).
-- **Never ship as runtime:** `maintainer-source/`.
+5. `docs/VALIDATION-AND-LIMITS.md` and `HOST-MATRIX.md`
+6. `codex/launch-factory/README.md` ("claim ceiling" / `self_check`)
 
 ## Version
 
-Documentation in this tree is for **Launch Factory v0.1.1** (skeleton). Update `CHANGELOG.md` and manifests when docs change claim boundaries.
+This documentation tree is for Launch Factory v0.2.0. Update `CHANGELOG.md` and the
+manifests whenever a doc change moves a claim boundary.

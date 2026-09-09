@@ -17,8 +17,16 @@ The full repository now includes the specialist layer described in [ADR 0017](do
 | Media quality and human acceptance | Require actual artifact inspection and decision | Same requirement |
 | Publish/send/schedule externally | Not included | Not included |
 
-The operator can perform a specialist protocol inline after reading its selected skill and bank. It must identify that fallback. Schema/hash checks do not measure copy quality. The legacy validators and fixtures retain their structural limits; a boolean flag or matching event envelope does not authenticate a human.
+The operator can perform a specialist protocol inline after reading its selected skill and
+bank, and it must say when it's using that fallback. A schema or hash check proves file
+structure, not copy quality. The legacy validators and fixtures keep their structural
+limits: a boolean flag or a matching event envelope doesn't authenticate a human.
 
-The fresh 14-skill discovery probe ran after the finishing update on 8 September 2026. The earlier 13-skill receipt remains historical evidence. It made no model turn or provider call and changed no host configuration. Destination hosts still require their own discovery check.
+The 14-skill discovery probe ran after the finishing update on 8 September 2026. An
+earlier 13-skill receipt remains as historical evidence. Neither check made a model turn
+or a provider call, and neither changed host configuration. Any destination host still
+needs its own discovery check.
 
-The actor-production contract added in layer 0.3.0 extends the existing video lead and keeps the same 14 skill names. The observed discovery receipt above predates this contract update; its code and prompts have only offline validation here. No native invocation, provider job, n8n adapter or actor-quality result is claimed by this update.
+A later actor-production contract extends the existing video lead and keeps the same 14
+skill names. It has offline validation only here: no native invocation, provider job,
+n8n adapter, or actor-quality result is claimed for it.
