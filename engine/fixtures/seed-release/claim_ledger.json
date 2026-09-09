@@ -1,0 +1,114 @@
+{
+  "campaign_id": "camp_seed_001",
+  "allowed": [
+    {
+      "claim_id": "tl1",
+      "text": "In TaskLink, the task and social posts are linked."
+    },
+    {
+      "claim_id": "tl2",
+      "text": "Opening a TaskLink task shows the actual post content, not a card describing it."
+    },
+    {
+      "claim_id": "tl3",
+      "text": "Approvers can see what needs a decision instead of hunting for the post first."
+    },
+    {
+      "claim_id": "tl4",
+      "text": "When an approval-queue task only says “Approve the next post,” finding the real post/context can take longer than the decision itself."
+    }
+  ],
+  "forbidden": [
+    {
+      "claim_id": "f1",
+      "text": "unlimited seats for $0",
+      "reason": "pricing invention — never invent seats or $"
+    },
+    {
+      "claim_id": "f2",
+      "text": "saves $",
+      "reason": "dollar savings invent — the reviewer email states time tax only"
+    },
+    {
+      "claim_id": "f3",
+      "text": "auto-publish",
+      "reason": "trial brief HITL: nothing auto-publishes v1"
+    },
+    {
+      "claim_id": "f4",
+      "text": "Reviewer zero-edit",
+      "reason": "not evidenced; contradicts HITL / light-edits eval bar"
+    },
+    {
+      "claim_id": "f5",
+      "text": "Gantt charts in TaskLink",
+      "reason": "not in the reviewer email; site anti-Gantt is marketing voice not this ledger seed"
+    },
+    {
+      "claim_id": "f6",
+      "text": "Demo Asset as product evidence",
+      "reason": "ADR 0001 — Demo Assets never enter Claim Ledger"
+    }
+  ],
+  "needs_disclaimer": [
+    {
+      "claim_id": "d1",
+      "text": "TaskLink is included on paid plans / trial packaging",
+      "disclaimer": "Not claimed in the reviewer email seed. If used later, cite live pricing/insights page only — do not invent $ or seats. Out of scope for this ledger seed."
+    }
+  ],
+  "evidence": [
+    {
+      "claim_id": "tl1",
+      "source": "loom_transcript",
+      "path": "sources/reviewer_email_transcript.txt",
+      "span_start": 498,
+      "span_end": 550,
+      "quote": "In TaskLink, the task and social posts are linked."
+    },
+    {
+      "claim_id": "tl1",
+      "source": "github_outline",
+      "path": "sources/tasklink_outline.md",
+      "span_start": 268,
+      "span_end": 320,
+      "quote": "In TaskLink, the task and social posts are linked."
+    },
+    {
+      "claim_id": "tl2",
+      "source": "loom_transcript",
+      "path": "sources/reviewer_email_transcript.txt",
+      "span_start": 595,
+      "span_end": 639,
+      "quote": "the actual content, not a card describing it"
+    },
+    {
+      "claim_id": "tl3",
+      "source": "loom_transcript",
+      "path": "sources/reviewer_email_transcript.txt",
+      "span_start": 641,
+      "span_end": 714,
+      "quote": "Your approvers see what needs a decision instead of hunting for it first."
+    },
+    {
+      "claim_id": "tl4",
+      "source": "loom_transcript",
+      "path": "sources/reviewer_email_transcript.txt",
+      "span_start": 448,
+      "span_end": 496,
+      "quote": "That search takes longer than the decision does."
+    },
+    {
+      "claim_id": "d1",
+      "source": "github_outline",
+      "path": "sources/tasklink_outline.md",
+      "span_start": 723,
+      "span_end": 758,
+      "quote": "no invented features/limits/pricing"
+    }
+  ],
+  "kill_switch": {
+    "armed": false,
+    "reason": null
+  }
+}

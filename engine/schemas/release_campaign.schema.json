@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launch-factory.local/schemas/release_campaign.schema.json",
+  "title": "ReleaseCampaign",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "title", "folder_id", "status", "fixture_label", "sources",
+    "claim_ledger_ref", "voice_pack_ref", "segments", "artifacts",
+    "cadence_ref", "reviewer", "hubspot_sandbox", "still_needs_human"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "folder_id": { "type": "string", "minLength": 1 },
+    "status": {
+      "enum": [
+        "idle", "ingested", "retrieving", "claims_gate", "needs_source_fix",
+        "drafting", "validating", "held", "awaiting_reviewer", "approved",
+        "packaged", "sandbox_exported", "closed"
+      ]
+    },
+    "fixture_label": {
+      "type": "string",
+      "description": "Non-empty for labelled fixtures; empty string only for real customer folder"
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loom", "transcript", "github_outline", "footage"],
+      "properties": {
+        "loom": { "type": "string" },
+        "transcript": { "type": "string" },
+        "github_outline": { "type": "string" },
+        "footage": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "claim_ledger_ref": { "type": "string" },
+    "voice_pack_ref": { "type": "string" },
+    "segments": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leads", "customers", "affiliate_rules"],
+      "properties": {
+        "leads": {
+          "type": "array",
+          "items": { "enum": ["SMB", "Agency", "Reseller_Affiliate"] }
+        },
+        "customers": {
+          "type": "array",
+          "items": { "enum": ["SMB", "Agency"] }
+        },
+        "affiliate_rules": { "type": "string" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot", "type", "version", "path", "validation", "reviewer_status", "held"],
+        "properties": {
+          "slot": { "type": "integer", "minimum": 1, "maximum": 7 },
+          "type": {
+            "enum": [
+              "social_video", "blog", "email_segments", "changelog",
+              "login_animation", "in_app_popup", "campaign_plan"
+            ]
+          },
+          "version": { "type": "integer", "minimum": 1 },
+          "path": { "type": ["string", "null"] },
+          "validation": { "enum": ["pending", "pass", "retryable_fail", "hard_fail"] },
+          "reviewer_status": { "enum": ["not_submitted", "spot_check", "pending", "approved", "request_changes", "held"] },
+          "held": { "type": "boolean" },
+          "hold_reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "cadence_ref": { "type": "string" },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seat", "surface", "wip"],
+      "properties": {
+        "seat": { "const": "Reviewer VP Marketing" },
+        "surface": { "type": "string" },
+        "wip": { "type": "integer", "const": 1 }
+      }
+    },
+    "hubspot_sandbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["draft_ids", "status"],
+      "properties": {
+        "draft_ids": { "type": "array", "items": { "type": "string" } },
+        "status": { "enum": ["not_started", "draft_only", "blocked_no_reviewer", "skipped"] }
+      }
+    },
+    "still_needs_human": { "type": "array", "items": { "type": "string" } }
+  }
+}

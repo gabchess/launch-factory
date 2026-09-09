@@ -1,0 +1,50 @@
+{
+  "name": "launch-factory",
+  "product_name": "Launch Factory",
+  "version": "0.2.0",
+  "category": "GTM Launch Operations",
+  "headline": "Release folder to review-ready launch package \u2014 Reviewer HITL.",
+  "format": "cd-augment-skill/v1",
+  "entrypoint": "SKILL.md",
+  "targets": [
+    "codex",
+    "claude"
+  ],
+  "engine_placement": "option-b-sibling-engine",
+  "third_party_runtime_dependencies": [],
+  "license_status": "mit",
+  "live_host_verification": false,
+  "holds": [
+    "slot-1-social-video",
+    "slot-5-login-animation",
+    "slot-6-in-app-popup"
+  ],
+  "non_goals": [
+    "auto-publish",
+    "auto-send",
+    "invent-pricing",
+    "cms-publisher",
+    "email-only-saas"
+  ],
+  "specialist_layer": {
+    "version": "0.3.1",
+    "entrypoint": "../../.agents/skills/launch-factory/SKILL.md",
+    "requires": "full-repository-project",
+    "registry": "../../engine/specialists/registry.json",
+    "host_discovery_verified": true,
+    "native_invocation_verified": false,
+    "approval_authentication_implemented": false,
+    "discovery_evidence": {
+      "host": "Codex CLI 0.153.3",
+      "method": "app-server skills/list forceReload",
+      "date": "2026-09-08",
+      "enabled_repo_skills": 14,
+      "target_errors": 0,
+      "scope": "Observed local Codex project skill discovery only; no model turn, native skill invocation or provider work",
+      "layer_version": "0.2.0",
+      "missing_skills": 0
+    },
+    "production_protocol": "../../engine/specialists/video-production/PROTOCOL.md"
+  },
+  "holds_scope": "Legacy v0.2.0 fixtures; current task-specific scope is in ADR 0017"
+}

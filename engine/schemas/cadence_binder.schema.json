@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launch-factory.local/schemas/cadence_binder.schema.json",
+  "title": "CadenceBinder",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["campaign_id", "fixture_label", "cells"],
+  "properties": {
+    "campaign_id": { "type": "string" },
+    "fixture_label": { "type": "string" },
+    "cells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order", "channel", "artifact_slot", "utm", "notes"],
+        "properties": {
+          "order": { "type": "integer", "minimum": 1 },
+          "channel": {
+            "enum": [
+              "changelog",
+              "email_interrupt",
+              "story_video",
+              "linkedin_written",
+              "x_written",
+              "threads_written",
+              "instagram_video",
+              "tiktok_video"
+            ]
+          },
+          "artifact_slot": { "type": ["integer", "null"], "minimum": 1, "maximum": 6 },
+          "utm": {
+            "type": "object",
+            "required": ["utm_source", "utm_medium", "utm_campaign"],
+            "properties": {
+              "utm_source": { "type": "string" },
+              "utm_medium": { "type": "string" },
+              "utm_campaign": { "type": "string" }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

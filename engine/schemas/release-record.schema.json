@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launch-factory.local/schemas/release-record.schema.json",
+  "title": "ReleaseRecord",
+  "description": "Canonical per-release state artifact for Launch Factory. One record per release folder; every run resumes from it. Only Reviewer (human) may move anything to approved; the writer seat never self-approves.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "schema_version",
+    "release_folder",
+    "ingest",
+    "claims",
+    "claims_lock",
+    "slots",
+    "voice_check",
+    "validations",
+    "gates",
+    "package_path",
+    "run_log"
+  ],
+  "properties": {
+    "record_id": { "type": "string", "minLength": 1 },
+    "schema_version": { "const": "release-record/v1" },
+    "release_folder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "files"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "bytes"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "bytes": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "ingest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "at"],
+      "properties": {
+        "state": { "enum": ["pending", "complete"] },
+        "at": { "type": ["string", "null"] }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "forbidden", "held"],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "text", "status", "evidence"],
+            "properties": {
+              "claim_id": { "type": "string", "minLength": 1 },
+              "text": { "type": "string", "minLength": 1 },
+              "status": {
+                "enum": ["observed", "source_stated", "inferred", "assumed", "unknown"]
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["source", "path", "span_start", "span_end", "quote"],
+                  "properties": {
+                    "source": { "type": "string", "minLength": 1 },
+                    "path": { "type": "string", "minLength": 1 },
+                    "span_start": { "type": "integer", "minimum": 0 },
+                    "span_end": { "type": "integer", "minimum": 0 },
+                    "quote": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "forbidden": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "text", "reason"],
+            "properties": {
+              "claim_id": { "type": "string", "minLength": 1 },
+              "text": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "held": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "text", "gap"],
+            "properties": {
+              "claim_id": { "type": "string", "minLength": 1 },
+              "text": { "type": "string", "minLength": 1 },
+              "gap": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "claims_lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "locked_at"],
+      "properties": {
+        "state": { "enum": ["drafted", "locked_by_reviewer"] },
+        "locked_at": { "type": ["string", "null"] }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot", "name", "state"],
+        "properties": {
+          "slot": { "type": "integer", "minimum": 1, "maximum": 7 },
+          "name": {
+            "enum": [
+              "social_video",
+              "blog",
+              "email_segments",
+              "changelog",
+              "login_animation",
+              "in_app_popup",
+              "campaign_plan"
+            ]
+          },
+          "state": {
+            "enum": ["drafted", "reviewed", "approved", "packaged", "held"]
+          },
+          "hold_reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "voice_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["brief", "label", "results"],
+      "properties": {
+        "brief": { "type": "string" },
+        "label": { "enum": ["interim", "brand_guide"] },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["slot", "matches_brief", "synthetic_habits_flagged", "note"],
+            "properties": {
+              "slot": { "type": "integer", "minimum": 1, "maximum": 7 },
+              "matches_brief": { "type": "boolean" },
+              "synthetic_habits_flagged": { "type": "array", "items": { "type": "string" } },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "validations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check", "result", "retries", "at"],
+        "properties": {
+          "check": { "type": "string", "minLength": 1 },
+          "result": { "enum": ["pass", "retryable_fail", "hard_fail", "not_run"] },
+          "retries": { "type": "integer", "minimum": 0 },
+          "at": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "decision", "decided_by", "at"],
+        "properties": {
+          "gate": { "type": "string", "minLength": 1 },
+          "decision": { "enum": ["approve", "request_changes", "reject", "hold"] },
+          "decided_by": { "enum": ["reviewer", "writer", "orchestrator"] },
+          "at": { "type": "string", "minLength": 1 },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "package_path": { "type": ["string", "null"] },
+    "run_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["at", "entry"],
+        "properties": {
+          "at": { "type": "string", "minLength": 1 },
+          "entry": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

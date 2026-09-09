@@ -1,0 +1,46 @@
+{
+  "id": "camp_demo_001",
+  "title": "FIXTURE — FEATURE_NAME launch",
+  "folder_id": "fixture/demo-release",
+  "status": "drafting",
+  "fixture_label": "LABELLED_FIXTURE_GENERIC_PLACEHOLDER",
+  "sources": {
+    "loom": "sources/loom_transcript.txt",
+    "transcript": "sources/loom_transcript.txt",
+    "github_outline": "sources/github_outline.md",
+    "footage": ["sources/footage_index.json"]
+  },
+  "claim_ledger_ref": "claim_ledger.json",
+  "voice_pack_ref": "voice_pack/fixture_placeholder",
+  "segments": {
+    "leads": ["SMB", "Agency", "Reseller_Affiliate"],
+    "customers": ["SMB", "Agency"],
+    "affiliate_rules": "FIXTURE — legal TBD from the customer"
+  },
+  "artifacts": [
+    {"slot": 1, "type": "social_video", "version": 1, "path": "adapters/01_social_video.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 2, "type": "blog", "version": 1, "path": "adapters/02_blog.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 3, "type": "email_segments", "version": 1, "path": "adapters/03_email_segments.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 4, "type": "changelog", "version": 1, "path": "adapters/04_changelog.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 5, "type": "login_animation", "version": 1, "path": "adapters/05_login_animation.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 6, "type": "in_app_popup", "version": 1, "path": "adapters/06_in_app_popup.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null},
+    {"slot": 7, "type": "campaign_plan", "version": 1, "path": "adapters/07_campaign_plan.md", "validation": "pending", "reviewer_status": "not_submitted", "held": false, "hold_reason": null}
+  ],
+  "cadence_ref": "cadence_binder.json",
+  "reviewer": {
+    "seat": "Reviewer VP Marketing",
+    "surface": "Notion + Drive pack",
+    "wip": 1
+  },
+  "hubspot_sandbox": { "draft_ids": [], "status": "not_started" },
+  "still_needs_human": [
+    "Source folder quality (customer)",
+    "Claims Lock seed / forbidden list confirm",
+    "Voice pack encode",
+    "Social video taste",
+    "Login animation designer/Lottie",
+    "Popup graphic taste / placement",
+    "Final publish",
+    "Segment / affiliate legal"
+  ]
+}

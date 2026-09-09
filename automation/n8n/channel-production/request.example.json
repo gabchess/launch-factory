@@ -12,7 +12,7 @@
       "deliverable": "blog",
       "stage": "draft",
       "voice_profile": "fixture-plain",
-      "requested_reviewer": "gabe",
+      "requested_reviewer": "fixture-reviewer",
       "sources": [
         {
           "id": "fixture-fact",
@@ -53,7 +53,7 @@
       "deliverable": "email_segments",
       "stage": "draft",
       "voice_profile": "fixture-plain",
-      "requested_reviewer": "gabe",
+      "requested_reviewer": "fixture-reviewer",
       "sources": [
         {
           "id": "fixture-fact",
@@ -94,7 +94,7 @@
       "deliverable": "changelog",
       "stage": "draft",
       "voice_profile": "fixture-plain",
-      "requested_reviewer": "gabe",
+      "requested_reviewer": "fixture-reviewer",
       "sources": [
         {
           "id": "fixture-fact",
@@ -135,7 +135,7 @@
       "deliverable": "in_app_popup",
       "stage": "draft",
       "voice_profile": "fixture-plain",
-      "requested_reviewer": "gabe",
+      "requested_reviewer": "fixture-reviewer",
       "sources": [
         {
           "id": "fixture-fact",
