@@ -26,7 +26,8 @@ function checkShape(value, schema, root, path, issues) {
   if (types.length && !types.some(fits)) {issues.push(path + ':invalid_type'); return;}
   if (schema.const !== undefined && value !== schema.const) issues.push(path + ':wrong_contract');
   if (schema.enum && !schema.enum.includes(value)) issues.push(path + ':invalid_enum');
-  if (typeof value === 'string' && ((schema.minLength && value.length < schema.minLength) ||
+  if (typeof value === 'string' && ((schema.minLength && [...value].length < schema.minLength) ||
+      (schema.maxLength !== undefined && [...value].length > schema.maxLength) ||
       (schema.pattern && !new RegExp(schema.pattern).test(value)))) issues.push(path + ':invalid_string');
   if (typeof value === 'number' && schema.minimum !== undefined && value < schema.minimum) issues.push(path + ':below_minimum');
   if (object(value)) {

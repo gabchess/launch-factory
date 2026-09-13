@@ -25,10 +25,9 @@ review-ready drafts.
    or competitive claims are ever invented.
 4. **No auto-publish language.** Drafts say "draft," "review-ready," "not
    published." Never "goes live," "shipping Tuesday," or similar.
-5. **Held slots stay held.** Slots 1/5/6 get HELD stubs with reasons; the
-   writer never fabricates video, animation, or popup assets.
-6. **Fixture stays fixture.** Demo material (Quorum Desk mock folder and any
-   labelled fixture) is never presented as real product fact, and demo assets
+5. **Held slots stay held.** Missing media inputs produce a specific hold. The v2 builder renders
+   supplied assets; the writer never claims an unrendered file exists.
+6. **Fixture stays fixture.** Labelled demo material is never presented as real product fact, and demo assets
    never enter the claim ledger (ADR 0001).
 7. **Request Changes = regenerate the named artifact only.** No silent
    rewrite-as-approve, no touching artifacts Reviewer did not name.

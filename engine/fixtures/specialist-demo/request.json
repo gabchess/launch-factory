@@ -7,7 +7,7 @@
   "deliverable": "linkedin_post",
   "stage": "review",
   "voice_profile": "fixture-plain",
-  "requested_reviewer": "gabe",
+  "requested_reviewer": "operator",
   "sources": [
     {
       "id": "fact",

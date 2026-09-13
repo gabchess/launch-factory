@@ -34,7 +34,7 @@ function fixture() {
     source_texts: [{path: 'sources/fact.txt', text: fact}, {path: 'voice/sample.txt', text: voice}],
     requests: lanes.map(deliverable => ({schema_version: 'specialist-request/v1', task_id: 'task-' + deliverable,
       campaign_id: 'campaign1', product_id: 'fixture', source_revision: 'r1', deliverable, stage: 'draft',
-      voice_profile: 'plain', requested_reviewer: 'gabe', sources: structuredClone(sources),
+      voice_profile: 'plain', requested_reviewer: 'operator', sources: structuredClone(sources),
       claims: [{id: 'c1', source_id: 'fact', quote: 'Offers', start: 2, end: 8}], voice_source_ids: ['voice'], artifacts: [], changed_ids: []}))};
 }
 const change = fn => {const x = fixture(); fn(x); return x;};
@@ -50,6 +50,19 @@ test('four complete requests become four concrete role assignments for one revie
   assert.equal(r.work_packets[1].required_artifact_fields.segments.length, 5);
   assert.equal(r.work_packets[3].required_artifact_fields.graphic.required, true);
 });
+test('reviewer names are portable assignments with bounded text', () => {
+  for (const reviewer of ['Avery', 'R'.repeat(100), '😀'.repeat(100)]) {
+    const x = fixture();
+    x.requests.forEach(r => r.requested_reviewer = reviewer);
+    assert.equal(run(x).status, 'ready_for_operator');
+  }
+  for (const reviewer of ['', '   ', 'R'.repeat(101), 4, null]) {
+    const x = fixture();
+    x.requests.forEach(r => r.requested_reviewer = reviewer);
+    held(x);
+  }
+});
+
 test('missing or repeated lanes hold the batch', () => {
   held(change(x => x.requests.pop()));
   held(change(x => x.requests[3] = structuredClone(x.requests[0])));

@@ -12,7 +12,7 @@
     "deliverable": {"type": "string", "minLength": 1},
     "stage": {"enum": ["source", "concept", "script", "draft", "render", "review", "revise", "package"]},
     "voice_profile": {"type": "string", "minLength": 1},
-    "requested_reviewer": {"enum": ["gabe", "reviewer"]},
+    "requested_reviewer": {"type": "string", "minLength": 1, "maxLength": 100, "pattern": "\\S"},
     "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
     "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
     "voice_source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
