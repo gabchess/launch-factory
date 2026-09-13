@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased: open-source repackaging
+## v2.0.0 · 2026-09-13
+
+- Build all six local launch assets, five email variants, and a two-week campaign from source-backed drafts and footage.
+- Review the package in one responsive page with playable video and working motion/popup previews.
+- Bind Claims Lock to source bytes; reject stale inputs, escaping paths, and changed packages. Preserve earlier output when a build fails.
+- Include this release as a reproducible example, with a recorded documentation walkthrough and explicit rehearsal status.
+- Replace the old adapter copier and duplicate manifests. Keep channel specialists, simplify the guides, and add CI.
+
+The next major release is v3. Human content approval and publication remain separate.
+
+## Before v2: open-source repackaging
 
 - **Claude Code plugin packaging.** Added `.claude-plugin/plugin.json` and `skills/launch/SKILL.md`, so the repository installs as a plugin (`/plugin install launch-factory --source .`) exposing `/launch-factory:launch`. Bring your own voice bank; the skill carries no personal voice or identity-bound references.
 - **Tix example run removed.** `packages/camp_tix_launch_001/` (25MB, including two mp4s, the author's own product) is deleted along with every reference to it: README, START-HERE, docs/HUMAN-GAPS.md, docs/REFERENCE.md, the engineer handoff, and `tests/test_article_handoff.py`. No worked example package ships in this repository; `packages/README.md` explains what lands there and `engine/fixtures/` still has runnable fixtures (`demo-release`, `mock-gtm-ship`, `specialist-demo`).

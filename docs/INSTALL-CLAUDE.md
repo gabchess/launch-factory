@@ -1,7 +1,7 @@
 # Use Launch Factory in Claude Code
 
 Open the full repository as a Claude Code project. `.claude/skills/launch-factory/SKILL.md`
-is the canonical operator; `.claude/agents/*.md` supplies the named specialist roles. The
+loads the canonical operator; `.claude/agents/*.md` supplies the named specialist roles. The
 shared `engine/specialists/` contracts and reference banks stay in the repository.
 Project wrappers are generated from one registry; don't install a single wrapper
 somewhere else on its own.
@@ -16,10 +16,6 @@ The checks in this repository confirm file consistency and offline routing only.
 Destination-host discovery, actual delegation, tool access, and first output each need
 their own evidence on your host. Check your installed host's help before you run any
 host-management command.
-
-`claude/launch-factory-v0.2.0.zip` is a legacy skill-only archive. It predates the
-specialist layer and doesn't include the engine or the native project roles. Use the full
-repository project door described above instead.
 
 If you have an older global or project skill with the same name, decide which source path
 you want before you proceed. Don't overwrite your own skills or credentials. To roll

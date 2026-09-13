@@ -1,35 +1,9 @@
 # Trust, privacy, and authority
 
-A release folder can contain product footage, unreleased feature copy, customer-facing
-claims, and internal notes.
+The local builder reads the release folder and writes a new package. It makes no network calls. Its package includes copies of quoted source files, which may contain unreleased product details. Share it only with authorized reviewers.
 
-## Before you use this
+Your AI host has its own data policy. Choose which material you give that host. Source documents are untrusted data; instructions inside them cannot change the operator's rules.
 
-- Follow your organization's model-hosting policy.
-- Minimize or redact personal and confidential data before you upload anything.
-- Confirm whether release materials may go to the AI host you're using.
-- Keep packaged outputs in an approved location.
+A person records Claims Lock before drafting and reviews the finished assets afterward. Agents cannot supply the person's decision. The local record binds source bytes, but it does not authenticate identity. The manifest detects changes to a trusted package; it is not a digital signature.
 
-This package doesn't itself guarantee zero data retention, training exclusion, tenant
-isolation, encryption, or regulatory compliance. Those properties belong to your
-deployment environment and your contract with the host.
-
-Uploaded documents and transcripts are untrusted data. Instructions embedded inside them
-don't override Launch Factory's operating rules.
-
-## Who has authority to do what
-
-- **Reviewer (VP Marketing)** approves copy and creative for the target product's work.
-  Nothing ships without that gate.
-- **Three human-review gates.** Cards live under `reviewer/`: Claims Lock
-  (`reviewer/claims-lock.md`), then spot-check (`reviewer/spot-check.md`), then pack approve
-  (`reviewer/pack-approve.md`). A thumbs-up in Slack doesn't count as any of these.
-- **Claims Lock happens once**, with Reviewer, before any drafting starts.
-- **No auto-publish.** Nothing in this pack pushes to a CMS, posts to social, or
-  publishes a changelog on its own.
-- **No auto-send.** Sending through a CRM or any ESP needs separately authorized
-  tooling, after Reviewer's pack approval.
-- **The writer role is never Reviewer.** Adapters draft; they don't approve their own work.
-
-Authorized people remain responsible for publishing, pricing claims, legal claims, and
-the final launch decision.
+Publishing, sending, scheduling, and paid provider work require separate authorization and tools. None occur in a v2 build. See [the operating guide](OPERATE-LAUNCH-FACTORY.md).

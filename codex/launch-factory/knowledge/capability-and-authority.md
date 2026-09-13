@@ -1,27 +1,7 @@
-# Capability and authority boundary
+# Capability and authority
 
-Launch Factory can help structure a release folder into draft launch artifacts, keep claims traceable, prepare Reviewer HITL cards, run bounded validation, and assemble a review package with honesty about HOLDs.
+V2 renders six local launch assets and a campaign from prepared content and footage. The AI host retrieves sources and drafts using the selected channel protocols. The builder checks files, source references, and media output.
 
-Launch Factory cannot know unstated product behavior, invent pricing, publish to the product's own surfaces, or send email. Scripts validate structure only; they do not confer brand or legal truth.
+A person records Claims Lock before drafting and reviews the finished assets afterward. Agents cannot supply that decision. A local Claims Lock record does not authenticate identity; every package remains a review draft.
 
-## Reviewer HITL: three gates (A5)
-
-1. **Claims Lock** (`reviewer/claims-lock.md`): Reviewer once before fan-out; kill-switch on reject  
-2. **Spot-check** (`reviewer/spot-check.md`): first real non-HELD slot (blog when slot 1 HELD)  
-3. **Pack approve** (`reviewer/pack-approve.md`): WIP=1 in `awaiting_reviewer`; named Request Changes only  
-
-Writer / adapter roles draft only. They are **not** Reviewer. Slack thumbs ≠ any gate.
-
-## External actions
-
-External actions require explicit authority and relevant host capability. No message is sent, CMS page updated, changelog posted, social published, login/popup deployed, or CRM/ESP campaign launched merely because Launch Factory drafted it. CRM or ESP sandbox export only **after** pack approve + authorized tooling.
-
-Any workflow-automation chrome (n8n or otherwise) is not the product's ESP and must not silently send.
-
-## Holds
-
-Slots 1 (social video), 5 (login animation), and 6 (in-app popup) are HOLD + honesty stubs in this version. HELD-skip for operate/spot-check. Do not present stubs as finished creative proof.
-
-## Portable mode
-
-When a host lacks durable files, execute a portable in-chat workflow and return Reviewer cards + package block for the user to save. Still enforce the three gates and no-publish rules.
+Publishing, sending, scheduling, and paid generation need separate authorization and tools. Missing media stops the build. See [the operating guide](../../../docs/OPERATE-LAUNCH-FACTORY.md).
