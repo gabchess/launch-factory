@@ -1,24 +1,11 @@
-# ADR 0014: One command, one chat prompt, one spine
+# ADR 0014: command-line and agent entry points
 
-Date: 2026-09-07. Status: accepted (Gabe, grill round 1).
+Date: 2026-09-07. Status: historical; current commands are in the root README.
 
 ## Decision
 
-The operator surface is two doors over the same spine:
-
-1. `./run.sh <release-folder>`: venv, ingest, brief, Claims Lock draft, adapters,
-   validation, Reviewer package, run log. Non-engineers never open code.
-2. A chat-prompt door: "Run Launch Factory on this release folder" inside any host
-   agent, backed by the installed skill; when Python/engine is unavailable it falls back
-   to the chat-only Claims Lock draft shape, fail closed (already documented).
-
-## Why
-
-The brief: "marketing, dev, or product should all be able to trigger it." One spine,
-two triggers, means the gates (Claims Lock, spot-check, pack approve) are identical no
-matter which door runs, so Reviewer reviews the same artifact shapes.
+Provide a command-line entry point and a host-agent skill for the same release workflow. Both need source intake, claim review and a package the operator can inspect.
 
 ## Consequences
 
-- The run log (ADR 0016 material) is written by both doors.
-- HOST-MATRIX must state which door was verified on which host.
+A host without the required runtime can prepare a draft, but must state which steps remain unexecuted. Installation in a host does not establish that a complete run passed there. V2 uses `launch_factory.py` for local builds and verification.

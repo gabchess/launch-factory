@@ -11,7 +11,7 @@ Use this protocol after the story or sketch is approved, when the user requests 
 
 ## Lock the edit contract
 
-Record the target duration, dimensions, frame rate, audio branch, exact words and the current human request. A requested 10-second music-and-SFX revision preserves its approved story. A separately requested 60-second restaurant film uses a 60-second root composition and its own script/sketch gate. The old product-film default below 30 seconds cannot override that explicit brief. Launch Factory retains its internal 30-second social-video target unless the operator explicitly changes that target. The customer's supplied v2 brief sets no numeric duration cap. A timeline length or CLI flag does not prove human authorization.
+Record the target duration, dimensions, frame rate, audio branch, exact words and the current human request. Follow the approved brief for the rendition. The v2 social-video builder supports 1–30 seconds; a separate production recipe can use a different duration within its own limits. A timeline length or CLI flag does not prove human authorization.
 
 For HyperFrames, choose duration, size and frame rate on the root composition. Declare typed brand/content variables before composing. Use a separate root when those compile-time settings differ. Keep color, type roles, spacing, motion and audio rules together. Strict variable validation checks names and types; inspect a rendered variation before claiming a successful re-skin.
 
@@ -39,7 +39,7 @@ The `speech-captions/v1` envelope in `schemas/captions.schema.json` adds the aud
 
 Use `schemas/generation-manifest.schema.json` for selected source assets and each produced rendition. Record source reference, provider, job ID when returned, license status/reference, media path/hash and input-asset IDs. Keep an observed provider receipt attached to the same record. Missing job, rights or provider details stay null or unknown. A returned job ID does not establish a completed media file.
 
-Label a ChatCut result as ChatCut. A skill named product-heygen-pipeline or a HyperFrames composition does not establish that HeyGen generated the actor or source clip. Record a HyperFrames or FFmpeg render as a distinct output with its own hash and input lineage. Verify rights for catalog/media reuse; do not treat a subscription or retrieval success as blanket publication clearance.
+Label a ChatCut result as ChatCut. A skill name or composition file does not establish which provider generated an actor or source clip. Record a HyperFrames or FFmpeg render as a distinct output with its own hash and input lineage. Verify rights for catalog/media reuse; do not treat a subscription or retrieval success as blanket publication clearance.
 
 Track prepared, materialized, decoded, listened, visually inspected and human-reviewed evidence separately. Each performed check names its materialized asset, exact hash and receipt/reference. Changed media needs new check evidence; a pass on an earlier rendition does not transfer. JSON validation proves structure. A matching file hash proves the referenced bytes. Neither proves product claims, licensing, provider entitlement or a human decision.
 

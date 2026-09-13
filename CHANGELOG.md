@@ -14,8 +14,8 @@ The next major release is v3. Human content approval and publication remain sepa
 
 - **Claude Code plugin packaging.** Added `.claude-plugin/plugin.json` and `skills/launch/SKILL.md`, so the repository installs as a plugin (`/plugin install launch-factory --source .`) exposing `/launch-factory:launch`. Bring your own voice bank; the skill carries no personal voice or identity-bound references.
 - **Tix example run removed.** `packages/camp_tix_launch_001/` (25MB, including two mp4s, the author's own product) is deleted along with every reference to it: README, START-HERE, docs/HUMAN-GAPS.md, docs/REFERENCE.md, the engineer handoff, and `tests/test_article_handoff.py`. No worked example package ships in this repository; `packages/README.md` explains what lands there and `engine/fixtures/` still has runnable fixtures (`demo-release`, `mock-gtm-ship`, `specialist-demo`).
-- **Client engagement removed.** The original client's demo package and its supporting release fixture are deleted from the repository, along with the client's name throughout the root docs.
-- **Root docs rewritten for a public audience.** `README.md`, `START-HERE.md`, `AGENTS.md`, and `CHANGELOG.md` no longer name the client; the reviewer role stays generic ("Reviewer"), and every linked path was checked against the current tree before publishing.
+- **Public example cleanup.** Removed obsolete example packages and supporting fixtures.
+- **Public documentation.** Updated the root guides to use a generic reviewer role and checked their links against the current tree.
 - **Repository rename.** The public repository is `gabchess/launch-factory`; root docs use that clone URL.
 
 ## 0.2.0: 2026-09-07

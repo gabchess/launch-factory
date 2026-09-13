@@ -24,7 +24,7 @@ Before a disputed visual defect becomes a blocking finding, identify the exact a
 
 For render, review or revision work, read [short motion finishing](../finishing/SKILL.md) for kinetic type, exact music/SFX cues, speech Caption JSON and actual provider lineage. Preserve accepted story decisions during an authorized finishing revision. New UGC script/sketch approval remains separate.
 
-The repository's campaign social-video route retains an internal 30-second target; the supplied customer's v2 brief sets no numeric duration cap. A separate user-approved film can have another duration, such as a 60-second restaurant story; use its explicit brief and a separate composition, without changing that slot's cap. Choose channel crops only after inspecting disclosure and caption survival. Every exported rendition has its own hash and human decision.
+The v2 social-video builder supports 1–30 seconds. Separate production recipes can use another duration within their own limits and approved brief. Choose channel crops after inspecting disclosure and caption survival. Every exported rendition has its own hash and human decision.
 
 These are original workflow rules informed by the user's UGC, viral-format and ad/deck notes on 8 September 2026. No course prose, templates, portraits, clips, brand styling or paid resources are distributed. Those private files are not runtime dependencies.
 

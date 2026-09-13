@@ -1,21 +1,17 @@
-# ADR 0017: specialist routing and current scope
+# ADR 0017: specialist routing
 
-Date: 8 September 2026. Status: accepted for the bounded local implementation requested by Gabe in this session. No push, deployment, publication or full-app/automated build loop activation is authorized by this ADR.
+Date: 2026-09-08. Status: implemented. [ADR 0020](0020-v2-local-package-builder.md) defines the current local builder.
 
-## Scope override
+## Decision
 
-A later instruction selected separate products for the client recording and for internal validation. Quorum Desk and ADR 0013's blanket media hold remain historical fixture decisions. Reusable routes for slots 1, 5 and 6 may proceed when their actual sources, capability checks and human stage approvals support the work. A route's availability does not establish a finished asset or provider connection.
+Use a shared registry, role references, packet schemas and an offline routing helper. Generated project entry points expose the same roles to supported coding agents. The operator selects a role and follows its protocol, with an inline fallback when delegation is unavailable.
 
-In that session the owner approved one eight-second animation render. Customer-role UGC direction was accepted; the revised exact UGC script and sketch still need their next human gate. These session facts do not become reusable default permissions. Each future run must carry its own source and actual human authority. No live product checkout path, credentials or current media is bundled as default input.
+Specialists return drafts and review findings. A named human decides whether to accept the exact artifact. Review subjects bind its version, hash and relevant inputs. The helper compares these bindings; it does not authenticate or store human decisions.
 
-## Specialist layer
+## Revisions
 
-Add one shared registry, role reference banks, packet/result schemas and an offline route/recommendation helper. Generated Codex and Claude Code project entry points expose the roles. The operator invokes each selected role's protocol and bank, using an explicit inline fallback where native delegation is unavailable.
+A revision affects the changed asset and its dependencies. Campaign dates remain separate from final artifact bindings, so changing a date need not regenerate unchanged copy. Missing tools and media checks remain visible in the result.
 
-Reviewer remains the actual human for client delivery. Gabe is the actual human for his own validation work. Specialists draft and recommend; they cannot assume either identity. Review subjects bind the artifact's version/hash and relevant transitive inputs. The helper compares evidence and never persists, authenticates or applies approvals. Legacy release-record/transition helpers retain their structural limits and receive no manufactured Reviewer event from this layer.
+## Scope
 
-Revisions affect the changed asset and its dependency closure. Calendar slot intent stays separate from final package bindings. A calendar date change therefore need not regenerate unchanged copy. Missing tools or uninspected media remain explicit gaps.
-
-## Delivery boundary
-
-The durable deliverable remains the reusable augment/repository and eventual technical handoff with own-account onboarding. Disposable Replit/Base44 presentation source is excluded. This bounded layer adds no running app, agent service or n8n infrastructure. Historical fixtures and the old Claude v0.2.0 skill archive remain labelled legacy; the full repository contains the new project entry points.
+This layer supplies reusable routing and preparation. Each run needs its own sources and human decisions. Provider execution, durable approval storage and publishing require separate implementations.

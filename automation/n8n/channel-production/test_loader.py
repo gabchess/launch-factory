@@ -26,7 +26,7 @@ class LoaderChecks(unittest.TestCase):
         self.paths = []
         for lane in LANES:
             packet = dict(schema_version='specialist-request/v1', task_id=lane, campaign_id='fixture-campaign', product_id='fixture',
-                          source_revision='fixture-r1', deliverable=lane, stage='draft', voice_profile='plain', requested_reviewer='gabe',
+                          source_revision='fixture-r1', deliverable=lane, stage='draft', voice_profile='plain', requested_reviewer='operator',
                           sources=sources, claims=[dict(id='c1', source_id='fact', quote=self.fact, start=0, end=len(self.fact))],
                           voice_source_ids=['voice'], artifacts=[])
             path = self.workspace / (lane + '.json')

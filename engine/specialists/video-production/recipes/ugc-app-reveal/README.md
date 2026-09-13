@@ -43,4 +43,4 @@ Send n8n preparation output to the `launch-factory` operator with the recipe ID,
 
 The method was used for one 55-second, 1920×1080, 30fps product-vision film approved by its owner on 8 September 2026. The actual route combined existing ChatCut performances, ByteDance picture enhancement through Higgsfield, a native HyperFrames app-source adaptation and ChatCut assembly. Approval, source media and export hashes stay in that run's evidence, outside this recipe. Future provider availability, identity fidelity, tool execution and approval need their own checks.
 
-To invoke again: `/product-heygen-pipeline recipe=ugc-app-reveal`, followed by the new brief and release-workspace bindings. Inside Launch Factory, select `lf-video-production` and this recipe. Preserve the chosen editor and accepted assets unless the new brief changes them.
+Select `lf-video-production` and the `ugc-app-reveal` recipe, then supply the brief and release-workspace bindings. Preserve the chosen editor and accepted assets unless the new brief changes them.

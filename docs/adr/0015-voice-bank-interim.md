@@ -1,28 +1,13 @@
-# ADR 0015: Voice Bank from public + Reviewer material, labeled interim
+# ADR 0015: voice examples for human review
 
-Date: 2026-09-07. Status: accepted (Gabe, grill round 1).
+Date: 2026-09-07. Status: accepted.
 
 ## Decision
 
-Build a **Voice Bank**: the Reviewer's own approval-queue email as the seed, plus the
-product's public website copy, social channels and LinkedIn
-posts. Scrape/collect once, store as a corpus in the repo (`voice-bank/`, public sources
-only), and derive a tone-and-style brief from it. Every voice judgment cites a bank item.
-The bank is labeled **interim** until the brand guide + newsletter examples land
-(issue #6).
+Use product-authored writing examples to guide channel drafts. Store authorized examples in `voice-bank/`, with their source and a short explanation of the relevant voice choices. Each review points to the examples it used.
 
-## Why
-
-GRILL-LOCK #4 already ruled one real letter beats a guessed brand guide. The brief's
-voice test ("reads like we wrote it") needs more than one email to be defensible, and
-public content is the only other product-authored voice we can touch without internal
-access. The operator stays out of the corpus (GRILL-LOCK #6: no operator voice in the
-product's own material).
+Label the voice guide as interim when brand guidance is incomplete. The product's reviewer decides whether the draft fits. A similarity score cannot make that decision.
 
 ## Consequences
 
-- Voice check becomes a real validation step: adapter output vs. bank-derived style
-  brief, with a human (Reviewer) as final arbiter, not a similarity score as truth.
-- Corpus is public-only; no scraped personal data ships in the pack (ship-bar rule).
-- Honesty doc states "voice derived from interim public corpus, not the product owner's internal
-  brand guide."
+Voice examples guide expression. Product facts still need their own source evidence. Operators must confirm what can be included before adding material to a public repository.

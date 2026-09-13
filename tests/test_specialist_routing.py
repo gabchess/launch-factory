@@ -37,7 +37,7 @@ def packet(tmp_path):
                           "version": 1, "product_id": "fixture-product", "depends_on": deps})
     return {"schema_version": "specialist-request/v1", "task_id": "fixture-task", "campaign_id": "fixture-campaign",
             "product_id": "fixture-product", "source_revision": "fixture-r1", "deliverable": "linkedin_post",
-            "stage": "review", "voice_profile": "fixture-plain", "requested_reviewer": "gabe",
+            "stage": "review", "voice_profile": "fixture-plain", "requested_reviewer": "operator",
             "sources": sources, "claims": [{"id": "c1", "source_id": "fact", "quote": fact, "start": 0, "end": len(fact)}],
             "voice_source_ids": ["voice"], "artifacts": artifacts, "target_asset_id": "linkedin", "changed_ids": []}
 
@@ -112,7 +112,7 @@ def test_revision_closure_is_narrow(packet, tmp_path):
 def test_old_decision_and_replays_never_acquire_approval(packet, tmp_path):
     packet["target_asset_id"] = "video"
     subject = route_request(packet, tmp_path)["subject"]
-    decision = {"event_id": "untrusted-1", "reviewer": "gabe", "decision": "approve", "subject": subject}
+    decision = {"event_id": "untrusted-1", "reviewer": "operator", "decision": "approve", "subject": subject}
     matching = check_decision_binding(packet, decision, tmp_path)
     assert matching["binding_matches"] and not matching["human_approval_granted"]
     script = next(a for a in packet["artifacts"] if a["id"] == "script")
@@ -136,7 +136,7 @@ def test_unrelated_artifact_change_does_not_stale_review(packet, tmp_path):
 def test_review_has_actual_content_and_result_cannot_approve(packet, tmp_path):
     projection = route_request(packet, tmp_path)
     assert projection["preview"]["content"] == "Fixture linkedin draft"
-    assert projection["requested_reviewer"] == "gabe"
+    assert projection["requested_reviewer"] == "operator"
     result = {"schema_version": "specialist-result/v1", **{key: packet[key] for key in ["task_id", "campaign_id", "product_id", "deliverable"]},
               "specialist": "linkedin_editor", "subject": projection["subject"], "verdict": "recommend_review",
               "checks": [{"criterion_id": key, "outcome": "not_tested", "evidence": "Fixture only; editorial review not run"} for key in projection["rubric"]],
@@ -173,3 +173,16 @@ def test_generated_host_entries_are_parseable_and_current():
             cases = json.loads((skill.parent / "trigger-evals.json").read_text())["cases"]
             assert sum(c["should_trigger"] for c in cases) == 3
             assert len(cases) == 6
+
+
+@pytest.mark.parametrize("reviewer", ["Avery", "reviewer", "R" * 100, "é" * 100])
+def test_reviewer_assignment_accepts_operator_supplied_names(packet, tmp_path, reviewer):
+    packet["requested_reviewer"] = reviewer
+    assert route_request(packet, tmp_path)["requested_reviewer"] == reviewer
+
+
+@pytest.mark.parametrize("reviewer", ["", "   ", "R" * 101, 4, None])
+def test_reviewer_assignment_requires_a_bounded_name(packet, tmp_path, reviewer):
+    packet["requested_reviewer"] = reviewer
+    with pytest.raises(jsonschema.ValidationError):
+        route_request(packet, tmp_path)
