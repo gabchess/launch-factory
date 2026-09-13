@@ -101,6 +101,7 @@ def test_real_six_output_build_and_tamper_detection(tmp_path):
     out = lf.build(EXAMPLE, tmp_path / "package", example=True)
     result = lf.verify(out)
     assert result["ok"] and not result["human_approved"]
+    assert str(tmp_path) not in (out / "checks.json").read_text()
     assert len(list((out / "emails").glob("[0-9][0-9].html"))) == 5
     assert (out / "popup/graphic.svg").read_text().startswith("<svg")
     assert "<dialog" in (out / "popup/index.html").read_text()

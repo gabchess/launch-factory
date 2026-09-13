@@ -274,7 +274,7 @@ def run_process(args: list[str], cwd: Path, timeout: int = 120) -> str:
 
 
 def probe(path: Path) -> dict:
-    return json.loads(
+    info = json.loads(
         run_process(
             [
                 "ffprobe",
@@ -294,6 +294,10 @@ def probe(path: Path) -> dict:
             30,
         )
     )
+
+    # Reports travel with the package; omit machine-specific temporary paths.
+    info.get("format", {}).pop("filename", None)
+    return info
 
 
 def stamp(seconds: float) -> str:
