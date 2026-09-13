@@ -36,7 +36,7 @@ Use `result.schema.json` for a review recommendation and `validate-result` to co
 
 The review packet contains the assigned human (`gabe` or `reviewer`), actual artifact content or media path, version, SHA-256, source/voice context digest, findings and unresolved gates. A typed reviewer name is assignment only. The actual human makes the decision. `check-binding` only compares an external decision's subject against the current subject; it never authenticates, orders, stores or applies that event. Even a matching or repeated event grants no approval here. An authenticated event ledger and export-time authority recheck remain future engine work.
 
-Do not use `transition_slot.py --human-confirmed` to project these recommendations or Gabe's decisions into Reviewer's legacy record. Existing legacy checks are structural and do not implement this authority contract.
+Do not turn these recommendations into a human Claims Lock or approval record. The operator must obtain the actual person's decision.
 
 ## Revision scope
 

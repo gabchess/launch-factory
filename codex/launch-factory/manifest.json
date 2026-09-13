@@ -1,24 +1,20 @@
 {
   "name": "launch-factory",
   "product_name": "Launch Factory",
-  "version": "0.2.0",
+  "version": "2.0.0",
   "category": "GTM Launch Operations",
-  "headline": "Release folder to review-ready launch package \u2014 Reviewer HITL.",
+  "headline": "Source-backed launch drafts and a local review package",
   "format": "cd-augment-skill/v1",
   "entrypoint": "SKILL.md",
   "targets": [
     "codex",
     "claude"
   ],
-  "engine_placement": "option-b-sibling-engine",
+  "engine_placement": "full-repository",
   "third_party_runtime_dependencies": [],
   "license_status": "mit",
   "live_host_verification": false,
-  "holds": [
-    "slot-1-social-video",
-    "slot-5-login-animation",
-    "slot-6-in-app-popup"
-  ],
+  "holds": [],
   "non_goals": [
     "auto-publish",
     "auto-send",
@@ -46,5 +42,10 @@
     },
     "production_protocol": "../../engine/specialists/video-production/PROTOCOL.md"
   },
-  "holds_scope": "Legacy v0.2.0 fixtures; current task-specific scope is in ADR 0017"
+  "runtime": {
+    "python": "3.10+",
+    "media": "FFmpeg with subtitles filter",
+    "entrypoint": "../../launch_factory.py",
+    "human_approval": "local operator record; not authenticated identity"
+  }
 }

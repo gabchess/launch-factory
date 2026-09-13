@@ -1,67 +1,97 @@
-# Operate Launch Factory
+---
+document_id: LF-OPS-02
+title: Build and review a launch package
+version: 2.0.0
+status: Ready for Owner Review
+owner: Gabriel
+approver: Gabriel
+effective_date: ""
+review_date: 2026-12-13
+risk_tier: Tier 1 Standard
+canonical_source: docs/OPERATE-LAUNCH-FACTORY.md
+supersedes: v1 operating guide
+audience: Local operators and their human reviewers
+---
 
-## Runtime spine
+# Build and review a launch package
 
-1. **Marketer run.** Point the operator at a release folder.
-2. **Ingest and retrieve.** Read the Loom transcript, outline, footage, and brand
-   references.
-3. **Voice pack.** Check drafts against the product's actual voice, not generic AI tone.
-4. **Claims Lock (Reviewer, once).** See `reviewer/claims-lock.md`. Every claim must trace to a
-   source. Never invent pricing, features, or limits.
-5. **Draft the first real adapter.** That's the blog post (slot 2). Don't wait on a held
-   slot to start.
-6. **Spot-check that artifact.** See `reviewer/spot-check.md`. The order is always: draft the
-   first real output, then Reviewer spot-checks it, then draft the rest. Never spot-check
-   before a draft exists.
-7. **Draft the remaining adapters.** Email (3) and changelog (4). Skip any held slot for
-   now; see the slot map below.
-8. **Validate, at most twice.** Run the structural and claim-ceiling checks. If a check
-   still fails after one fix-and-retry, stop and escalate to a human instead of looping
-   forever.
-9. **Reviewer approves the pack.** See `reviewer/pack-approve.md`, the copy-and-creative gate.
-10. **Package and write the honesty note.** Name every held slot. Send an email through
-    a CRM/ESP sandbox only as a draft, only last, and only after Reviewer's approval and
-    authorized tooling.
+## Operational foreground
 
-Keep one campaign in progress at a time. Drafting is not the same as Reviewer's approval.
-Nothing in this spine auto-publishes.
+V2 builds local files. The operator supplies source-backed drafts and footage. A person decides which claims and final assets to approve. This procedure is ready for owner review; it is not an approved company policy.
 
-## Skipping held slots
+## Purpose and outcome
 
-A slot marked held is skipped for now, not blocked forever:
+Produce six launch assets and a campaign plan that the reviewer can inspect together.
 
-- Don't wait on a held slot to finish a run.
-- Write an honesty note for each held slot, and keep going.
-- The first real adapter is the blog post (slot 2), then email (3) and changelog (4).
-- Never fake a held output to make the package look complete.
+## Trigger
 
-## Slot map (v0.2.0)
+A release owner provides a feature outline, readable transcript, footage, and audience choices.
 
-Slot 7 is the Campaign Plan (see [ADR 0016](adr/0016-orchestrator-and-campaign-plan.md)):
-a day-by-day, multi-channel sequence drafted from the same locked claims.
-`cadence_binder.json` is its data shape.
+## Scope and boundaries
 
-| Slot | Output | Status | Rule |
+Use this procedure for a local build. Publishing, sending, scheduling, and paid provider calls require separate decisions and tools.
+
+## Prerequisites and stop conditions
+
+| Requirement | Ready condition | Evidence | If unavailable |
 |---|---|---|---|
-| 1 | Social video + burned captions | Held without real footage; use a concept preview only when no private footage exists | Skip when held |
-| 2 | Blog | First real adapter | Draft this first |
-| 3 | Email (segments) | Real adapter | After blog |
-| 4 | Changelog | Real adapter | After blog |
-| 5 | Login animation | Held without real footage; use a concept preview only when no private footage exists | Skip when held |
-| 6 | In-app popup | Real adapter | Draft after email and changelog |
-| 7 | Campaign Plan | Adapter `07_campaign_plan.md` | One-release scope only; approved in the pack gate |
+| Tools | Python 3.10+, FFmpeg and ffprobe; FFmpeg includes subtitles | Local version/filter checks | Install before build |
+| Sources | Readable local files and exact quotes | release.json | Ask the release owner for the missing source |
+| Claims decision | Human reviewed the current claims and source revision | claims-lock.json | Stop before drafting |
+| Footage | A usable local clip and timed captions, 1–30 seconds | release.json and media file | Resolve the media gap before build |
 
-## Engine
+## Roles and decision rights
 
-The canonical schemas, validators, and adapters live under `engine/`. Don't fork a second
-schema tree elsewhere.
+The operator or AI host prepares sources and drafts. The human reviewer checks claim meaning and records Claims Lock in their own terminal. The operator runs the build. Final asset approval and publication belong to the human reviewer; an AI agent cannot act as that person.
 
-## Scripts
+## Systems, inputs, and records
 
-All executable helpers live under `engine/scripts/`: `init_release.py`,
-`validate_record.py`, `transition_slot.py`, `validate_ledger.py`, `validate_campaign.py`,
-and `build_package.py`. They validate structure only. They never publish, and moving a
-slot to `approved` or `packaged` requires Reviewer's recorded decision
-(`--human-confirmed`). The one-command door is `./run.sh RELEASE_FOLDER` (see
-[ADR 0014](adr/0014-one-command-one-prompt.md)). Any scripts under
-`codex/launch-factory/scripts/` follow the same rule.
+Keep one release folder containing `release.json`, its named source files, footage, and `claims-lock.json`. Sources can contain private product details. The output includes their text for review, so share the package only with authorized reviewers. No remote upload occurs during build.
+
+## Standard path
+
+1. **Prepare the claims.** The operator fills the product, title, version, and claims in `release.json`, using the example's shape. Run `python3 launch_factory.py inspect RELEASE_FOLDER`. Show the claims and quotes to the reviewer.
+2. **Record the human decision.** The reviewer checks meaning and runs `python3 launch_factory.py lock-claims RELEASE_FOLDER --reviewer "Your name"`. Only that person types `LOCK CLAIMS`. If a claim is wrong or incomplete, return to step 1.
+3. **Draft the assets.** The AI host uses the channel protocols to fill copy blocks, five email segments, timed captions, and campaign rows in `release.json`. Each copy block cites claim IDs. The operator resolves missing evidence instead of inventing it.
+4. **Build a new revision.** Run `./run.sh RELEASE_FOLDER --out runs/NEW_REVISION`. A nonzero exit means no completed package. Fix the named error and repeat this step using a new output folder.
+5. **Verify and inspect.** Run `python3 launch_factory.py verify runs/NEW_REVISION`. Serve that folder locally and open `index.html`. Read every email and check the campaign sequence. Play the full video with sound; inspect captions, the animation, and the popup's dismissal. Source checks do not replace a person's review of meaning or quality.
+6. **Retain the review.** The reviewer records requested changes or approval with the package manifest hash in their own review system. Any edited asset needs another review. A source change returns to step 1. Publishing stays outside this tool.
+
+## Decision points
+
+Claims Lock permits drafting from that source revision. It does not approve the finished assets. A successful build permits review. It does not permit publication. The local decision file records an operator's assertion; it does not authenticate their identity.
+
+## Exceptions and escalation
+
+| ID | Trigger | Action and owner | Re-entry |
+|---|---|---|---|
+| E1 | Missing or changed source | Operator stops and asks the release owner to resolve it before drafting | Step 1 |
+| E2 | FFmpeg error or timeout | Operator checks footage and tool output; earlier packages remain intact | Step 4 |
+| E3 | Interrupted run | Operator confirms no completed destination exists; discard only a leftover temporary `.launch-*` folder from that run | Step 4 |
+| E4 | Unsupported claim or poor output | Reviewer names the claim or asset and requested correction | Step 1 for facts; step 3 for copy/media |
+| E5 | Private material cannot be shared | Release owner selects approved source material before building a distributable package | Step 1 |
+
+## Completion and verification
+
+A build is complete when `verify` passes and the output files are inspectable. Human review is complete only when the reviewer records their decision against that version. Resume interrupted work from the last saved source folder and build into a new destination.
+
+## Evidence basis and open items
+
+The implementation and tests define the executable behavior. `docs/V2-AUDIT.md` records the checks. The bundled example rehearses rendering without human approval. Visual, audio, brand, and semantic acceptance remain with the human reviewer.
+
+## Governance
+
+Gabriel owns this procedure. Review it each major release or when inputs, authority, rendering, or delivery changes. Report corrections through the repository's issues. Retire this version when a later procedure replaces it.
+
+## References and related artifacts
+
+- [README](../README.md)
+- [Input example](../examples/v2-release/release.json)
+- [V2 audit](V2-AUDIT.md)
+- [Implementation decision](adr/0020-v2-local-package-builder.md)
+
+## Change history
+
+| Version | Date | Change | Authority |
+|---|---|---|---|
+| 2.0.0 | 2026-09-13 | Replace instruction copying with a local renderer and review procedure | Prepared at Gabriel's request; owner review pending |

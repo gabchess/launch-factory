@@ -1,5 +1,0 @@
-[FIXTURE TRANSCRIPT]
-Speaker: Product (placeholder)
-00:00 FEATURE_NAME helps teams do PLACEHOLDER_BENEFIT.
-00:15 We are not stating pricing in this walkthrough.
-00:20 Footage cue: UI_SCREEN_A shows schedule calendar placeholder.

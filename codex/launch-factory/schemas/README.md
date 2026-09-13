@@ -1,11 +1,3 @@
-# Schemas: pointer only (Option B)
+# Validation
 
-Canonical schemas live at:
-
-```text
-../../../engine/schemas/
-```
-
-(product-root `launch-factory/engine/schemas/`)
-
-Do **not** fork or paste a second schema set here. One SoT under `engine/`. Claude ZIP and any host vendor must point at or thin-copy that same set: never a divergent third tree.
+V2 package inputs are validated by [launch_factory.py](../../../launch_factory.py). Specialist request and result schemas remain in [engine/specialists](../../../engine/specialists/README.md).

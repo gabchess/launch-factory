@@ -1,5 +1,3 @@
 # Handoff
 
-Start with [ENGINEER-START-HERE.md](ENGINEER-START-HERE.md). It has the current setup
-commands, what the repository can prove today, and the next implementation slice.
-
+[Engineer entry point](ENGINEER-START-HERE.md) · [Operating guide](../docs/OPERATE-LAUNCH-FACTORY.md) · [V2 audit](../docs/V2-AUDIT.md)
