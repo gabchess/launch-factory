@@ -12,3 +12,7 @@ runs/
 node_modules/
 .env
 .env.*
+
+# Generated local packages and review captures
+packages/*/
+.qa/

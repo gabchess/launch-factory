@@ -1,27 +1,14 @@
-# Reviewer: Pack approve (copy + creative)
+# Review the finished package
 
-**Campaign:** {{campaign_id}}  
-**Prerequisite:** Claims Lock approved; spot-check on first real (non-HELD) slot done; validate ≤2 done  
-**WIP:** **1** in `awaiting_reviewer` (no parallel packs in this state)
+Release and revision:
+MANIFEST.json SHA-256:
+Reviewer and date:
+Decision and requested changes:
 
-## Artifacts
-| Slot | Type | Link | Note | Decision |
-|---|---|---|---|---|
-| 1 | social_video | | HELD-skip unless live | Approve / Request Changes / skip |
-| 2 | blog | | **first real** when O1 HELD | Approve / Request Changes |
-| 3 | email_segments | | | Approve / Request Changes |
-| 4 | changelog | | | Approve / Request Changes |
-| 5 | login_animation | | HELD-skip | skip |
-| 6 | in_app_popup | | HELD-skip | skip |
-| - | cadence binder | | one-release cells | Approve / Request Changes |
+- Check claim meaning and CTA targets against the sources.
+- Read the blog, every email variant, changelog, and written social.
+- Play the full video; inspect captions and any audio.
+- Test the animation, reduced motion, and popup dismissal.
+- Check campaign dates, audiences, and linked assets.
 
-## Decision
-- [ ] **Approve pack** → status `approved` → package + honesty doc (name HOLDs)
-- [ ] **Request Changes**: list **named** slot(s) to regenerate only (no silent rewrite-as-approve)
-
-## Forbidden
-- One-click ship / auto-publish
-- CRM or ESP sandbox export **before** this approve
-- Slack emoji as approve
-- Claiming all six review-ready while 1/5/6 are held
-- Invent pricing in approved copy
+Record your decision against this exact package. Any output change needs another review. The builder leaves `human_approved: false`; it does not store final approval or publish assets.

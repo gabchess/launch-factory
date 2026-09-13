@@ -32,8 +32,8 @@ help rather than assume a particular validate or install command exists.
 
 Provider accounts and n8n configuration belong to you, the operator. No credentials ship
 in this pack. A successful MCP connection in another chat doesn't prove this host can use
-it. The human reviewer's actual decisions stay human; the legacy `--human-confirmed` flag
-supplies no authenticated authority.
+it. The human reviewer's actual decisions stay human; the local Claims Lock record
+supplies no authenticated identity.
 
 See [INSTALL-CLAUDE.md](INSTALL-CLAUDE.md), [HOST-MATRIX.md](../HOST-MATRIX.md), and
 [ADR 0017](adr/0017-specialist-routing-and-current-scope.md) for current scope.

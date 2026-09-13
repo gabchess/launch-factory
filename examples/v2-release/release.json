@@ -1,0 +1,516 @@
+{
+  "format": "launch-factory/v2",
+  "product": "Launch Factory",
+  "title": "Launch Factory v2: review the whole launch",
+  "version": "2.0.0",
+  "start_date": "2026-09-14",
+  "timezone": "America/Sao_Paulo",
+  "cta": {
+    "label": "Try Launch Factory v2",
+    "url": "https://github.com/gabchess/launch-factory"
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Launch Factory builds a local review package from a release folder.",
+      "source": "sources/release-notes.md",
+      "start": 21,
+      "quote": "Launch Factory builds a local review package from a release folder."
+    },
+    {
+      "id": "c2",
+      "text": "The package includes a captioned social video, a blog post, five email variants, a changelog, a login animation, and an in-app popup.",
+      "source": "sources/release-notes.md",
+      "start": 90,
+      "quote": "The package includes a captioned social video, a blog post, five email variants, a changelog, a login animation, and an in-app popup."
+    },
+    {
+      "id": "c3",
+      "text": "Every copy block cites claim IDs, and each claim has an exact quote from a local source file.",
+      "source": "sources/release-notes.md",
+      "start": 225,
+      "quote": "Every copy block cites claim IDs, and each claim has an exact quote from a local source file."
+    },
+    {
+      "id": "c4",
+      "text": "The campaign plan covers two weeks across email, blog, changelog, popup, login, LinkedIn, X, Threads, Instagram, and TikTok.",
+      "source": "sources/release-notes.md",
+      "start": 320,
+      "quote": "The campaign plan covers two weeks across email, blog, changelog, popup, login, LinkedIn, X, Threads, Instagram, and TikTok."
+    },
+    {
+      "id": "c5",
+      "text": "A person reviews claims before a normal build. Finished assets still need human review. Nothing publishes, sends, or schedules.",
+      "source": "sources/release-notes.md",
+      "start": 446,
+      "quote": "A person reviews claims before a normal build. Finished assets still need human review. Nothing publishes, sends, or schedules."
+    },
+    {
+      "id": "c6",
+      "text": "The build uses Python and FFmpeg locally. The AI agent writes the drafts in its host; the command line validates and renders them.",
+      "source": "sources/release-notes.md",
+      "start": 575,
+      "quote": "The build uses Python and FFmpeg locally. The AI agent writes the drafts in its host; the command line validates and renders them."
+    },
+    {
+      "id": "c7",
+      "text": "A changed source invalidates its Claims Lock. The builder refuses to overwrite an existing package.",
+      "source": "sources/release-notes.md",
+      "start": 707,
+      "quote": "A changed source invalidates its Claims Lock. The builder refuses to overwrite an existing package."
+    }
+  ],
+  "blog": {
+    "headline": {
+      "text": "Launch Factory v2 builds the files your team needs to review",
+      "claims": [
+        "c1",
+        "c2"
+      ]
+    },
+    "body": [
+      {
+        "text": "Launch Factory v2 turns a release folder into a local package you can open in a browser. Play the captioned video, read the blog and emails, then check the animation and popup in the same review session.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      },
+      {
+        "text": "The AI agent writes from the release sources. Python checks the inputs and renders the package, while FFmpeg cuts the supplied footage and burns in the captions. The command line does not call a paid model or media provider.",
+        "claims": [
+          "c2",
+          "c6"
+        ]
+      },
+      {
+        "text": "Each copy block cites claim IDs. The claims point to exact quotes in local files so a reviewer can check what the release supports. A matching quote confirms the source reference; a person still has to judge whether the writing preserves its meaning.",
+        "claims": [
+          "c3",
+          "c5"
+        ]
+      },
+      {
+        "text": "Five email variants let the team address different audiences. The campaign plan connects them with the other assets across two weeks, including written social and video posts. Dates are proposals for review. Nothing is scheduled.",
+        "claims": [
+          "c2",
+          "c4",
+          "c5"
+        ]
+      },
+      {
+        "text": "A normal build requires a person to review the claims first. If the source changes, that decision becomes stale. Each build also needs a new output folder, so the earlier package stays available for comparison.",
+        "claims": [
+          "c5",
+          "c7"
+        ]
+      },
+      {
+        "text": "Start with the included example to inspect the output, then bring your own release notes, transcript, footage, and audience choices. Final writing and media approval remain with your team.",
+        "claims": [
+          "c1",
+          "c2",
+          "c5"
+        ]
+      }
+    ]
+  },
+  "changelog": {
+    "headline": {
+      "text": "v2.0.0 · A complete local review package",
+      "claims": [
+        "c1",
+        "c2"
+      ]
+    },
+    "body": [
+      {
+        "text": "Build the captioned video, blog, five emails, changelog, login animation, and popup as files you can inspect.",
+        "claims": [
+          "c2"
+        ]
+      },
+      {
+        "text": "Review a proposed two-week campaign alongside source quotes. Changed sources require a new Claims Lock; existing packages are preserved.",
+        "claims": [
+          "c3",
+          "c4",
+          "c7"
+        ]
+      }
+    ]
+  },
+  "popup": {
+    "headline": {
+      "text": "Your launch, ready to review",
+      "claims": [
+        "c1",
+        "c2"
+      ]
+    },
+    "body": [
+      {
+        "text": "Open the video, writing, and motion previews from one local package.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      },
+      {
+        "text": "Your team approves the assets before publication.",
+        "claims": [
+          "c5"
+        ]
+      }
+    ]
+  },
+  "animation": {
+    "headline": {
+      "text": "Review the whole launch",
+      "claims": [
+        "c1",
+        "c2"
+      ]
+    },
+    "body": [
+      {
+        "text": "Source-backed drafts. Playable previews. Your team makes the final call.",
+        "claims": [
+          "c2",
+          "c3",
+          "c5"
+        ]
+      }
+    ]
+  },
+  "emails": [
+    {
+      "segment": "Lead · SMB",
+      "subject": {
+        "text": "Start with one release folder",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      },
+      "body": [
+        {
+          "text": "Try the local example before using your own release files. Version 2 produces a package with the video, writing, and motion previews together.",
+          "claims": [
+            "c1",
+            "c2"
+          ]
+        },
+        {
+          "text": "Publication stays with your team.",
+          "claims": [
+            "c5"
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "Lead · Agency",
+      "subject": {
+        "text": "Give your client a package they can inspect",
+        "claims": [
+          "c3",
+          "c5"
+        ]
+      },
+      "body": [
+        {
+          "text": "Each copy block cites claim IDs, and the package includes the source quotes. Your reviewer can check the claims before approving the finished work.",
+          "claims": [
+            "c3",
+            "c5"
+          ]
+        },
+        {
+          "text": "Publication stays with your team.",
+          "claims": [
+            "c5"
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "Lead · Reseller / Affiliate",
+      "subject": {
+        "text": "Take a look at the v2 review workflow",
+        "claims": [
+          "c1",
+          "c3",
+          "c6"
+        ]
+      },
+      "body": [
+        {
+          "text": "The build runs locally with Python and FFmpeg. Open the example to see how source-backed drafts become assets for a human review.",
+          "claims": [
+            "c1",
+            "c3",
+            "c6"
+          ]
+        },
+        {
+          "text": "Publication stays with your team.",
+          "claims": [
+            "c5"
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "Customer · SMB",
+      "subject": {
+        "text": "The v2 package includes playable previews",
+        "claims": [
+          "c2",
+          "c5"
+        ]
+      },
+      "body": [
+        {
+          "text": "The captioned video, login animation, and popup now sit alongside your launch writing. Review the complete package before deciding what to publish.",
+          "claims": [
+            "c2",
+            "c5"
+          ]
+        },
+        {
+          "text": "Publication stays with your team.",
+          "claims": [
+            "c5"
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "Customer · Agency",
+      "subject": {
+        "text": "Keep each launch revision available",
+        "claims": [
+          "c4",
+          "c7"
+        ]
+      },
+      "body": [
+        {
+          "text": "Version 2 refuses to overwrite an existing package. Changed sources require a new Claims Lock, and the campaign plan stays available for review with the assets.",
+          "claims": [
+            "c4",
+            "c7"
+          ]
+        },
+        {
+          "text": "Publication stays with your team.",
+          "claims": [
+            "c5"
+          ]
+        }
+      ]
+    }
+  ],
+  "written_social": {
+    "linkedin": [
+      {
+        "text": "Launch Factory v2 produces the files a team needs to review a release: a captioned video, blog, five emails, changelog, login animation, and popup. Each copy block cites its source claims. A two-week plan connects the assets, and the team controls publication.",
+        "claims": [
+          "c2",
+          "c3",
+          "c4",
+          "c5"
+        ]
+      }
+    ],
+    "x": [
+      {
+        "text": "Launch Factory v2: a release folder becomes six launch assets and a two-week campaign plan. Source quotes travel with the drafts. Your team reviews the output before anything goes out.",
+        "claims": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "c5"
+        ]
+      }
+    ],
+    "threads": [
+      {
+        "text": "The launch package should be easy to inspect. In Launch Factory v2, you can play the video and open the writing, login animation, and popup from one local page. Source quotes are included for review.",
+        "claims": [
+          "c1",
+          "c2",
+          "c3"
+        ]
+      }
+    ]
+  },
+  "video": {
+    "footage": "sources/walkthrough.mp4",
+    "start": 0,
+    "duration": 12,
+    "captions": [
+      {
+        "text": "Launch Factory v2 builds a local review package.",
+        "claims": [
+          "c1"
+        ],
+        "start": 0,
+        "end": 4
+      },
+      {
+        "text": "Six launch assets share source-backed claims.",
+        "claims": [
+          "c2",
+          "c3"
+        ],
+        "start": 4,
+        "end": 8
+      },
+      {
+        "text": "Your team reviews the package before publication.",
+        "claims": [
+          "c5"
+        ],
+        "start": 8,
+        "end": 12
+      }
+    ]
+  },
+  "campaign": [
+    {
+      "day": 0,
+      "channel": "changelog",
+      "audience": "Current users",
+      "message": {
+        "text": "Introduce the v2 local package.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 0,
+      "channel": "login",
+      "audience": "Signed-in users",
+      "message": {
+        "text": "Show the release announcement.",
+        "claims": [
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 1,
+      "channel": "blog",
+      "audience": "Builders and marketing teams",
+      "message": {
+        "text": "Explain how the package is built and reviewed.",
+        "claims": [
+          "c1",
+          "c5",
+          "c6"
+        ]
+      }
+    },
+    {
+      "day": 2,
+      "channel": "email",
+      "audience": "Five named segments",
+      "message": {
+        "text": "Send the appropriate segment variant after approval.",
+        "claims": [
+          "c2",
+          "c5"
+        ]
+      }
+    },
+    {
+      "day": 3,
+      "channel": "linkedin",
+      "audience": "Marketing operators",
+      "message": {
+        "text": "Show source checks and human review.",
+        "claims": [
+          "c3",
+          "c5"
+        ]
+      }
+    },
+    {
+      "day": 4,
+      "channel": "ig",
+      "audience": "Builders",
+      "message": {
+        "text": "Share the captioned walkthrough.",
+        "claims": [
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 5,
+      "channel": "tiktok",
+      "audience": "Builders",
+      "message": {
+        "text": "Show the v2 review page in a short video.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 7,
+      "channel": "popup",
+      "audience": "Current users",
+      "message": {
+        "text": "Invite the team to inspect the package.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 9,
+      "channel": "x",
+      "audience": "Builders",
+      "message": {
+        "text": "Summarize the release and link to the repo.",
+        "claims": [
+          "c1",
+          "c2"
+        ]
+      }
+    },
+    {
+      "day": 11,
+      "channel": "threads",
+      "audience": "Marketing teams",
+      "message": {
+        "text": "Explain what a reviewer can inspect.",
+        "claims": [
+          "c2",
+          "c3",
+          "c5"
+        ]
+      }
+    },
+    {
+      "day": 13,
+      "channel": "email",
+      "audience": "Interested leads",
+      "message": {
+        "text": "Follow up with the example and source workflow.",
+        "claims": [
+          "c1",
+          "c3"
+        ]
+      }
+    }
+  ]
+}

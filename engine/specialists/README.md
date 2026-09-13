@@ -26,7 +26,7 @@ The project files follow current [Codex custom subagent documentation](https://d
 
 ## Maintainer boundaries
 
-Do not translate a recommendation into `transition_slot.py --human-confirmed`. The legacy helper does not implement authenticated, ordered human decisions. This change does not repair that engine or supply the future app and n8n service. The historical Claude v0.2.0 ZIP remains a legacy skill-only archive and excludes this layer. Use the full repository project doors for the current layer.
+Recommendations grant no human approval. V2 uses the local Claims Lock command and the full repository project entry points. The earlier state-transition helper has been removed.
 
 Reference banks contain original reusable guidance. Private course sources, paid media and machine-specific product paths are not runtime dependencies. Optional carousel work requires explicit opt-in. All deliverables remain drafts until the actual human reviews their exact versions.
 
