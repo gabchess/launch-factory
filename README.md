@@ -8,7 +8,7 @@
 
 Launch Factory turns source-backed drafts and footage into a local launch package. Open one page to review the video, writing, animation, and popup, with a two-week campaign plan alongside them.
 
-**The AI agent writes in Codex or Claude Code. Python validates and renders the files. Your team approves them.** Nothing publishes, sends, or schedules.
+**An AI agent writes in Codex or Claude Code. Python then validates and renders the files for your team's approval.** Nothing publishes, sends, or schedules.
 
 ## See the output
 
@@ -23,7 +23,7 @@ python3 -m http.server 8768 --bind 127.0.0.1 --directory runs/v2-example
 
 Open **http://127.0.0.1:8768**. Requires Python 3.10+ and FFmpeg with the `subtitles` filter. No Python packages or paid API calls are needed to build. On macOS, `brew install ffmpeg` supplies the media tools; on Ubuntu, use `sudo apt install ffmpeg`.
 
-The example uses this project's release notes and a recorded documentation walkthrough. Its output files are real; its approval status is an explicitly labelled rehearsal.
+The example uses this project's release notes and a recorded documentation walkthrough to build real output files for a labelled rehearsal without human approval.
 
 | Output | Files to review |
 |---|---|
@@ -63,13 +63,13 @@ After drafting, inspect the actual output and follow [the review checklist](docs
 - FFmpeg creates and probes the movie. The completed package records hashes for every file.
 - A failed build leaves no completed package. Earlier output stays untouched.
 
-These checks do not judge whether a claim supports a paraphrase, whether the writing fits your brand, or whether a video looks and sounds right. A person reviews those decisions.
+A person reviews whether each claim supports its paraphrase, the writing fits the brand, and the video looks and sounds right.
 
 ## Scope
 
-V2 is a local tool for an agent-assisted workflow. Bring readable source files, drafts, timed captions, and footage. It does not transcribe Loom URLs, invent a brand voice, generate actor footage, or operate a hosted app. The login animation is a web component preview; it is not a Lottie export or an installed login-page integration.
+V2 is a local tool for an agent-assisted workflow. Bring readable source files, drafts, timed captions, and footage. It does not transcribe Loom URLs, invent a brand voice, generate actor footage, or run as a hosted app. The login animation is an HTML/CSS web component preview. Lottie export and login-page installation also remain outside the tool.
 
-No new agent framework was added. The existing specialist protocols cover drafting and review; Python's standard library and FFmpeg cover the build. Optional provider recipes remain separate and require their own access and approval.
+Existing specialist protocols guide drafting and review. Python's standard library and FFmpeg handle the build. Optional provider recipes require separate access and approval.
 
 ## Develop
 

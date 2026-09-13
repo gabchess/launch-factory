@@ -9,6 +9,6 @@
 | Review package | Generated assets, campaign plan, and their evidence |
 | Reviewer | The person who decides whether the claims and assets are suitable |
 | Voice bank | Selected writing examples used for style, not as product evidence |
-| Example | A labelled rehearsal; it supplies no human approval |
+| Example | A labelled rehearsal without human approval |
 
-Use plain names in copy. The campaign plan proposes dates; it does not schedule posts.
+Use plain names in copy. The campaign plan proposes dates. Scheduling happens outside this tool.

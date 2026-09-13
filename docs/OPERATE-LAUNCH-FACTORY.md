@@ -17,7 +17,7 @@ audience: Local operators and their human reviewers
 
 ## Operational foreground
 
-V2 builds local files. The operator supplies source-backed drafts and footage. A person decides which claims and final assets to approve. This procedure is ready for owner review; it is not an approved company policy.
+V2 builds local files. The operator supplies source-backed drafts and footage. A person decides which claims and final assets to approve. The owner must approve this procedure before anyone treats it as company policy.
 
 ## Purpose and outcome
 
@@ -42,7 +42,7 @@ Use this procedure for a local build. Publishing, sending, scheduling, and paid 
 
 ## Roles and decision rights
 
-The operator or AI host prepares sources and drafts. The human reviewer checks claim meaning and records Claims Lock in their own terminal. The operator runs the build. Final asset approval and publication belong to the human reviewer; an AI agent cannot act as that person.
+The operator or AI host prepares sources and drafts. The human reviewer checks each claim's meaning and records Claims Lock in their own terminal. The operator runs the build. The human reviewer approves the final assets and any publication.
 
 ## Systems, inputs, and records
 
@@ -54,12 +54,12 @@ Keep one release folder containing `release.json`, its named source files, foota
 2. **Record the human decision.** The reviewer checks meaning and runs `python3 launch_factory.py lock-claims RELEASE_FOLDER --reviewer "Your name"`. Only that person types `LOCK CLAIMS`. If a claim is wrong or incomplete, return to step 1.
 3. **Draft the assets.** The AI host uses the channel protocols to fill copy blocks, five email segments, timed captions, and campaign rows in `release.json`. Each copy block cites claim IDs. The operator resolves missing evidence instead of inventing it.
 4. **Build a new revision.** Run `./run.sh RELEASE_FOLDER --out runs/NEW_REVISION`. A nonzero exit means no completed package. Fix the named error and repeat this step using a new output folder.
-5. **Verify and inspect.** Run `python3 launch_factory.py verify runs/NEW_REVISION`. Serve that folder locally and open `index.html`. Read every email and check the campaign sequence. Play the full video with sound; inspect captions, the animation, and the popup's dismissal. Source checks do not replace a person's review of meaning or quality.
+5. **Verify and inspect.** Run `python3 launch_factory.py verify runs/NEW_REVISION`. Serve that folder locally and open `index.html`. Read every email and check the campaign sequence. Play the full video with sound; inspect the captions, animation, and popup dismissal. Source checks do not replace a person's review of meaning or quality.
 6. **Retain the review.** The reviewer records requested changes or approval with the package manifest hash in their own review system. Any edited asset needs another review. A source change returns to step 1. Publishing stays outside this tool.
 
 ## Decision points
 
-Claims Lock permits drafting from that source revision. It does not approve the finished assets. A successful build permits review. It does not permit publication. The local decision file records an operator's assertion; it does not authenticate their identity.
+Claims Lock permits drafting from that source revision. Finished assets require a separate approval. A successful build makes the package ready for review. Publication requires another decision. The local decision file records an operator's assertion without authenticating their identity.
 
 ## Exceptions and escalation
 
@@ -77,11 +77,11 @@ A build is complete when `verify` passes and the output files are inspectable. H
 
 ## Evidence basis and open items
 
-The implementation and tests define the executable behavior. `docs/V2-AUDIT.md` records the checks. The bundled example rehearses rendering without human approval. Visual, audio, brand, and semantic acceptance remain with the human reviewer.
+The implementation and tests define the executable behavior. `docs/V2-AUDIT.md` records the checks. The bundled example rehearses rendering without human approval. The human reviewer decides whether the visuals, audio, writing, and claim meanings are acceptable.
 
 ## Governance
 
-Gabriel owns this procedure. Review it each major release or when inputs, authority, rendering, or delivery changes. Report corrections through the repository's issues. Retire this version when a later procedure replaces it.
+Gabriel owns this procedure. Review it at each major release or when inputs, authority, rendering, or delivery change. Report corrections through the repository's issues. Retire this version when a later procedure replaces it.
 
 ## References and related artifacts
 
