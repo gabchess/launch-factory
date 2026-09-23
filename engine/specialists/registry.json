@@ -1,0 +1,301 @@
+{
+  "schema_version": "specialist-registry/v1",
+  "layer_version": "0.3.1",
+  "roles": {
+    "evidence_editor": {
+      "skill": "lf-evidence-review",
+      "description": "Reviews product evidence and exact source spans before drafting.",
+      "reference": "engine/specialists/references/evidence.md",
+      "agents": {
+        "codex": "lf_evidence_editor",
+        "claude": "lf-evidence-editor"
+      }
+    },
+    "video_lead": {
+      "skill": "lf-video-production",
+      "description": "Leads source-led social video concept, script, shot plan, edit and review.",
+      "reference": "engine/specialists/references/video.md",
+      "agents": {
+        "codex": "lf_video_lead",
+        "claude": "lf-video-lead"
+      },
+      "support_skills": [
+        "short_motion_finishing"
+      ],
+      "production_protocol": "engine/specialists/video-production/PROTOCOL.md"
+    },
+    "motion_designer": {
+      "skill": "lf-login-animation",
+      "description": "Designs concise login-page motion from approved UI and copy.",
+      "reference": "engine/specialists/references/animation.md",
+      "agents": {
+        "codex": "lf_motion_designer",
+        "claude": "lf-motion-designer"
+      },
+      "support_skills": [
+        "short_motion_finishing"
+      ]
+    },
+    "linkedin_editor": {
+      "skill": "lf-linkedin",
+      "description": "Writes and reviews LinkedIn posts with grounded professional relevance.",
+      "reference": "engine/specialists/references/linkedin.md",
+      "agents": {
+        "codex": "lf_linkedin_editor",
+        "claude": "lf-linkedin-editor"
+      }
+    },
+    "social_editor": {
+      "skill": "lf-written-social",
+      "description": "Adapts grounded written social copy for X and Threads.",
+      "reference": "engine/specialists/references/social.md",
+      "agents": {
+        "codex": "lf_social_editor",
+        "claude": "lf-social-editor"
+      }
+    },
+    "blog_editor": {
+      "skill": "lf-blog",
+      "description": "Drafts a source-linked feature article in the selected brand voice.",
+      "reference": "engine/specialists/references/blog.md",
+      "agents": {
+        "codex": "lf_blog_editor",
+        "claude": "lf-blog-editor"
+      }
+    },
+    "email_editor": {
+      "skill": "lf-email-segments",
+      "description": "Creates five distinct announcement variants by buyer and customer segment.",
+      "reference": "engine/specialists/references/email.md",
+      "agents": {
+        "codex": "lf_email_editor",
+        "claude": "lf-email-editor"
+      }
+    },
+    "changelog_editor": {
+      "skill": "lf-changelog",
+      "description": "Turns verified changes into a concise, useful changelog entry.",
+      "reference": "engine/specialists/references/changelog.md",
+      "agents": {
+        "codex": "lf_changelog_editor",
+        "claude": "lf-changelog-editor"
+      }
+    },
+    "popup_designer": {
+      "skill": "lf-popup",
+      "description": "Pairs in-app popup copy with a coherent graphic and interruption context.",
+      "reference": "engine/specialists/references/popup.md",
+      "agents": {
+        "codex": "lf_popup_designer",
+        "claude": "lf-popup-designer"
+      }
+    },
+    "campaign_planner": {
+      "skill": "lf-campaign-calendar",
+      "description": "Plans a weekly campaign with distinct channel roles and explicit asset bindings.",
+      "reference": "engine/specialists/references/campaign.md",
+      "agents": {
+        "codex": "lf_campaign_planner",
+        "claude": "lf-campaign-planner"
+      }
+    },
+    "carousel_designer": {
+      "skill": "lf-carousel",
+      "description": "Creates an explicitly requested, source-grounded carousel with a page-by-page argument.",
+      "reference": "engine/specialists/references/carousel.md",
+      "agents": {
+        "codex": "lf_carousel_designer",
+        "claude": "lf-carousel-designer"
+      }
+    },
+    "quality_reviewer": {
+      "skill": "lf-deliverable-review",
+      "description": "Reviews an exact artifact version against claims, voice and channel requirements.",
+      "reference": "engine/specialists/references/review.md",
+      "agents": {
+        "codex": "lf_quality_reviewer",
+        "claude": "lf-quality-reviewer"
+      }
+    }
+  },
+  "routes": {
+    "social_video": {
+      "role": "video_lead",
+      "slot": 1,
+      "channels": [
+        "instagram",
+        "tiktok"
+      ],
+      "capability": "video-render",
+      "rubric": [
+        "source_truth",
+        "viewer_relevance",
+        "spoken_copy",
+        "captions",
+        "render_inspection",
+        "duration_at_most_30s"
+      ]
+    },
+    "blog": {
+      "role": "blog_editor",
+      "slot": 2,
+      "channels": [
+        "blog"
+      ],
+      "rubric": [
+        "source_truth",
+        "reader_job",
+        "structure",
+        "brand_voice",
+        "complete_article"
+      ]
+    },
+    "email_segments": {
+      "role": "email_editor",
+      "slot": 3,
+      "channels": [
+        "email"
+      ],
+      "segments": [
+        "lead_smb",
+        "lead_agency",
+        "lead_reseller_affiliate",
+        "customer_smb",
+        "customer_agency"
+      ],
+      "rubric": [
+        "source_truth",
+        "five_distinct_variants",
+        "segment_relevance",
+        "subject_preheader",
+        "cta"
+      ]
+    },
+    "changelog": {
+      "role": "changelog_editor",
+      "slot": 4,
+      "channels": [
+        "changelog"
+      ],
+      "rubric": [
+        "source_truth",
+        "change_detail",
+        "availability_qualifiers",
+        "first_action"
+      ]
+    },
+    "login_animation": {
+      "role": "motion_designer",
+      "slot": 5,
+      "channels": [
+        "login"
+      ],
+      "capability": "motion-render",
+      "rubric": [
+        "source_truth",
+        "readability",
+        "loop_seam",
+        "reduced_motion",
+        "render_inspection"
+      ]
+    },
+    "in_app_popup": {
+      "role": "popup_designer",
+      "slot": 6,
+      "channels": [
+        "in_app"
+      ],
+      "capability": "image-render",
+      "rubric": [
+        "source_truth",
+        "context_fit",
+        "graphic_copy_match",
+        "dismissal",
+        "render_inspection"
+      ]
+    },
+    "campaign_plan": {
+      "role": "campaign_planner",
+      "slot": 7,
+      "channels": [
+        "calendar"
+      ],
+      "rubric": [
+        "source_truth",
+        "weekly_cadence",
+        "distinct_angles",
+        "timezone",
+        "asset_bindings"
+      ]
+    },
+    "linkedin_post": {
+      "role": "linkedin_editor",
+      "slot": null,
+      "channels": [
+        "linkedin"
+      ],
+      "rubric": [
+        "source_truth",
+        "professional_relevance",
+        "specific_insight",
+        "selected_voice",
+        "no_invented_experience"
+      ]
+    },
+    "written_social": {
+      "role": "social_editor",
+      "slot": null,
+      "channels": [
+        "x",
+        "threads"
+      ],
+      "rubric": [
+        "source_truth",
+        "channel_fit",
+        "distinct_angle",
+        "preserved_qualifiers"
+      ]
+    },
+    "carousel": {
+      "role": "carousel_designer",
+      "slot": null,
+      "channels": [
+        "linkedin",
+        "instagram"
+      ],
+      "opt_in": true,
+      "capability": "image-render",
+      "rubric": [
+        "source_truth",
+        "page_progression",
+        "mobile_readability",
+        "accessible_text",
+        "render_inspection"
+      ]
+    }
+  },
+  "default_package": [
+    "social_video",
+    "blog",
+    "email_segments",
+    "changelog",
+    "login_animation",
+    "in_app_popup",
+    "campaign_plan",
+    "linkedin_post",
+    "written_social"
+  ],
+  "shared_contract": "engine/specialists/CONTRACT.md",
+  "support_skills": {
+    "short_motion_finishing": {
+      "skill": "lf-short-motion-finishing",
+      "source": "engine/specialists/finishing/SKILL.md",
+      "stages": [
+        "render",
+        "review",
+        "revise"
+      ],
+      "description": "Finish an approved motion edit with cue timing, kinetic type, speech captions when applicable and truthful media lineage."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "task_id", "campaign_id", "product_id", "deliverable", "specialist", "subject", "verdict", "checks", "claims_used", "voice_refs", "requested_changes"],
+  "properties": {
+    "schema_version": {"const": "specialist-result/v1"},
+    "task_id": {"type": "string"}, "campaign_id": {"type": "string"}, "product_id": {"type": "string"}, "deliverable": {"type": "string"}, "specialist": {"type": "string"},
+    "subject": {
+      "type": "object", "additionalProperties": false,
+      "required": ["campaign_id", "product_id", "asset_id", "version", "sha256", "context_digest"],
+      "properties": {"campaign_id": {"type": "string"}, "product_id": {"type": "string"}, "asset_id": {"type": "string"}, "version": {"type": "integer", "minimum": 1}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "context_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+    },
+    "verdict": {"enum": ["recommend_review", "revise", "held"]},
+    "checks": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["criterion_id", "outcome", "evidence"], "properties": {"criterion_id": {"type": "string"}, "outcome": {"enum": ["pass", "fail", "not_tested"]}, "evidence": {"type": "string", "minLength": 1}}}},
+    "claims_used": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "voice_refs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "requested_changes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  }
+}

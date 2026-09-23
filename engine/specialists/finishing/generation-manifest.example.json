@@ -1,0 +1,51 @@
+{
+  "schema_version": "media-generation-manifest/v1",
+  "project_id": "illustrative-finishing-plan",
+  "assets": [
+    {
+      "id": "music-selection-pending",
+      "origin": "catalog",
+      "status": "planned",
+      "source_reference": "Select a permitted catalog source for the actual project",
+      "provider": null,
+      "job_id": null,
+      "provider_receipt": null,
+      "license": {
+        "status": "unknown",
+        "reference": null
+      },
+      "media": null,
+      "input_asset_ids": []
+    }
+  ],
+  "checks": [
+    {
+      "kind": "decode",
+      "status": "not_tested",
+      "asset_id": null,
+      "sha256": null,
+      "reference": null
+    },
+    {
+      "kind": "audio_listening",
+      "status": "not_tested",
+      "asset_id": null,
+      "sha256": null,
+      "reference": null
+    },
+    {
+      "kind": "visual_inspection",
+      "status": "not_tested",
+      "asset_id": null,
+      "sha256": null,
+      "reference": null
+    },
+    {
+      "kind": "human_review",
+      "status": "not_tested",
+      "asset_id": null,
+      "sha256": null,
+      "reference": null
+    }
+  ]
+}

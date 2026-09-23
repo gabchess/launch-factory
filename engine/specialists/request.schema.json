@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_id", "campaign_id", "product_id", "source_revision", "deliverable", "stage", "voice_profile", "sources", "claims", "voice_source_ids", "artifacts", "requested_reviewer"],
+  "properties": {
+    "schema_version": {"const": "specialist-request/v1"},
+    "task_id": {"type": "string", "minLength": 1},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "product_id": {"type": "string", "minLength": 1},
+    "source_revision": {"type": "string", "minLength": 1},
+    "deliverable": {"type": "string", "minLength": 1},
+    "stage": {"enum": ["source", "concept", "script", "draft", "render", "review", "revise", "package"]},
+    "voice_profile": {"type": "string", "minLength": 1},
+    "requested_reviewer": {"type": "string", "minLength": 1, "maxLength": 100, "pattern": "\\S"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
+    "voice_source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "target_asset_id": {"type": ["string", "null"]},
+    "changed_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "carousel_opt_in": {"type": "boolean", "default": false},
+    "capabilities": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "state", "receipt"], "properties": {
+      "name": {"type": "string"}, "state": {"enum": ["verified", "missing", "not_tested"]}, "receipt": {"type": "string"}
+    }}}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "path", "sha256", "product_id", "kind"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}, "product_id": {"type": "string"}, "kind": {"enum": ["fact", "voice"]}}
+    },
+    "claim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source_id", "quote", "start", "end"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "source_id": {"type": "string"}, "quote": {"type": "string", "minLength": 1}, "start": {"type": "integer", "minimum": 0}, "end": {"type": "integer", "minimum": 1}}
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "path", "sha256", "version", "product_id", "depends_on"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}, "version": {"type": "integer", "minimum": 1}, "product_id": {"type": "string"}, "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}}
+    }
+  }
+}

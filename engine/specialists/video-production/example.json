@@ -1,0 +1,179 @@
+{
+  "schema_version": "production-job/v1",
+  "job_key": "recipient-example-shot-01-attempt-1",
+  "revision": 1,
+  "product_id": "fictional-lamp-demo",
+  "purpose": "first_sample",
+  "state": "prepared",
+  "story": {
+    "angle": {
+      "path": "angle.txt",
+      "sha256": "2089cd460f8c0448a1e482c55339e78c845b66bdf992e74c382e20cdf6f5af09",
+      "version": 1
+    },
+    "script": {
+      "path": "script.txt",
+      "sha256": "b855a26522cdc7239a587772aec1fc45324d8004a1ea98c7a54bc0d5a5db4d72",
+      "version": 1
+    },
+    "sketch": {
+      "path": "sketch.txt",
+      "sha256": "67d06c1ea7ffcba3816de80466ad765e259d26a29f295417ca48e632098cbd79",
+      "version": 1
+    }
+  },
+  "story_decision": null,
+  "references": [
+    {
+      "id": "identity-example",
+      "role": "identity",
+      "binding": {
+        "path": "identity.txt",
+        "sha256": "1781b370931b2a8e1e29b9cce500ae03c170cae9870807ed12cbe801d8be5526",
+        "version": 1
+      }
+    },
+    {
+      "id": "voice-example",
+      "role": "voice",
+      "binding": {
+        "path": "voice.txt",
+        "sha256": "6ab63a7faa7764bca9a55fb7f572166f7b0d3907796e48dd6e72a3ded02aa7ed",
+        "version": 1
+      }
+    },
+    {
+      "id": "setting-example",
+      "role": "setting",
+      "binding": {
+        "path": "setting.txt",
+        "sha256": "4287a08b11783f13b146d2fc5aa4ff121647361df6ddabf89675647f8cac378d",
+        "version": 1
+      }
+    }
+  ],
+  "reference_decision": null,
+  "brief": {
+    "film_duration_ms": 60000,
+    "aspect_ratio": "16:9",
+    "channel_max_duration_ms": null,
+    "audio": {
+      "dialogue": {
+        "mode": "on",
+        "plan": "Exact approved actor speech; preserve returned source audio."
+      },
+      "ambience": {
+        "mode": "on",
+        "plan": "Quiet room tone through the film; inspect seams."
+      },
+      "music": {
+        "mode": "on",
+        "plan": "Retrieve licensed quiet instrumental; duck beneath speech."
+      },
+      "sfx": {
+        "mode": "on",
+        "plan": "Subtle authored interface cues in the later insert."
+      },
+      "captions": {
+        "mode": "on",
+        "plan": "Typed Caption JSON after speech timing and transcript review."
+      }
+    },
+    "disclosures": [
+      "Dramatization: fictional actor",
+      "Concept preview"
+    ]
+  },
+  "shot": {
+    "id": "S01",
+    "speaker_id": "shopper",
+    "identity_reference_id": "identity-example",
+    "voice_reference_id": "voice-example",
+    "setting_reference_id": "setting-example",
+    "framing": "Medium close-up",
+    "camera_movement": "Static",
+    "wardrobe": "One recipient-approved plain shirt across all takes",
+    "light_direction": "Window from camera left",
+    "eyeline": "Toward partner, camera right",
+    "geography": "Shopper left seat; partner opposite; phone in right hand",
+    "action": "Look up once, then speak the exact line",
+    "action_start_ms": 0,
+    "action_end_ms": 600,
+    "edit_duration_ms": 5000,
+    "generation_duration_ms": 5000,
+    "trim_start_ms": 0,
+    "speech": {
+      "text": "Please find a lamp for less than thirty dollars.",
+      "start": 0,
+      "end": 48
+    },
+    "dialogue_source": "provider_native",
+    "audio": {
+      "dialogue": {
+        "mode": "on",
+        "plan": "Exact approved actor speech; preserve returned source audio."
+      },
+      "ambience": {
+        "mode": "off",
+        "plan": "Dry first sample; inspect for unwanted room sound."
+      },
+      "music": {
+        "mode": "off",
+        "plan": "No music in first sample."
+      },
+      "sfx": {
+        "mode": "off",
+        "plan": "No SFX in first sample."
+      },
+      "captions": {
+        "mode": "off",
+        "plan": "No sample captions; inspect native dialogue first."
+      }
+    },
+    "speech_input": null
+  },
+  "route": {
+    "gateway": "recipient-selected-gateway",
+    "producer": "recipient-selected-producer",
+    "model": "recipient-selected-model",
+    "account_scope": "recipient_owned",
+    "capability_reference": null
+  },
+  "budget": {
+    "currency": "USD",
+    "per_call_ceiling": 0,
+    "film_ceiling": 0,
+    "film_spent": 0
+  },
+  "quote": null,
+  "execution": {
+    "count": 1,
+    "auto_retry": false,
+    "after_result": "awaiting_human_review"
+  },
+  "runtime": {
+    "job_id": null,
+    "output": null
+  },
+  "generation_review": null,
+  "previous_rendition": null,
+  "price_constraints": [
+    {
+      "id": "illustrative-lamp-budget",
+      "source": {
+        "text": "Please find a lamp for less than thirty dollars.",
+        "start": 0,
+        "end": 48
+      },
+      "comparator": "lt",
+      "amount": 30,
+      "currency": "USD",
+      "spoken_form": "less than thirty dollars",
+      "illustrative_values": [
+        25,
+        29
+      ]
+    }
+  ],
+  "revision_scope": null
+}

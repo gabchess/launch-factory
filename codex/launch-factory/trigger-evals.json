@@ -1,0 +1,43 @@
+{
+  "skill": "launch-factory",
+  "version": "0.2.0",
+  "schema": "cd-augment-trigger-evals/v1",
+  "cases": [
+    {
+      "prompt": "Run launch factory on this release folder.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Turn this feature release into launch assets — Loom transcript and outline attached.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Draft the claims lock for Reviewer from these release sources.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "We shipped a new feature; prepare the blog, email segments, and changelog drafts through the gated spine.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "Publish this blog post to our site.",
+      "should_trigger": false,
+      "note": "Publishing is outside the pack — no auto-publish."
+    },
+    {
+      "prompt": "Write me a generic tweet about Monday motivation.",
+      "should_trigger": false,
+      "note": "No release folder, no claims discipline — not a launch run."
+    },
+    {
+      "prompt": "Approve this copy — looks good to ship.",
+      "should_trigger": false,
+      "note": "Approval is Reviewer's written gate, not the skill; writer never self-approves."
+    },
+    {
+      "prompt": "Send the newsletter to our HubSpot list now.",
+      "should_trigger": false,
+      "note": "No auto-send; HubSpot only after Reviewer pack approve with separately authorized tooling."
+    }
+  ]
+}

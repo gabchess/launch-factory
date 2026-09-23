@@ -1,0 +1,730 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "One film production job, recorded evidence only",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_key",
+    "revision",
+    "product_id",
+    "purpose",
+    "state",
+    "story",
+    "story_decision",
+    "references",
+    "reference_decision",
+    "brief",
+    "shot",
+    "route",
+    "budget",
+    "quote",
+    "execution",
+    "runtime",
+    "generation_review",
+    "previous_rendition",
+    "revision_scope",
+    "price_constraints"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "production-job/v1"
+    },
+    "job_key": {
+      "$ref": "#/$defs/text"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "product_id": {
+      "$ref": "#/$defs/text"
+    },
+    "purpose": {
+      "enum": [
+        "first_sample",
+        "shot_rendition",
+        "revision"
+      ]
+    },
+    "state": {
+      "enum": [
+        "prepared",
+        "submitted",
+        "returned",
+        "failed"
+      ]
+    },
+    "story": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "angle",
+        "script",
+        "sketch"
+      ],
+      "properties": {
+        "angle": {
+          "$ref": "#/$defs/binding"
+        },
+        "script": {
+          "$ref": "#/$defs/binding"
+        },
+        "sketch": {
+          "$ref": "#/$defs/binding"
+        }
+      }
+    },
+    "story_decision": {
+      "$ref": "#/$defs/nullableDecision"
+    },
+    "references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "role",
+          "binding"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/text"
+          },
+          "role": {
+            "enum": [
+              "identity",
+              "voice",
+              "setting",
+              "wardrobe",
+              "pose",
+              "product_ui"
+            ]
+          },
+          "binding": {
+            "$ref": "#/$defs/binding"
+          }
+        }
+      }
+    },
+    "reference_decision": {
+      "$ref": "#/$defs/nullableDecision"
+    },
+    "brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "film_duration_ms",
+        "aspect_ratio",
+        "channel_max_duration_ms",
+        "audio",
+        "disclosures"
+      ],
+      "properties": {
+        "film_duration_ms": {
+          "$ref": "#/$defs/duration"
+        },
+        "aspect_ratio": {
+          "enum": [
+            "16:9",
+            "9:16",
+            "1:1",
+            "4:5"
+          ]
+        },
+        "channel_max_duration_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "audio": {
+          "$ref": "#/$defs/audioPlan"
+        },
+        "disclosures": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "speaker_id",
+        "identity_reference_id",
+        "voice_reference_id",
+        "setting_reference_id",
+        "framing",
+        "camera_movement",
+        "wardrobe",
+        "light_direction",
+        "eyeline",
+        "geography",
+        "action",
+        "action_start_ms",
+        "action_end_ms",
+        "edit_duration_ms",
+        "generation_duration_ms",
+        "trim_start_ms",
+        "speech",
+        "dialogue_source",
+        "speech_input",
+        "audio"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "speaker_id": {
+          "$ref": "#/$defs/text"
+        },
+        "identity_reference_id": {
+          "$ref": "#/$defs/text"
+        },
+        "voice_reference_id": {
+          "$ref": "#/$defs/text"
+        },
+        "setting_reference_id": {
+          "$ref": "#/$defs/text"
+        },
+        "framing": {
+          "$ref": "#/$defs/text"
+        },
+        "camera_movement": {
+          "$ref": "#/$defs/text"
+        },
+        "wardrobe": {
+          "$ref": "#/$defs/text"
+        },
+        "light_direction": {
+          "$ref": "#/$defs/text"
+        },
+        "eyeline": {
+          "$ref": "#/$defs/text"
+        },
+        "geography": {
+          "$ref": "#/$defs/text"
+        },
+        "action": {
+          "$ref": "#/$defs/text"
+        },
+        "action_start_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "action_end_ms": {
+          "$ref": "#/$defs/duration"
+        },
+        "edit_duration_ms": {
+          "$ref": "#/$defs/duration"
+        },
+        "generation_duration_ms": {
+          "$ref": "#/$defs/duration"
+        },
+        "trim_start_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "speech": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/span"
+            }
+          ]
+        },
+        "dialogue_source": {
+          "enum": [
+            "provider_native",
+            "approved_audio",
+            "silent"
+          ]
+        },
+        "speech_input": {
+          "$ref": "#/$defs/nullableBinding"
+        },
+        "audio": {
+          "$ref": "#/$defs/audioPlan"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gateway",
+        "producer",
+        "model",
+        "account_scope",
+        "capability_reference"
+      ],
+      "properties": {
+        "gateway": {
+          "$ref": "#/$defs/text"
+        },
+        "producer": {
+          "$ref": "#/$defs/text"
+        },
+        "model": {
+          "$ref": "#/$defs/text"
+        },
+        "account_scope": {
+          "const": "recipient_owned"
+        },
+        "capability_reference": {
+          "$ref": "#/$defs/nullableBinding"
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "currency",
+        "per_call_ceiling",
+        "film_ceiling",
+        "film_spent"
+      ],
+      "properties": {
+        "currency": {
+          "const": "USD"
+        },
+        "per_call_ceiling": {
+          "type": "number",
+          "minimum": 0
+        },
+        "film_ceiling": {
+          "type": "number",
+          "minimum": 0
+        },
+        "film_spent": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "quote": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "producer",
+            "model",
+            "duration_ms",
+            "quantity",
+            "unit",
+            "amount",
+            "usd_estimate",
+            "conversion_reference",
+            "reference"
+          ],
+          "properties": {
+            "producer": {
+              "$ref": "#/$defs/text"
+            },
+            "model": {
+              "$ref": "#/$defs/text"
+            },
+            "duration_ms": {
+              "$ref": "#/$defs/duration"
+            },
+            "quantity": {
+              "const": 1
+            },
+            "unit": {
+              "enum": [
+                "USD",
+                "provider_credits"
+              ]
+            },
+            "amount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "usd_estimate": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "conversion_reference": {
+              "$ref": "#/$defs/nullableBinding"
+            },
+            "reference": {
+              "$ref": "#/$defs/binding"
+            }
+          }
+        }
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "auto_retry",
+        "after_result"
+      ],
+      "properties": {
+        "count": {
+          "const": 1
+        },
+        "auto_retry": {
+          "const": false
+        },
+        "after_result": {
+          "const": "awaiting_human_review"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job_id",
+        "output"
+      ],
+      "properties": {
+        "job_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "output": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/output"
+            }
+          ]
+        }
+      }
+    },
+    "generation_review": {
+      "$ref": "#/$defs/nullableDecision"
+    },
+    "revision_scope": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/text"
+        }
+      ]
+    },
+    "previous_rendition": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject",
+            "review"
+          ],
+          "properties": {
+            "subject": {
+              "$ref": "#/$defs/renditionBinding"
+            },
+            "review": {
+              "$ref": "#/$defs/decision"
+            }
+          }
+        }
+      ]
+    },
+    "price_constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "source",
+          "comparator",
+          "amount",
+          "currency",
+          "spoken_form",
+          "illustrative_values"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/text"
+          },
+          "source": {
+            "$ref": "#/$defs/span"
+          },
+          "comparator": {
+            "enum": [
+              "lt",
+              "lte",
+              "eq"
+            ]
+          },
+          "amount": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "currency": {
+            "$ref": "#/$defs/text"
+          },
+          "spoken_form": {
+            "$ref": "#/$defs/text"
+          },
+          "illustrative_values": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "duration": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "version"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/text"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "nullableBinding": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/binding"
+        }
+      ]
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "actor",
+        "decision",
+        "subject_digest",
+        "reference"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/text"
+        },
+        "actor": {
+          "$ref": "#/$defs/text"
+        },
+        "decision": {
+          "enum": [
+            "accepted",
+            "request_changes"
+          ]
+        },
+        "subject_digest": {
+          "$ref": "#/$defs/sha"
+        },
+        "reference": {
+          "$ref": "#/$defs/binding"
+        }
+      }
+    },
+    "nullableDecision": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/decision"
+        }
+      ]
+    },
+    "audioCategory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "plan"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "on",
+            "off"
+          ]
+        },
+        "plan": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "audioPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dialogue",
+        "ambience",
+        "music",
+        "sfx",
+        "captions"
+      ],
+      "properties": {
+        "dialogue": {
+          "$ref": "#/$defs/audioCategory"
+        },
+        "ambience": {
+          "$ref": "#/$defs/audioCategory"
+        },
+        "music": {
+          "$ref": "#/$defs/audioCategory"
+        },
+        "sfx": {
+          "$ref": "#/$defs/audioCategory"
+        },
+        "captions": {
+          "$ref": "#/$defs/audioCategory"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_id",
+        "asset_id",
+        "version",
+        "producer",
+        "model",
+        "media",
+        "speech_audio",
+        "manifest"
+      ],
+      "properties": {
+        "output_id": {
+          "$ref": "#/$defs/text"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/text"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "producer": {
+          "$ref": "#/$defs/text"
+        },
+        "model": {
+          "$ref": "#/$defs/text"
+        },
+        "media": {
+          "$ref": "#/$defs/binding"
+        },
+        "speech_audio": {
+          "$ref": "#/$defs/nullableBinding"
+        },
+        "manifest": {
+          "$ref": "#/$defs/binding"
+        }
+      }
+    },
+    "renditionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job",
+        "job_id",
+        "output"
+      ],
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/sha"
+        },
+        "job_id": {
+          "$ref": "#/$defs/text"
+        },
+        "output": {
+          "$ref": "#/$defs/output"
+        }
+      }
+    }
+  }
+}

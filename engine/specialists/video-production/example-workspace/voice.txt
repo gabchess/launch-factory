@@ -1,0 +1,1 @@
+Pending recipient provider/voice reference. Conversational direction only; no stable voice ID.

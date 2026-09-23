@@ -1,0 +1,8 @@
+format: cd-augment-eval/v1
+product: launch-factory
+version: 2.0.0
+cases: core-transfer-cases.yaml
+claim_boundary: >
+  These are authored host-behavior cases, not executed model evaluations.
+  CLI and browser evidence is recorded in docs/V2-AUDIT.md. Human decisions,
+  native host delegation, and provider execution need separate evidence.

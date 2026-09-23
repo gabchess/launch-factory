@@ -1,0 +1,73 @@
+{
+  "fixture": true,
+  "campaign_id": "example-camera-release",
+  "request_id": "example-ugc-001",
+  "recipe_id": "ugc-app-reveal",
+  "deliverable_scope": "standalone_product_film",
+  "product": {
+    "name": "Example Camera Assistant",
+    "url": "https://example.com"
+  },
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration_seconds": 55
+  },
+  "brief": {
+    "audience": "People shopping for used cameras",
+    "goal": "Explain the intended camera search and alert experience",
+    "cta_text": "Join the waitlist",
+    "cta_url": "https://example.com/waitlist"
+  },
+  "bindings": {
+    "source_facts": {
+      "text": "Fictional rehearsal: Example Camera Assistant accepts a buyer request. No real feature or transaction is claimed.",
+      "version": "fixture-v1",
+      "sha256": "f0cc86629bdd7fe2570a96916caa938063f7940369d2ef1737ffc63c139012cf",
+      "uri": "release/source_facts.md"
+    },
+    "brand_voice": {
+      "text": "Example brand: cream background, blue controls, readable UI; warm plain dialogue. Replace with the current brand bank.",
+      "version": "fixture-v1",
+      "sha256": "e990ae409f02135bd3926430dedfec7072bf03e09074eabb468c721b16cf8709",
+      "uri": "release/brand_voice.md"
+    },
+    "story": {
+      "text": "A couple at dinner opens a camera assistant, reviews listing photos and chooses an alert. CTA: Join the waitlist.",
+      "version": "fixture-v1",
+      "sha256": "8e5d2a7b7826085e89817e7c5d14a89743b5b09d39032fdbb660b9bb51f11730",
+      "uri": "release/story.md"
+    },
+    "approved_scope": {
+      "text": "Draft request for a 55-second product-vision film. No human approval or paid-generation authority is supplied by this example.",
+      "version": "fixture-v1",
+      "sha256": "d0b4d35e8582e040b2db36c5a37fc87e2f1aa1bb79a022d0727c3e300b3cd672",
+      "uri": "release/approved_scope.md"
+    },
+    "asset_inventory": {
+      "text": "No actors, listing photographs or audio supplied. Inventory and rights review are pending. Reuse accepted source assets when available.",
+      "version": "fixture-v1",
+      "sha256": "b3ea7ff90a7bcf7fd4e34c75225ee112d1c5a8ab26ab8096a4ca88d72615d41c",
+      "uri": "release/asset_inventory.md"
+    },
+    "audio_plan": {
+      "text": "Plan natural dialogue, quiet background music, restaurant ambience, event-timed effects and one caption source. Final cues follow the final picture.",
+      "version": "fixture-v1",
+      "sha256": "7565abcc0c44f8ffbb8e670636e0dd31a797f382aebda2a9560a544bfeb016b5",
+      "uri": "release/audio_plan.md"
+    },
+    "provider_plan": {
+      "text": "Resolve current ChatCut tools, a licensed HyperFrames template and recipient-owned voice access. No provider has been called.",
+      "version": "fixture-v1",
+      "sha256": "28a980179ea59c932dab1029cb0f49c0929cc49650eda8e1237de59bf41f6b30",
+      "uri": "release/provider_plan.md"
+    },
+    "review_schedule": {
+      "text": "Human decisions required for story/layout, new performance samples and the final assembled film. Existing exact-asset decisions may be reused by the operator.",
+      "version": "fixture-v1",
+      "sha256": "cf202c275b9c1ed58ba46f65d8287d09a71f5b6e737457e8503e13ea12da3d17",
+      "uri": "release/review_schedule.md"
+    }
+  }
+}

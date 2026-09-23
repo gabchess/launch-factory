@@ -1,0 +1,1 @@
+Fixture voice: explain the user action in plain words.
