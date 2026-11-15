@@ -3,16 +3,6 @@
 __pycache__/
 .pytest_cache/
 runs/
-
-# public-repo hygiene
 .DS_Store
-*.swp
-.vscode/
-.idea/
-node_modules/
 .env
 .env.*
-
-# Generated local packages and review captures
-packages/*/
-.qa/

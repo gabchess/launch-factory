@@ -6,7 +6,7 @@ import pytest
 
 import launch_factory as lf
 
-EXAMPLE = lf.ROOT / "examples/v2-release"
+EXAMPLE = lf.ROOT / "tests/fixtures/v2-release"
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def test_sources_bind_quote_bytes_and_revision(release):
     root, data = release
     _, before = lf.source_record(root, data)
     source = root / data["claims"][0]["source"]
-    source.write_text(source.read_text() + "\nChanged revision.\n")
+    source.write_bytes(source.read_bytes() + b"\nChanged revision.\n")
     _, after = lf.source_record(root, data)
     assert before != after
     data["claims"][0]["quote"] = "Invented feature"

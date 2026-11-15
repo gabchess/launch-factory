@@ -621,7 +621,7 @@ def build(folder: Path, destination: Path, *, example: bool = False) -> Path:
     sources, fingerprint = validate(folder, data)
     lock_bytes = None
     if example:
-        if folder != (ROOT / "examples/v2-release").resolve():
+        if folder != (ROOT / "tests/fixtures/v2-release").resolve():
             raise ValueError("--example is limited to the bundled, labelled rehearsal")
     else:
         lock_bytes = local_file(folder, "claims-lock.json").read_bytes()
@@ -645,7 +645,7 @@ def build(folder: Path, destination: Path, *, example: bool = False) -> Path:
         out.mkdir()
         render(out, folder, data, sources, fingerprint, example, lock_bytes)
         files = {
-            str(p.relative_to(out)): digest(p.read_bytes())
+            p.relative_to(out).as_posix(): digest(p.read_bytes())
             for p in sorted(out.rglob("*"))
             if p.is_file()
         }
@@ -677,7 +677,7 @@ def verify(folder: Path) -> dict:
     if any(p.is_symlink() for p in entries):
         raise ValueError("Package symlinks are not allowed")
     actual = {
-        str(p.relative_to(folder))
+        p.relative_to(folder).as_posix()
         for p in entries
         if p.is_file() and p != folder / "MANIFEST.json"
     }
