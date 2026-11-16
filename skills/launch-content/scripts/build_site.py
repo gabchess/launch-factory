@@ -222,7 +222,11 @@ def clock_html(runs):
     return f'  <section class="clock" aria-label="{escape(label)}">{took}\n    {week}\n  </section>'
 
 
-def quote_where(folder, claim_words):
+def quote_where(folder, claim):
+    """An owner claim's quote lives in the Owner sources of its gate, as check.py checks it; any other in the Snapshot."""
+    if "gate" in claim:
+        return "Owner sources"
+    claim_words = check.plain_words(claim["quote"])
     for number, line in enumerate((folder / "snapshot.md").read_text(encoding="utf-8").split("\n"), 1):
         if check.find_run(check.source_words(line), claim_words) >= 0:
             return f"Snapshot, line {number}"
@@ -232,11 +236,12 @@ def quote_where(folder, claim_words):
 def slip_html(folder, cell, owners):
     run = cell.run
     claims = {c["id"]: (n, c["quote"]) for n, c in enumerate(run["claims"], 1)}
+    places = {c["id"]: quote_where(folder, c) for c in run["claims"]}
     rows = []
     for index, line in enumerate(shown_lines((folder / "gates" / cell.gate / "draft.md").read_text(encoding="utf-8"))):
         ids = " ".join(str(claims[c][0]) for c in line.claims if c in claims)
         quotes = "".join(f'<p class="line-quote">"{escape(claims[c][1])}"</p>'
-                         f'<p class="line-where">{quote_where(folder, check.plain_words(claims[c][1]))}</p>'
+                         f'<p class="line-where">{places[c]}</p>'
                          for c in line.claims if c in claims)
         title = " is-title" if index == 0 and line.mark.startswith("#") else ""
         rows.append(f"""          <li class="line{title}">
@@ -296,11 +301,13 @@ def blog_page(folder, cell, owners, also, nav_links):
     cited = list(dict.fromkeys(c for line in lines for c in line.claims if c in claims))
     kind = KINDS[run["source"]["kind"]][0]
     where = (f'<a href="{escape(run["source"]["link"])}">{kind}</a>' if run["source"].get("link") else kind)
+    places = {c["id"]: quote_where(folder, c) if "gate" in c else f"{where}, {quote_where(folder, c).lower()}"
+              for c in run["claims"]}
     sources = "\n".join(f"""      <li class="src" id="{escape(c)}" data-key="quote/{escape(c)}">
         <span class="src-id">{claims[c][0]}</span>
         <div>
           <p class="src-quote">"{escape(claims[c][1])}"</p>
-          <p class="src-where">{where}, {quote_where(folder, check.plain_words(claims[c][1])).lower()}</p>
+          <p class="src-where">{places[c]}</p>
         </div>
       </li>""" for c in cited)
     links = [f'the <a href="../../{page}/index.html">{label}</a>' for gate, page, label in

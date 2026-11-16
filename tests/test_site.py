@@ -216,6 +216,26 @@ def test_a_blog_page_shows_each_line_next_to_its_quote(site):
     assert "Ready to post" in page and "approved by Sandbox owner" in page
 
 
+def test_an_owner_claim_names_the_owner_sources_on_the_blog_page_and_the_slip(tmp_path):
+    runs = tmp_path / "records"
+    shutil.copytree(FIXTURES / "records", runs)
+    record = json.loads((runs / "pr-csv/run.json").read_text(encoding="utf-8"))
+    record["claims"].append({"id": "c4", "gate": "blog", "quote": "CSV export ships to every plan this week."})
+    record["gates"]["blog"]["owner_sources"] = "CSV export ships to every plan this week."
+    (runs / "pr-csv/run.json").write_text(json.dumps(record), encoding="utf-8")
+    with (runs / "pr-csv/gates/blog/draft.md").open("a", encoding="utf-8") as draft:
+        draft.write("CSV export ships to every plan this week. [c4]\n")
+    assert build(tmp_path / "out", runs=runs).returncode == 0
+    page = (tmp_path / "out/blog/pr-csv/index.html").read_text(encoding="utf-8")
+    assert re.search(r'id="c4".*?<p class="src-where">Owner sources</p>', page, re.S)
+    notion = json.loads((FIXTURES / "notion.json").read_text(encoding="utf-8"))
+    notion["pr-csv/blog"]["status"] = "Drafted"
+    (tmp_path / "notion.json").write_text(json.dumps(notion), encoding="utf-8")
+    assert build(tmp_path / "board", notion=tmp_path / "notion.json", runs=runs).returncode == 0
+    slip = (tmp_path / "board/index.html").read_text(encoding="utf-8")
+    assert 'every plan this week."</p><p class="line-where">Owner sources</p>' in slip
+
+
 def test_only_a_ready_to_post_or_posted_blog_gate_gets_a_page(site):
     assert (site / "blog/pr-csv/index.html").is_file()
     assert not (site / "blog/brief-seats").exists(), "a Drafted gate is not published"
@@ -287,6 +307,8 @@ def test_every_reference_on_a_published_page_reaches_a_target_on_that_page(site)
 @pytest.mark.parametrize("entry, problem", [
     ({"status": "Drafted", "round": "two"}, 'pr-csv/blog has the round "two", expected a whole number'),
     ({"status": "Drafted", "round": None}, 'pr-csv/blog has the round "None", expected a whole number'),
+    ({"status": "Drafted", "round": 0}, 'pr-csv/blog has the round "0", expected a whole number'),
+    ({"status": "Drafted", "round": True}, 'pr-csv/blog has the round "True", expected a whole number'),
     ("Drafted", "pr-csv/blog must be an object with status, round and url"),
 ])
 def test_a_malformed_notion_page_state_fails_the_build_with_its_key(tmp_path, entry, problem):
