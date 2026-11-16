@@ -15,11 +15,11 @@ BUILD = ROOT / "skills/launch-content/scripts/build_site.py"
 FIXTURES = ROOT / "tests/fixtures/site"
 
 
-def build(out, notion=None, runs=None):
+def build(out, notion=None, runs=None, owners=None, skill=None):
     args = [sys.executable, str(BUILD), str(runs or FIXTURES / "records"),
             "--notion", str(notion or FIXTURES / "notion.json"),
-            "--owners", str(FIXTURES / "owners.json"),
-            "--skill", str(FIXTURES / "skill"),
+            "--owners", str(owners or FIXTURES / "owners.json"),
+            "--skill", str(skill or FIXTURES / "skill"),
             "--out", str(out)]
     return subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
 
@@ -93,6 +93,15 @@ def test_board_is_a_grid_of_sources_by_the_four_gates(board):
     assert rows == ["row/pr-csv", "row/brief-seats", "row/pr-rounding", "row/pr-pdf", "row/brief-dashboards", "row/pr-refactor"]
     assert [k for k in text if k.startswith("cell/pr-csv/")] == [f"cell/pr-csv/{g}" for g in ("blog", "changelog", "social", "faq")]
     assert "Thu 14:06" in text["row/pr-csv"]
+
+
+def test_the_shipped_owners_and_gate_contracts_build_a_board_with_owner_names(tmp_path):
+    shipped = ROOT / "skills/launch-content"
+    result = build(tmp_path, owners=shipped / "owners.json", skill=shipped)
+    assert result.returncode == 0, result.stderr
+    text, _, _ = parse(tmp_path / "index.html")
+    assert "Content lead" in text["head/blog"]
+    assert "Support lead" in text["head/faq"]
 
 
 def test_board_keeps_the_desk_log_look(site):

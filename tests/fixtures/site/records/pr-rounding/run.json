@@ -26,7 +26,7 @@
   "gates": {
     "changelog": {
       "contract": "gates/changelog.md",
-      "owner_role": "marketing",
+      "owner_role": "product-marketer",
       "check": {}
     }
   },

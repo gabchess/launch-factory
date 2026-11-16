@@ -37,22 +37,22 @@
   "gates": {
     "blog": {
       "contract": "gates/blog.md",
-      "owner_role": "content",
+      "owner_role": "content-lead",
       "check": {}
     },
     "changelog": {
       "contract": "gates/changelog.md",
-      "owner_role": "marketing",
+      "owner_role": "product-marketer",
       "check": {}
     },
     "social": {
       "contract": "gates/social.md",
-      "owner_role": "social",
+      "owner_role": "social-manager",
       "check": {}
     },
     "faq": {
       "contract": "gates/faq.md",
-      "owner_role": "support",
+      "owner_role": "support-lead",
       "check": {}
     }
   },

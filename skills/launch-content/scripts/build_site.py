@@ -94,7 +94,7 @@ def owner_role(skill, gate):
 
 
 def owner(owners, role):
-    name = owners.get("roles", {}).get(role, "")
+    name = owners.get("roles", {}).get(role, {}).get("display_name", "")
     return " · ".join(part for part in (name, role.capitalize()) if part)
 
 
@@ -314,7 +314,7 @@ def blog_page(folder, cell, owners, also, nav_links):
              (("changelog", "changelog", "changelog"), ("faq", "faq", "FAQ")) if gate in also]
     via_also = f'\n    <span class="via-also">Also in {" and ".join(links)}</span>' if links else ""
     role = run["gates"]["blog"].get("owner_role", "")
-    name = owners.get("roles", {}).get(role, "")
+    name = owners.get("roles", {}).get(role, {}).get("display_name", "")
     main = f"""  <p class="meta"><b>{escape(str(run['verdict'].get('tier') or 'Launch').capitalize())}</b>, arrived {when(run['source'].get('received'), '%A at %H:%M')}</p>
   <h1>{escape(title)}</h1>
 
