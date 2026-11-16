@@ -38,7 +38,8 @@ OUTCOME = re.compile(r"^\| `([a-z]+)` \|([^|\n]*)\|$", re.M)
 STAMP = re.compile(r"^[a-z0-9-]+: (\d+) lines, (\d+) claims, (\d+/\d+) parts$")
 
 VERDICT_FORMAT = ("One line. A write is: write | <tier launch or changelog> | <rule number> | <quote from the "
-                  "Snapshot> | <one line reason>. A skip or an ask is: skip | <rule number> | <quote> | <reason>.")
+                  "Snapshot> | <one line reason>. A skip is: skip | <rule number> | <quote> | <reason>. "
+                  "An ask is: ask | <rule number> | <quote> | <reason>.")
 CLAIMS_FORMAT = "A JSON list of {\"id\": \"c1\", \"quote\": \"<exact words from the Snapshot>\"}, one per claim."
 DRAFT_FORMAT = ("The Draft as markdown: one sentence per line, each line ending in its claim ids such as [c1, c2], "
                 "and a <!-- part: name --> marker before each part of the contract, in order.")

@@ -9,6 +9,7 @@ on the same pull request continues the first run instead of starting a new one.
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime
@@ -56,7 +57,10 @@ def fetch(repo, number, runs, gh=run_gh):
     }
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "snapshot.md").write_text(text, "utf-8", newline="\n")
-    (folder / "run.json").write_text(json.dumps(run, indent=2) + "\n", "utf-8", newline="\n")
+    # run.json goes last and by atomic replace: a run counts as started only once its record is whole.
+    temporary = folder / "run.json.tmp"
+    temporary.write_text(json.dumps(run, indent=2) + "\n", "utf-8", newline="\n")
+    os.replace(temporary, folder / "run.json")
     return folder
 
 

@@ -455,3 +455,14 @@ def test_state_rule_1_a_status_key_anywhere_in_the_run_record_stops_the_wake(tmp
     run["source"]["status"] = "New"
     (folder / "run.json").write_text(json.dumps(run), "utf-8")
     assert runner.current(folder, SKILL) == {"step": "stopped", "reason": "run.json holds a Notion Status; Notion owns Status"}
+
+
+def test_an_ask_verdict_opens_no_gate_and_ends_the_run(tmp_path):
+    notion = RecordedNotion()
+    folder = start("csv-export", tmp_path)
+    step = runner.answer(folder, "ask | 7 | Adds a CSV download of the weekly report. | Product must say which plans get it.", SKILL)
+    assert step["step"] == "final_push"
+    assert kinds(drive(folder, "csv-export", notion)) == ["final_push", "done"]
+    run = read_run(folder)
+    assert (run["verdict"]["decision"], run["verdict"]["rule"], run["gates"]) == ("ask", 7, {})
+    assert notion.pages == {}
