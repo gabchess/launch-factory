@@ -17,11 +17,11 @@
   "gates": {
     "blog": {"contract": "gates/blog.md", "owner_role": "content-lead", "notion_page": "", "notion_url": "",
              "round": 1, "last_comment_id": "",
-             "rounds": [{"n": 1, "baseline": "gates/blog/draft.agent.r1.md", "baseline_sha256": "",
+             "rounds": [{"n": 1, "baseline": "gates/blog/draft.agent.r1.md", "baseline_sha256": "baec7b59f7d89e4047e47df739f59ba1f3f23286fcb9ee5b1f28b8c9a71b2661",
                          "owner_sources": "", "check": {"ok": true, "lines": 7, "claims": 5, "parts": "6/6"}}]},
     "changelog": {"contract": "gates/changelog.md", "owner_role": "product-marketer", "notion_page": "", "notion_url": "",
                   "round": 1, "last_comment_id": "",
-                  "rounds": [{"n": 1, "baseline": "gates/changelog/draft.agent.r1.md", "baseline_sha256": "",
+                  "rounds": [{"n": 1, "baseline": "gates/changelog/draft.agent.r1.md", "baseline_sha256": "25e0d98944b2bca7fd85262ce170356c74bf01a87fce40e46ef34018258000b7",
                               "owner_sources": "", "check": {"ok": true, "lines": 4, "claims": 4, "parts": "4/4"}}]}
   },
   "steps": {"snapshot": "done", "verdict": "done", "claims": "done", "gates": {"blog": {"r1": "checked"}, "changelog": {"r1": "checked"}}},

@@ -4,6 +4,7 @@ Usage:
   python next.py RUN_FOLDER                 print the one next step as JSON
   python next.py RUN_FOLDER --answer FILE   give the answer to that step (FILE or - for stdin), then
                                             print the step after it
+  python next.py RUN_FOLDER --push KIND      the one command a push step prints: git add, commit, push
 
 Start a run with snapshot.py, then call this until it prints {"step": "done"} or {"step": "stopped"}.
 The model answers the verdict, the claim list and each Draft. Code parses every answer, runs the Check
@@ -20,6 +21,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -46,7 +48,8 @@ DRAFT_FORMAT = ("The Draft as markdown: one sentence per line, each line ending 
 PAGE_FORMAT = ("Search the database \"Launch gates\" for a page whose Key is the key. If one exists in any Status, "
                "create nothing and answer {\"page_id\": \"<its id>\", \"url\": \"<its url>\", \"created\": false}. "
                "Otherwise create the page with exactly these properties and content, the Owner set to the Notion "
-               "user with that email, and answer {\"page_id\": \"<id>\", \"url\": \"<url>\", \"created\": true}.")
+               "user with that email, then fetch the page back and answer {\"page_id\": \"<id>\", \"url\": \"<url>\", "
+               "\"created\": true, \"status\": \"<the Status the fetched page shows>\"}.")
 COMMENT_FORMAT = ("Read the comments on page_id. If one already holds the markdown, add nothing and answer its id. "
                   "Otherwise add one page level comment: a mention of the Notion user with the mention email, then "
                   "the markdown. Answer {\"comment_id\": \"<the comment's id>\"}.")
@@ -227,7 +230,10 @@ def gate_step(folder, run, skill):
         return push_step(folder, run, "push", "the run record, before any Notion write")
     for gate, state in gates.items():
         if state["r1"] == "checked":
-            page = render_page.notion_write(render_page.render(folder, gate, skill))
+            try:
+                page = render_page.notion_write(render_page.render(folder, gate, skill))
+            except render_page.NotionRefused as problem:
+                return {"step": "stopped", "reason": str(problem)}
             return {"step": "notion_page", "gate": gate, "key": page["key"], "database": render_page.DATABASE,
                     "page": page, "answer": PAGE_FORMAT}
         if state["r1"] == "paged":
@@ -243,15 +249,29 @@ def gate_step(folder, run, skill):
 
 
 def push_step(folder, run, kind, what):
-    """The record says committed before the commands run, so the pushed copy holds this step too. A wake
-    that starts from that copy asks for the push once more, and the guarded commit then has nothing to add."""
+    """The record says committed before the command runs, so the pushed copy holds this step too. A wake
+    that starts from that copy asks for the push once more, and the guarded commit then has nothing to add.
+    The one printed command has no shell operator, so bash, Windows PowerShell 5.1 and pwsh all run it."""
     run["steps"][kind] = "committed"
     save(folder, run)
-    root, path = folder.parent.parent.as_posix(), f"runs/{run['id']}"
-    return {"step": kind, "what": what, "commands": [
-        f"git -C \"{root}\" add \"{path}\"",
-        f"git -C \"{root}\" diff --cached --quiet || git -C \"{root}\" commit -m \"Run {run['id']}: {kind}\"",
-        f"git -C \"{root}\" push origin launch-log"], "answer": "pushed"}
+    script, target = Path(__file__).resolve().as_posix(), Path(folder).resolve().as_posix()
+    return {"step": kind, "what": what, "commands": [f"python -I \"{script}\" \"{target}\" --push {kind}"],
+            "answer": "pushed"}
+
+
+def push(folder, kind):
+    """Add, commit only when something changed, and push the run folder to launch-log. Code runs git with a
+    list of arguments, so no shell parses the commit message or the paths."""
+    folder = Path(folder).resolve()
+    run_id = load(folder)["id"]
+
+    def git(*args, check=True):
+        return subprocess.run(["git", "-C", str(folder.parent.parent), *args], check=check)
+
+    git("add", f"runs/{run_id}")
+    if git("diff", "--cached", "--quiet", check=False).returncode:
+        git("commit", "-q", "-m", f"Run {run_id}: {kind}")
+    git("push", "-q", "origin", "launch-log")
 
 
 def current(folder, skill):
@@ -262,6 +282,8 @@ def current(folder, skill):
         return {"step": "stopped", "reason": "run.json holds a Notion Status; Notion owns Status"}
     if steps.get("snapshot") != "done":
         return {"step": "stopped", "reason": "the run has no Snapshot; run snapshot.py first"}
+    if hashlib.sha256((folder / "snapshot.md").read_bytes()).hexdigest() != run.get("snapshot_sha256"):
+        return {"step": "stopped", "reason": "snapshot.md changed after the fetch; code writes the Snapshot"}
     if steps.get("error"):
         return {"step": "stopped", "reason": steps["error"]}
     if "verdict" not in run:
@@ -287,6 +309,8 @@ def apply(folder, run, step, text, skill):
             open_gates(run, skill)
         else:
             steps["claims"] = "not needed"
+            if run["verdict"]["decision"] == "ask":
+                run["source"]["open_questions"] = [run["verdict"]["reason"]]
     elif kind == "claims":
         run["claims"] = parse_claims(text, folder)
         steps["claims"] = "done"
@@ -305,6 +329,8 @@ def apply(folder, run, step, text, skill):
         steps[kind] = "done"
     elif kind == "notion_page":
         reply = parse_reply(text, {"page_id": str, "url": str, "created": bool})
+        if reply["created"] and reply.get("status") != render_page.DRAFTED:
+            raise StepFailed(f"the page read back must show the Status {render_page.DRAFTED}, got {reply.get('status')!r}")
         run["gates"][step["gate"]].update(notion_page=reply["page_id"], notion_url=reply["url"])
         steps["gates"][step["gate"]]["r1"] = "paged"
     elif kind == "notion_comment":
@@ -337,7 +363,11 @@ def main(argv=None):
     parser.add_argument("run", type=Path)
     parser.add_argument("--answer", help="a file holding the answer, or - for stdin")
     parser.add_argument("--skill", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--push", choices=("push", "final_push"), help="run the git steps of that push step")
     args = parser.parse_args(argv)
+    if args.push:
+        push(args.run, args.push)
+        return 0
     if args.answer is None:
         step = current(args.run, args.skill)
     else:

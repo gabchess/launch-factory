@@ -8,6 +8,7 @@ on the same pull request continues the first run instead of starting a new one.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -43,12 +44,14 @@ def fetch(repo, number, runs, gh=run_gh):
     diff = gh([*api, "-H", "Accept: application/vnd.github.diff"])
     body = (pull.get("body") or "").replace("\r\n", "\n").strip()
     text = f"# {pull['title']}\n\n{body}\n\nMerged on {merged_on(pull['merged_at'])}.\n\n## Diff\n\n{diff}"
+    data = text.encode("utf-8")
     run = {
         "id": folder.name,
         "source": {"kind": "pull_request", "title": pull["title"], "link": pull.get("html_url", ""),
                    "author": pull.get("user", {}).get("login", ""), "received": pull["merged_at"],
                    "do_not_say": [], "open_questions": []},
         "record_link": f"https://github.com/{repo}/tree/launch-log/runs/{folder.name}",
+        "snapshot_sha256": hashlib.sha256(data).hexdigest(),
         "mode": "suggest",
         "claims": [],
         "gates": {},
@@ -56,7 +59,7 @@ def fetch(repo, number, runs, gh=run_gh):
         "times": {"received": pull["merged_at"]},
     }
     folder.mkdir(parents=True, exist_ok=True)
-    (folder / "snapshot.md").write_text(text, "utf-8", newline="\n")
+    (folder / "snapshot.md").write_bytes(data)  # its sha256 is in run.json; next.py stops if the file changes
     # run.json goes last and by atomic replace: a run counts as started only once its record is whole.
     temporary = folder / "run.json.tmp"
     temporary.write_text(json.dumps(run, indent=2) + "\n", "utf-8", newline="\n")

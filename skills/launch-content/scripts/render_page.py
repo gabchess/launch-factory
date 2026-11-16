@@ -9,6 +9,7 @@ code path of the agent can set Ready to post, Needs changes, Posted or Rejected.
 """
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -63,7 +64,11 @@ def render(folder, gate, skill):
     terms = contract(skill, gate)
     stamp = entry["rounds"][-1]["check"]
     quotes = {c["id"]: c["quote"] for c in run["claims"]}
-    draft = (folder / "gates" / gate / "draft.md").read_text("utf-8")
+    path = folder / "gates" / gate / "draft.md"
+    body = path.read_bytes()
+    if hashlib.sha256(body).hexdigest() != entry["rounds"][-1]["baseline_sha256"]:
+        raise NotionRefused(f"{path.relative_to(folder).as_posix()} changed after the Check passed; only checked text is posted")
+    draft = body.decode("utf-8")
     door = f"Door: {terms['door']}. Blast radius: {terms['blast_radius']}."
     table = ["| Draft line | Claims and quotes |", "| --- | --- |", *draft_rows(draft, quotes)]
     key = f"{run['id']}/{gate}"

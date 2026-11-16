@@ -7,6 +7,9 @@ until next.py prints done. No test calls a model or Notion.
 
 import hashlib
 import json
+import os
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -38,7 +41,8 @@ class RecordedNotion:
         self.creates += 1
         page_id = f"page-{self.creates}"
         self.pages[step["key"]] = {"id": page_id, "url": f"https://notion.so/{page_id}", **step["page"]}
-        return {"page_id": page_id, "url": f"https://notion.so/{page_id}", "created": True}
+        read_back = self.pages[step["key"]]["properties"]["Status"]
+        return {"page_id": page_id, "url": f"https://notion.so/{page_id}", "created": True, "status": read_back}
 
     def comment(self, step):
         same = [c for c in self.comments if (c["page_id"], c["markdown"]) == (step["page_id"], step["markdown"])]
@@ -427,13 +431,21 @@ def git(*args, cwd):
     return subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, encoding="utf-8", check=True).stdout
 
 
-def run_commands(step):
+SHELLS = ["default", *(name for name in ("powershell", "pwsh") if shutil.which(name))]
+
+
+def run_commands(step, shell):
+    """Run the printed commands the way an agent would in that shell: cmd.exe or sh, Windows PowerShell 5.1, pwsh."""
+    env = {**os.environ, "PATH": os.path.dirname(sys.executable) + os.pathsep + os.environ["PATH"]}
     for command in step["commands"]:
-        done = subprocess.run(command, shell=True, capture_output=True, text=True, encoding="utf-8")
-        assert done.returncode == 0, f"{command}\n{done.stdout}{done.stderr}"
+        args = command if shell == "default" else [shell, "-NoProfile", "-Command", command]
+        done = subprocess.run(args, shell=shell == "default", capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", env=env)
+        assert done.returncode == 0, f"{shell}: {command}\n{done.stdout}{done.stderr}"
 
 
-def test_the_pushed_record_holds_its_own_push_and_a_retry_needs_no_new_commit(tmp_path):
+@pytest.mark.parametrize("shell", SHELLS)
+def test_the_pushed_record_holds_its_own_push_and_a_retry_needs_no_new_commit(tmp_path, shell):
     remote, log = tmp_path / "remote.git", tmp_path / "log"
     git("init", "-q", "--bare", str(remote), cwd=tmp_path)
     git("init", "-q", "-b", "launch-log", str(log), cwd=tmp_path)
@@ -442,11 +454,22 @@ def test_the_pushed_record_holds_its_own_push_and_a_retry_needs_no_new_commit(tm
     git("remote", "add", "origin", str(remote), cwd=log)
     folder = start("date-helpers-refactor", log / "runs")
     step = drive(folder, "date-helpers-refactor", RecordedNotion(), stop_at="final_push")[-1]
-    run_commands(step)
-    run_commands(step)
+    run_commands(step, shell)
+    run_commands(step, shell)
+    assert git("branch", "--list", "launch-log", cwd=remote).strip() == "launch-log"
     pushed = json.loads(git("show", "launch-log:runs/pr-5/run.json", cwd=remote))
     assert pushed["steps"].get("final_push", "") == "committed"
+    assert git("rev-list", "--count", "launch-log", cwd=remote).strip() == "1"
     assert runner.answer(folder, "pushed", SKILL) == {"step": "done"}
+
+
+@pytest.mark.parametrize("kind", ["push", "final_push"])
+def test_every_printed_command_holds_no_shell_operator(tmp_path, kind):
+    folder = start("csv-export", tmp_path)
+    step = drive(folder, "csv-export", RecordedNotion(), stop_at=kind)[-1]
+    for command in step["commands"]:
+        unquoted = re.sub(r'"[^"]*"', "", command)
+        assert not re.search(r"[|&;<>`$]", unquoted), command
 
 
 def test_state_rule_1_a_status_key_anywhere_in_the_run_record_stops_the_wake(tmp_path):
@@ -466,3 +489,74 @@ def test_an_ask_verdict_opens_no_gate_and_ends_the_run(tmp_path):
     run = read_run(folder)
     assert (run["verdict"]["decision"], run["verdict"]["rule"], run["gates"]) == ("ask", 7, {})
     assert notion.pages == {}
+
+
+def test_a_finished_ask_run_carries_its_open_question_and_passes_the_repo_check(tmp_path):
+    import check
+    folder = start("csv-export", tmp_path)
+    runner.answer(folder, "ask | 7 | Adds a CSV download of the weekly report. | Product must say which plans get it.", SKILL)
+    drive(folder, "csv-export", RecordedNotion())
+    assert read_run(folder)["source"]["open_questions"] == ["Product must say which plans get it."]
+    assert check.check(folder, None, SKILL)[0] == []
+
+
+def test_a_snapshot_edited_after_the_fetch_stops_the_run_before_any_step_reads_it(tmp_path):
+    folder = start("csv-export", tmp_path)
+    with open(folder / "snapshot.md", "a", encoding="utf-8") as snapshot_file:
+        snapshot_file.write("\nIt also doubles revenue for every customer overnight.\n")
+    stopped = {"step": "stopped", "reason": "snapshot.md changed after the fetch; code writes the Snapshot"}
+    assert runner.current(folder, SKILL) == stopped
+    assert runner.answer(folder, "write | launch | 5 | It also doubles revenue for every customer overnight. | x", SKILL) == stopped
+    assert "verdict" not in read_run(folder)
+
+
+def test_a_draft_swapped_after_the_check_passed_stops_the_run_and_never_reaches_notion(tmp_path):
+    folder = start("csv-export", tmp_path)
+    drive(folder, "csv-export", RecordedNotion(), stop_at="notion_page")
+    draft = folder / "gates/blog/draft.md"
+    draft.write_text("<!-- part: title -->\nMade-up launch claim [c1]\n", "utf-8")
+    assert runner.current(folder, SKILL) == {
+        "step": "stopped", "reason": "gates/blog/draft.md changed after the Check passed; only checked text is posted"}
+
+
+@pytest.mark.parametrize("status", ["Needs changes", "Ready to post", "Posted", "Rejected", "", None])
+def test_a_created_page_that_reads_back_any_status_but_drafted_stops_the_run(tmp_path, status):
+    folder = start("csv-export", tmp_path)
+    drive(folder, "csv-export", RecordedNotion(), stop_at="notion_page")
+    reply = {"page_id": "page-1", "url": "https://notion.so/page-1", "created": True}
+    if status is not None:
+        reply["status"] = status
+    step = runner.answer(folder, json.dumps(reply), SKILL)
+    assert step["step"] == "stopped"
+    assert "Drafted" in step["reason"]
+    assert read_run(folder)["gates"]["blog"]["notion_page"] == ""
+
+
+def crash_halfway(monkeypatch):
+    """A write that stops after half its text, the way a killed process or a full disk leaves a file."""
+    def write_text(self, text, encoding=None, errors=None, newline=None):
+        with open(self, "w", encoding=encoding, newline=newline) as handle:
+            handle.write(text[:len(text) // 2])
+        raise OSError("the process stopped halfway through the write")
+    monkeypatch.setattr(Path, "write_text", write_text)
+
+
+def test_a_save_cut_off_halfway_leaves_the_last_whole_run_record(tmp_path, monkeypatch):
+    folder = start("csv-export", tmp_path)
+    before = (folder / "run.json").read_bytes()
+    changed = {**read_run(folder), "verdict": {"decision": "skip"}}
+    crash_halfway(monkeypatch)
+    with pytest.raises(OSError):
+        runner.save(folder, changed)
+    monkeypatch.undo()
+    assert (folder / "run.json").read_bytes() == before
+    assert runner.current(folder, SKILL)["step"] == "verdict"
+
+
+def test_a_snapshot_cut_off_halfway_leaves_no_run_record_so_the_next_wake_starts_again(tmp_path, monkeypatch):
+    crash_halfway(monkeypatch)
+    with pytest.raises(OSError):
+        start("csv-export", tmp_path)
+    monkeypatch.undo()
+    assert not (tmp_path / "pr-3/run.json").exists()
+    assert runner.current(start("csv-export", tmp_path), SKILL)["step"] == "verdict"
