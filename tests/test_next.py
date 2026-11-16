@@ -408,3 +408,45 @@ def test_the_command_prints_the_next_step_and_takes_an_answer_file(tmp_path):
                               capture_output=True, text=True, encoding="utf-8")
     assert answered.returncode == 0, answered.stderr
     assert json.loads(answered.stdout)["step"] == "claims"
+
+
+def test_a_source_whose_text_matches_a_status_name_still_runs(tmp_path):
+    folder = start("csv-export", tmp_path)
+    run = read_run(folder)
+    run["source"]["title"] = "Ready to post"
+    (folder / "run.json").write_text(json.dumps(run), "utf-8")
+    assert runner.current(folder, SKILL)["step"] == "verdict"
+
+
+def git(*args, cwd):
+    return subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, encoding="utf-8", check=True).stdout
+
+
+def run_commands(step):
+    for command in step["commands"]:
+        done = subprocess.run(command, shell=True, capture_output=True, text=True, encoding="utf-8")
+        assert done.returncode == 0, f"{command}\n{done.stdout}{done.stderr}"
+
+
+def test_the_pushed_record_holds_its_own_push_and_a_retry_needs_no_new_commit(tmp_path):
+    remote, log = tmp_path / "remote.git", tmp_path / "log"
+    git("init", "-q", "--bare", str(remote), cwd=tmp_path)
+    git("init", "-q", "-b", "launch-log", str(log), cwd=tmp_path)
+    for key, value in (("user.name", "test"), ("user.email", "test@example.com"), ("commit.gpgsign", "false")):
+        git("config", key, value, cwd=log)
+    git("remote", "add", "origin", str(remote), cwd=log)
+    folder = start("date-helpers-refactor", log / "runs")
+    step = drive(folder, "date-helpers-refactor", RecordedNotion(), stop_at="final_push")[-1]
+    run_commands(step)
+    run_commands(step)
+    pushed = json.loads(git("show", "launch-log:runs/pr-5/run.json", cwd=remote))
+    assert pushed["steps"].get("final_push", "") == "committed"
+    assert runner.answer(folder, "pushed", SKILL) == {"step": "done"}
+
+
+def test_state_rule_1_a_status_key_anywhere_in_the_run_record_stops_the_wake(tmp_path):
+    folder = start("csv-export", tmp_path)
+    run = read_run(folder)
+    run["source"]["status"] = "New"
+    (folder / "run.json").write_text(json.dumps(run), "utf-8")
+    assert runner.current(folder, SKILL) == {"step": "stopped", "reason": "run.json holds a Notion Status; Notion owns Status"}

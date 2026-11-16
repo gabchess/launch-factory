@@ -57,12 +57,20 @@ def now():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def holds_status(value):
+def status_keys_or_values(value, values):
+    """True when value holds a key named status, or, with values set, a Notion Status option as a value."""
     if isinstance(value, dict):
-        return any(key.casefold() == "status" or holds_status(item) for key, item in value.items())
+        return any(key.casefold() == "status" or status_keys_or_values(item, values) for key, item in value.items())
     if isinstance(value, list):
-        return any(holds_status(item) for item in value)
-    return value in STATUSES
+        return any(status_keys_or_values(item, values) for item in value)
+    return values and value in STATUSES
+
+
+def holds_status(run):
+    """State rule 1. A status key anywhere, or a Status value where the loop keeps its own state. Source text
+    and claims are data, so a pull request titled "Ready to post" is not a stored Status."""
+    return (status_keys_or_values(run, False)
+            or any(status_keys_or_values(run.get(part, {}), True) for part in ("gates", "steps")))
 
 
 def load(folder):
@@ -229,10 +237,14 @@ def gate_step(folder, run, skill):
 
 
 def push_step(folder, run, kind, what):
+    """The record says committed before the commands run, so the pushed copy holds this step too. A wake
+    that starts from that copy asks for the push once more, and the guarded commit then has nothing to add."""
+    run["steps"][kind] = "committed"
+    save(folder, run)
     root, path = folder.parent.parent.as_posix(), f"runs/{run['id']}"
     return {"step": kind, "what": what, "commands": [
         f"git -C \"{root}\" add \"{path}\"",
-        f"git -C \"{root}\" commit -m \"Run {run['id']}: {kind}\"",
+        f"git -C \"{root}\" diff --cached --quiet || git -C \"{root}\" commit -m \"Run {run['id']}: {kind}\"",
         f"git -C \"{root}\" push origin launch-log"], "answer": "pushed"}
 
 
