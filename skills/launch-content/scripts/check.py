@@ -310,6 +310,8 @@ def check(folder, gate, skill):
 
 
 def main(argv=None):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Check a run record against its gate contracts.")
     parser.add_argument("run", type=Path)
     parser.add_argument("gate", nargs="?")
