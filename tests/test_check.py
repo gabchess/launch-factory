@@ -392,6 +392,7 @@ SNAPSHOT_FAILS = {
     "entity-read-as-a-word": ("the user picked", "the user&nbsp;picked", "the user nbsp picked"),
     "tag-joins-nothing": ("the filters", "the<br>filters", "keeps thefilters the"),
     "zero-width-splits": ("the filters", "the fil\u200bters", "keeps the filters"),
+    "comment-holding-a-bracket": ("# Add CSV export", "# Add CSV export\n<!-- x > a hidden claim text -->", "a hidden claim text"),
     "tag-attribute-across-lines": ("the filters", 'the <span\nclass="launch ready">filters</span>', "class launch ready"),
     "comment-hides-words": ("# Add CSV export", "# Add CSV export\n<!-- a hidden\nclaim text -->", "a hidden claim text"),
 }
@@ -506,6 +507,7 @@ CONTRACT_SHAPES = {
     "parts-not-a-list": '{"parts": "problem", "uncited": []}',
     "uncited-missing": '{"parts": ["problem", "change"]}',
     "limit-not-a-pair": '{"parts": ["problem", "change"], "uncited": [], "lines": 4}',
+    "limit-of-one": '{"parts": ["problem", "change"], "uncited": [], "lines": [4]}',
     "limit-of-text": '{"parts": ["problem", "change"], "uncited": [], "lines": ["2", "4"]}',
     "not-an-object": "[]",
 }
