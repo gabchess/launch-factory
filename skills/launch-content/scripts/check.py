@@ -20,7 +20,7 @@ CLAIM_ID = re.compile(r"[A-Za-z0-9_-]+")
 PART = re.compile(r"<!-- part: ([a-z0-9-]+) -->")
 HEADING = re.compile(r"##? ")
 CONTRACT = re.compile(r"```json\s*\n(.*?)\n```", re.S)
-MARKUP = re.compile(r"<!--.*?-->|<[^<>\n]*>", re.S)
+MARKUP = re.compile(r"<!--.*?-->|<[^<>]*>", re.S)
 WORD = re.compile(r"(?:(?<![^\W_])-(?=\d))?[^\W_]+(?:[.,'][^\W_]+)*%?")
 NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*%?")
 GATE_NAME = re.compile(r"[a-z0-9-]+")
@@ -174,6 +174,13 @@ def do_not_say(gate, lines, banned):
     return failures
 
 
+def contract_shape_ok(contract):
+    return (isinstance(contract, dict)
+            and all(isinstance(contract.get(key), list) for key in ("parts", "uncited"))
+            and all(isinstance(contract[m], list) and len(contract[m]) == 2
+                    and all(isinstance(n, int) for n in contract[m]) for m in MEASURES if m in contract))
+
+
 def check_gate(run, gate, lines, skill, quotes, banned, owner):
     path = skill / "gates" / f"{gate}.md"
     if not path.is_file():
@@ -181,6 +188,8 @@ def check_gate(run, gate, lines, skill, quotes, banned, owner):
     block = CONTRACT.search(read_text(path, ""))
     invalid = f"contract gates/{gate}.md has no valid JSON block"
     contract = read_json(block.group(1) if block else "", invalid)
+    if not contract_shape_ok(contract):
+        raise Unreadable(f"contract gates/{gate}.md must list parts and uncited, and give each limit as two numbers")
     cited = {c for line in lines for c in line.claims}
     parts = [p for p in contract["parts"] if any(line.part == p for line in lines)]
     failures = [] if lines else [f"{gate} has zero lines"]

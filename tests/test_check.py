@@ -392,6 +392,7 @@ SNAPSHOT_FAILS = {
     "entity-read-as-a-word": ("the user picked", "the user&nbsp;picked", "the user nbsp picked"),
     "tag-joins-nothing": ("the filters", "the<br>filters", "keeps thefilters the"),
     "zero-width-splits": ("the filters", "the fil\u200bters", "keeps the filters"),
+    "tag-attribute-across-lines": ("the filters", 'the <span\nclass="launch ready">filters</span>', "class launch ready"),
     "comment-hides-words": ("# Add CSV export", "# Add CSV export\n<!-- a hidden\nclaim text -->", "a hidden claim text"),
 }
 
@@ -407,6 +408,7 @@ SNAPSHOT_PASSES = {
     "tag-is-a-space": ("the filters", "the<br>filters", "keeps the filters the"),
     "emphasis-around-words": ("the filters", "the **filters**", "keeps the filters the"),
     "fullwidth": ("keeps", "\uff4beeps", "export keeps the filters"),
+    "tag-across-lines": ("the filters", 'the <span\nclass="x">filters</span>', "keeps the filters the"),
     "escaped-tag-is-text": ("the filters", "the &lt;filters&gt;", "keeps the filters the"),
 }
 
@@ -497,3 +499,24 @@ def test_a_contract_with_no_json_block_fails_with_a_fail_line(tmp_path, contract
     result = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
     assert result.returncode == 1
     assert result.stderr.splitlines() == ["FAIL contract gates/test-card.md has no valid JSON block"]
+
+
+CONTRACT_SHAPES = {
+    "empty-object": "{}",
+    "parts-not-a-list": '{"parts": "problem", "uncited": []}',
+    "uncited-missing": '{"parts": ["problem", "change"]}',
+    "limit-not-a-pair": '{"parts": ["problem", "change"], "uncited": [], "lines": 4}',
+    "limit-of-text": '{"parts": ["problem", "change"], "uncited": [], "lines": ["2", "4"]}',
+    "not-an-object": "[]",
+}
+
+
+@pytest.mark.parametrize("block", CONTRACT_SHAPES.values(), ids=CONTRACT_SHAPES.keys())
+def test_a_contract_of_the_wrong_shape_fails_with_a_fail_line(tmp_path, block):
+    skill = tmp_path / "skill"
+    shutil.copytree(FIXTURES / "skill", skill)
+    (skill / "gates/test-card.md").write_text(f"```json\n{block}\n```\n", "utf-8")
+    args = [sys.executable, str(CHECK), str(FIXTURES / "records/good-pr"), "test-card", "--skill", str(skill)]
+    result = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
+    assert result.returncode == 1
+    assert result.stderr.splitlines() == ["FAIL contract gates/test-card.md must list parts and uncited, and give each limit as two numbers"]
