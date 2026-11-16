@@ -2,7 +2,7 @@
 
 The reader is an admin who skims. The owner is the product marketer.
 
-The parts come in this order. A heading. A status tag. A one line summary. Up to three change lines. The entry holds 4 to 6 lines and 8 to 60 words.
+The parts come in this order. A heading. A status tag. A one line summary. Up to three change lines. The entry holds 4 to 6 lines and 8 to 60 words. The line minimum is one line per required part, and the word minimum is a prototype choice to be checked in the rehearsal.
 
 The gate opens for any change a user can see. Its door is two-way. Its blast radius is one entry on the `/changelog/` page.
 

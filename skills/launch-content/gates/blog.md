@@ -2,7 +2,7 @@
 
 The reader is a sales manager deciding whether to care. The owner is the content lead.
 
-The parts come in this order. A title. One opening story line or two. What changed, in two lines or three. One proof line with its label. One caveat line. A status line with the call to action. The post holds 7 to 12 lines and 60 to 250 words.
+The parts come in this order. A title. One opening story line or two. What changed, in two lines or three. One proof line with its label. One caveat line. A status line with the call to action. The post holds 7 to 12 lines and 60 to 250 words. The line minimum is one line per required part, and the word minimum is a prototype choice to be checked in the rehearsal.
 
 The gate opens for a new capability only. Its door is two-way, because the post can be edited or removed. Its blast radius is one post page on the company's own site.
 

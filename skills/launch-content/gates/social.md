@@ -2,7 +2,7 @@
 
 The reader is a sales manager scrolling. The owner is the social manager.
 
-The parts come in this order. A problem line. A change line. A proof line with its label. A status line. The post holds exactly 4 lines and 80 to 280 characters.
+The parts come in this order. A problem line. A change line. A proof line with its label. A status line. The post holds exactly 4 lines and 80 to 280 characters. The line count is one line per required part, and the character minimum is a prototype choice to be checked in the rehearsal.
 
 The gate opens for a new capability that has proof. Its door is two-way while it is a card on the site. Its blast radius is one card, which a person may later copy and post.
 

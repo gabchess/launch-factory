@@ -2,7 +2,7 @@
 
 The reader is a customer or a support agent. The owner is the support lead.
 
-The update holds 2 to 4 question and answer pairs, so 4 to 8 lines and 16 to 160 words. Each answer stays under 40 words.
+The update holds 2 to 4 question and answer pairs, so 4 to 8 lines and 16 to 160 words. Each answer stays under 40 words. The line minimum is one line per required part, and the word minimum is a prototype choice to be checked in the rehearsal.
 
 The gate opens for a change to how a user does something. Its door is two-way. Its blast radius is the answers added to the `/faq/` page.
 
