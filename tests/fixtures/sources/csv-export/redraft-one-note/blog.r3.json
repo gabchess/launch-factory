@@ -1,0 +1,11 @@
+{
+  "draft": "<!-- part: title -->\n# Send your director the weekly report as a CSV file\n\n<!-- part: story -->\nManagers asked for a way to load the weekly report into a spreadsheet or send it to their director. [c1]\n\n<!-- part: change -->\nThe weekly report can now be saved as a CSV file. [c2]\nThe file has one row per stage and a total row at the end. [c2]\n\n<!-- part: proof -->\nThe file has the columns stage and deals, then a total row with the pipeline total. [c3]\n\n<!-- part: caveat -->\nThe download covers the weekly report only. [c4]\n\n<!-- part: status -->\nOpen your weekly report and save it as a CSV file, released on 18 November 2026. [c2, c5]\n",
+  "owner_claims": [],
+  "notes": [
+    {
+      "comment_id": "owner-3",
+      "action": "followed",
+      "why": "The title now names the director."
+    }
+  ]
+}

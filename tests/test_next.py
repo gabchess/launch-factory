@@ -32,7 +32,7 @@ class RecordedNotion:
     """Stands in for the Notion connector: the gates database by Key, and the comments on each page."""
 
     def __init__(self):
-        self.pages, self.comments, self.creates = {}, [], 0
+        self.pages, self.comments, self.creates, self.updates = {}, [], 0, 0
 
     def page(self, step):
         found = self.pages.get(step["key"])
@@ -52,6 +52,30 @@ class RecordedNotion:
         self.comments.append({"id": comment_id, "page_id": step["page_id"], "mention": step["mention"],
                               "markdown": step["markdown"]})
         return {"comment_id": comment_id}
+
+    def owner_comment(self, key, text):
+        """A comment the owner leaves on a gate page."""
+        comment_id = f"owner-{sum(c['id'].startswith('owner-') for c in self.comments) + 1}"
+        self.comments.append({"id": comment_id, "page_id": self.pages[key]["id"], "mention": "", "markdown": text})
+
+    def set(self, key, **properties):
+        """A person changes properties of a page, such as its Status or its Owner sources."""
+        self.pages[key]["properties"] = {**self.pages[key]["properties"], **properties}
+
+    def update(self, step):
+        self.updates += 1
+        page = next(p for p in self.pages.values() if p["id"] == step["page_id"])
+        page["properties"] = {**page["properties"], **step["page"]["properties"]}
+        page["content"] = step["page"]["content"]
+        return {"page_id": page["id"], "status": page["properties"]["Status"], "round": page["properties"]["Round"]}
+
+    def read(self, step):
+        """The recorded Notion replies the agent hands to a sweep: each page's Status, Owner sources and comments."""
+        pages = {p["id"]: p for p in self.pages.values()}
+        return {gate: {"status": pages[page_id]["properties"]["Status"],
+                       "owner_sources": pages[page_id]["properties"]["Owner sources"],
+                       "comments": [{"id": c["id"], "text": c["markdown"]} for c in self.comments if c["page_id"] == page_id]}
+                for gate, page_id in step["pages"].items()}
 
 
 def start(example, runs):
@@ -74,8 +98,14 @@ def reply(step, example, notion):
         return (answers / f"{step['gate']}.md").read_text("utf-8")
     if kind == "repair":
         return (answers / f"{step['gate']}.repair{step['repair']}.md").read_text("utf-8")
-    if kind in ("push", "final_push"):
+    if kind == "redraft":
+        return (answers / f"{step['gate']}.r{step['round']}.json").read_text("utf-8")
+    if kind in ("push", "final_push", "sweep_push", "sweep_final_push"):
         return "pushed"
+    if kind == "notion_update":
+        return json.dumps(notion.update(step))
+    if kind == "notion_reply":
+        return json.dumps(notion.comment(step))
     if kind == "notion_page":
         return json.dumps(notion.page(step))
     if kind == "notion_comment":
@@ -600,3 +630,56 @@ def test_a_push_commits_only_the_run_folder_and_leaves_a_stray_file_out(tmp_path
     run_commands(step, "default")
     pushed = git("ls-tree", "-r", "--name-only", "launch-log", cwd=remote).split()
     assert pushed and all(path.startswith("runs/pr-5/") for path in pushed), pushed
+
+
+# B-14, the redraft loop. An owner leaves comments and sets Needs changes, and the gate's own agent redrafts.
+
+def drafted(tmp_path):
+    """The csv-export run after its first wake: four Drafted pages, each with its ping."""
+    notion = RecordedNotion()
+    folder = start("csv-export", tmp_path)
+    drive(folder, "csv-export", notion)
+    return folder, notion
+
+
+def wake(folder, answers, notion, stop_at=None):
+    """One wake over the run's gate pages: read them, hand the reading to the sweep, answer until done."""
+    reading = notion.read(runner.read(folder, SKILL))
+    steps = [runner.sweep(folder, json.dumps(reading), SKILL)]
+    while steps[-1]["step"] not in ("done", "stopped", stop_at):
+        steps.append(runner.answer(folder, reply(steps[-1], answers, notion), SKILL))
+    return steps
+
+
+def sent_back(notion, *notes, owner_sources=""):
+    for note in notes:
+        notion.owner_comment("pr-3/blog", note)
+    notion.set("pr-3/blog", Status="Needs changes", **{"Owner sources": owner_sources})
+
+
+def replies(notion):
+    """Comments the agent added to the blog page after its first ping."""
+    page = notion.pages["pr-3/blog"]["id"]
+    return [c for c in notion.comments if c["page_id"] == page and not c["id"].startswith("owner-")][1:]
+
+
+TWO_NOTES = ("Make the title about the director.", "Put the spreadsheet first in the story line.")
+
+
+def test_a_needs_changes_blog_page_with_two_comments_gets_round_2_drafted_and_a_reply_naming_both_notes(tmp_path):
+    folder, notion = drafted(tmp_path)
+    sent_back(notion, *TWO_NOTES)
+    steps = wake(folder, "csv-export/redraft-two-notes", notion)
+    assert kinds(steps) == ["redraft:blog", "sweep_push", "notion_update:blog", "notion_reply:blog", "sweep_final_push", "done"]
+    page = notion.pages["pr-3/blog"]
+    assert (page["properties"]["Status"], page["properties"]["Round"]) == ("Drafted", 2)
+    assert "| # Send your director the weekly report as a CSV file | No claim needed |" in page["content"]
+    [answer] = replies(notion)
+    assert answer["mention"] == "owner@example.com"
+    assert answer["markdown"].startswith(f"{owner_name('blog')}, round 2 of the blog Draft")
+    assert f"Followed: \"{TWO_NOTES[0]}\" The title now names the director." in answer["markdown"]
+    assert f"Followed: \"{TWO_NOTES[1]}\" The story line now opens with the spreadsheet." in answer["markdown"]
+    run = read_run(folder)
+    baseline = folder / run["gates"]["blog"]["rounds"][1]["baseline"]
+    assert baseline.name == "draft.agent.r2.md"
+    assert baseline.read_bytes() == json.loads((RUNS / "csv-export/redraft-two-notes/blog.r2.json").read_bytes())["draft"].encode()
