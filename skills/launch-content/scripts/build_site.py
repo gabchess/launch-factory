@@ -44,7 +44,7 @@ class BuildError(Exception):
 
 
 class Shown(NamedTuple):
-    """One Draft line as a reader sees it: its Markdown mark, its text without citations, and its claim ids."""
+    """One Draft line as a reader sees it: its heading mark, its text without citations, and its claim ids."""
     mark: str
     text: str
     claims: tuple[str, ...]
@@ -70,11 +70,11 @@ def shown_lines(text):
     lines = []
     for raw in text.replace("\r\n", "\n").split("\n"):
         line = raw.strip()
-        if not line or check.PART.match(line):
+        if not line or check.PART.fullmatch(line):
             continue
         cited = check.CITATIONS.search(line)
         body = (line[:cited.start()] if cited else line).strip()
-        mark = check.MARK.match(body)
+        mark = check.HEADING.match(body)
         lines.append(Shown(mark.group(0) if mark else "", body[mark.end():] if mark else body,
                            tuple(check.CLAIM_ID.findall(cited.group(0))) if cited else ()))
     return lines
@@ -224,7 +224,7 @@ def clock_html(runs):
 
 def quote_where(folder, claim_words):
     for number, line in enumerate((folder / "snapshot.md").read_text(encoding="utf-8").split("\n"), 1):
-        if check.find_run(check.words(line), claim_words) >= 0:
+        if check.find_run(check.source_words(line), claim_words) >= 0:
             return f"Snapshot, line {number}"
     return "Snapshot"
 
@@ -236,7 +236,7 @@ def slip_html(folder, cell, owners):
     for index, line in enumerate(shown_lines((folder / "gates" / cell.gate / "draft.md").read_text(encoding="utf-8"))):
         ids = " ".join(str(claims[c][0]) for c in line.claims if c in claims)
         quotes = "".join(f'<p class="line-quote">"{escape(claims[c][1])}"</p>'
-                         f'<p class="line-where">{quote_where(folder, check.words(claims[c][1]))}</p>'
+                         f'<p class="line-where">{quote_where(folder, check.plain_words(claims[c][1]))}</p>'
                          for c in line.claims if c in claims)
         title = " is-title" if index == 0 and line.mark.startswith("#") else ""
         rows.append(f"""          <li class="line{title}">
@@ -300,7 +300,7 @@ def blog_page(folder, cell, owners, also, nav_links):
         <span class="src-id">{claims[c][0]}</span>
         <div>
           <p class="src-quote">"{escape(claims[c][1])}"</p>
-          <p class="src-where">{where}, {quote_where(folder, check.words(claims[c][1])).lower()}</p>
+          <p class="src-where">{where}, {quote_where(folder, check.plain_words(claims[c][1])).lower()}</p>
         </div>
       </li>""" for c in cited)
     links = [f'the <a href="../../{page}/index.html">{label}</a>' for gate, page, label in
