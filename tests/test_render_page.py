@@ -103,3 +103,13 @@ def test_the_command_prints_the_page_payload():
                             capture_output=True, text=True, encoding="utf-8")
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["key"] == "pr-3/blog"
+
+
+def test_the_round_property_is_the_round_the_run_record_holds(tmp_path):
+    folder = tmp_path / "pr-3"
+    subprocess.run([sys.executable, "-c", "import shutil,sys; shutil.copytree(sys.argv[1], sys.argv[2])",
+                    str(PAGES / "pr-3"), str(folder)], check=True)
+    run = json.loads((folder / "run.json").read_text("utf-8"))
+    run["gates"]["blog"]["round"] = 2
+    (folder / "run.json").write_text(json.dumps(run), "utf-8")
+    assert render_page.render(folder, "blog", SKILL)["properties"]["Round"] == 2

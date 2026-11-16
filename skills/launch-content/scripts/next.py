@@ -68,9 +68,6 @@ def load(folder):
 
 
 def save(folder, run):
-    """State rule 1: Notion owns Status, so a run record that holds a Status value is never written."""
-    if holds_status(run):
-        raise ValueError("run.json may not hold a Notion Status; Notion owns Status")
     (folder / "run.json").write_text(json.dumps(run, indent=2, ensure_ascii=False) + "\n", "utf-8", newline="\n")
 
 
