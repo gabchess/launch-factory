@@ -29,7 +29,6 @@ import render_page
 STATUSES = ("Drafted", "Needs changes", "Ready to post", "Posted", "Rejected")
 DECISIONS = ("write", "skip", "ask")
 TIERS = ("launch", "changelog")
-BUILT_GATES = ("blog",)
 MAX_REPAIRS = 2
 RULE = re.compile(r"^(\d+)\. (.+)$", re.M)
 OUTCOME = re.compile(r"^\| `([a-z]+)` \|([^|\n]*)\|$", re.M)
@@ -166,8 +165,6 @@ def parse_reply(text, required):
 def open_gates(run, skill):
     _, opens = policy(skill)
     for gate in opens.get(run["verdict"]["tier"] or "", []):
-        if gate not in BUILT_GATES:
-            continue
         run["gates"][gate] = {"contract": f"gates/{gate}.md", "owner_role": render_page.contract(skill, gate)["owner_role"],
                               "notion_page": "", "notion_url": "", "round": 0, "last_comment_id": "", "rounds": []}
         run["steps"]["gates"][gate] = {"r1": "pending", "repairs": 0}
@@ -245,6 +242,8 @@ def current(folder, skill):
     folder = Path(folder)
     run = load(folder)
     steps = run["steps"]
+    if holds_status(run):
+        return {"step": "stopped", "reason": "run.json holds a Notion Status; Notion owns Status"}
     if steps.get("snapshot") != "done":
         return {"step": "stopped", "reason": "the run has no Snapshot; run snapshot.py first"}
     if steps.get("error"):
