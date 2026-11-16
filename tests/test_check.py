@@ -457,6 +457,27 @@ def test_an_owner_claim_quote_found_only_in_the_snapshot_fails(tmp_path):
     assert f"FAIL {message}" in result.stderr.splitlines()
 
 
+def owner_number(quote):
+    """owner-claim with its owner claim c4 holding a labelled number, cited by test-post."""
+    def edit(run, folder):
+        run["gates"]["test-post"]["owner_sources"] = f"Load test notes, https://example.com/load: {quote}"
+        run["claims"][3]["quote"] = quote
+        path = folder / "gates/test-post/draft.md"
+        path.write_bytes(path.read_bytes().replace(b"Exports also run on a schedule every night.", quote.encode("utf-8")))
+    return edit
+
+
+def test_an_owner_claim_whose_number_differs_from_the_same_label_in_another_output_fails(tmp_path):
+    result = run_check(owner_variant(tmp_path, owner_number("Exports of up to 90000 rows finish in under 10 seconds.")))
+    assert result.returncode == 1
+    assert "FAIL claim c4: number 90000 rows differs from 50000 rows in test-card line 4" in result.stderr.splitlines()
+
+
+def test_an_owner_claim_whose_number_matches_the_same_label_in_another_output_passes(tmp_path):
+    result = run_check(owner_variant(tmp_path, owner_number("Exports of up to 50000 rows finish in under 10 seconds.")))
+    assert result.returncode == 0, result.stderr
+
+
 def test_a_do_not_say_phrase_with_no_words_fails(tmp_path):
     result = run_check(variant(tmp_path, do_not_say=["   "]))
     assert result.stderr.splitlines() == ['FAIL Do not say phrase "   " has no words']

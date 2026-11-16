@@ -164,6 +164,17 @@ def number_failures(gate, line, quotes):
     return failures
 
 
+def owner_number_failures(claims, drafts):
+    """A number in an owner claim must match the same label in every other Output of the Source."""
+    failures = []
+    for claim in (c for c in claims if "gate" in c):
+        for value, label in numbers(plain_words(claim["quote"])):
+            failures += [f"claim {claim['id']}: number {value} {label} differs from {other} {label} in {gate} line {line.number}"
+                         for gate, lines in drafts.items() if gate != claim["gate"] and label
+                         for line in lines for other, same in numbers(line.words) if same == label and other != value]
+    return failures
+
+
 def do_not_say(gate, lines, banned):
     stream = [(line.number, word) for line in lines for word in line.words]
     failures = []
@@ -298,6 +309,7 @@ def check(folder, gate, skill):
     drafts = {name: parse_draft(read_text(folder / "gates" / name / "draft.md", "")) for name in run["gates"]}
     used = {c for lines in drafts.values() for line in lines for c in line.claims}
     failures += [f"claim {c['id']} is cited by no opened gate" for c in run["claims"] if c["id"] not in used]
+    failures += owner_number_failures(run["claims"], drafts)
     if gate and gate not in run["gates"]:
         return failures + [f"gate {gate} is not opened by run {run['id']}"], []
     stamps = []
