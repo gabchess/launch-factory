@@ -145,6 +145,7 @@ WORDLESS = {
     "dot": ". [c1]",
     "zero-width-space": "\u200b [c1]",
     "html-comment": "<!-- x --> [c1]",
+    "html-tags": "<b></b> [c1]",
     "emphasis-only": "** __ [c1]",
 }
 
@@ -181,6 +182,11 @@ def test_a_unicode_minus_is_a_sign(tmp_path):
     assert "FAIL test-post line 9: number -10 is not in its cited claims c3" in result.stderr.splitlines()
 
 
+def test_a_decimal_is_one_number(tmp_path):
+    result = run_check(variant(tmp_path, post=("under 10 seconds", "under 10.50000 seconds")), "test-post")
+    assert "FAIL test-post line 9: number 10.50000 is not in its cited claims c3" in result.stderr.splitlines()
+
+
 def test_a_number_glued_to_a_word_is_still_checked(tmp_path):
     result = run_check(variant(tmp_path, post=("50000 rows", "50001rows")), "test-post")
     assert "FAIL test-post line 9: number 50001 is not in its cited claims c3" in result.stderr.splitlines()
@@ -191,6 +197,7 @@ HIDDEN = {
     "hyphen": "at the beta-price.",
     "zero-width-space": "at the beta\u200bprice.",
     "html-comment": "at the beta <!-- x --> price.",
+    "fullwidth": "at the ｂｅｔａ price.",
 }
 
 

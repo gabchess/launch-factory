@@ -65,10 +65,9 @@ class Unreadable(Exception):
 
 
 def words(text):
-    """The reader's words: Unicode NFKC, minus signs as "-", markup and format characters dropped, lowercased."""
+    """The reader's words: Unicode NFKC, minus signs as "-", markup and other symbols dropped, lowercased."""
     text = unicodedata.normalize("NFKC", text).translate(MINUS)
-    text = "".join(" " if unicodedata.category(c) == "Cf" else c for c in MARKUP.sub(" ", text))
-    return tuple(WORD.findall(text.casefold()))
+    return tuple(WORD.findall(MARKUP.sub(" ", text).casefold()))
 
 
 def find_run(haystack, needle):
@@ -187,7 +186,7 @@ def check(folder, gate, skill):
     failures += [f"claim {c['id']}: quote \"{c['quote']}\" is shorter than {MIN_QUOTE_WORDS} words"
                  for c in run["claims"] if len(quotes[c["id"]]) < MIN_QUOTE_WORDS]
     failures += [f"claim {c['id']}: quote not found in the Snapshot: \"{c['quote']}\""
-                 for c in run["claims"] if len(quotes[c["id"]]) >= MIN_QUOTE_WORDS and find_run(snapshot, quotes[c["id"]]) < 0]
+                 for c in run["claims"] if find_run(snapshot, quotes[c["id"]]) < 0]
     missing = [f"gate {name} has no draft.md" for name in run["gates"]
                if not (folder / "gates" / name / "draft.md").is_file()]
     if missing:
