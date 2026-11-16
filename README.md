@@ -18,7 +18,9 @@ A run folder holds `run.json`, the Source saved as `snapshot.md`, and one `gates
 
 On a pass, the Check prints one line per gate, such as `test-post: 4 lines, 3 claims, 3/3 parts`, and exits 0. On a fail, it prints one `FAIL` line per problem, naming the claim, line, part or phrase, and exits 1.
 
-It fails a run when a claim's quote is empty or not in the Snapshot, when a line cites no claim or an unknown claim, when a line holds only a citation, when a number, sign included, is not in the claims a line cites, when a Draft holds a Do not say phrase on one line or across lines, when a part is missing, when a gate has no draft.md, when a gate name is not a plain name, when a Draft is outside its contract's limits or has zero lines or zero claims, when a claim is cited by no opened gate, and when a skip or ask verdict opens a gate. It normalises Windows line endings and runs of whitespace before it matches quotes.
+It reads each Draft line, the Snapshot and every quote as a list of words. A word is what a reader sees after Unicode NFKC, with minus signs read as `-`, Markdown emphasis, HTML tags and comments dropped, and case ignored. Every rule below reads those words, so markup, hyphens, line breaks and Windows line endings cannot hide or fake one. The character limit counts those words joined by single spaces.
+
+It fails a run when a claim's quote has fewer than 3 words or is not a run of whole words in the Snapshot, when a line has no words, cites no claim or cites an unknown claim, when a number, sign included, is not in the claims a line cites, when a Draft holds a Do not say phrase anywhere, even across lines, when a Do not say phrase has no words, when a part is missing, when a gate has no draft.md, when a gate name is not a plain name, when a Draft is outside its contract's limits or has zero lines or zero claims, when a claim is cited by no opened gate, and when a skip or ask verdict opens a gate. A missing or unreadable run.json, snapshot.md or contract block prints a `FAIL` line, not a traceback.
 
 The contracts in `tests/fixtures/check/skill/gates/` exist for the tests only.
 
