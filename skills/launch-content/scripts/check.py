@@ -6,24 +6,31 @@ Exits 0 when every rule holds and 1 with one line per failure otherwise.
 """
 
 import argparse
+import html
 import json
 import re
+import string
 import sys
 import unicodedata
 from pathlib import Path
 from typing import NamedTuple
 
-CITATIONS = re.compile(r"(?:\s*\[[A-Za-z0-9_-]+(?:\s*,\s*[A-Za-z0-9_-]+)*\])+\s*$")
+CITATIONS = re.compile(r"(?: *\[[A-Za-z0-9_-]+(?: *, *[A-Za-z0-9_-]+)*\])+ *$")
 CLAIM_ID = re.compile(r"[A-Za-z0-9_-]+")
-PART = re.compile(r"^<!--\s*part:\s*([A-Za-z0-9_-]+)\s*-->$")
-MARK = re.compile(r"#{1,6} |[-*+>] ")
+PART = re.compile(r"<!-- part: ([a-z0-9-]+) -->")
+HEADING = re.compile(r"##? ")
 CONTRACT = re.compile(r"```json\s*\n(.*?)\n```", re.S)
 MARKUP = re.compile(r"<!--.*?-->|<[^<>\n]*>", re.S)
-SYMBOLS = str.maketrans({**dict.fromkeys("*~`"), **{c: "-" for c in "\u2010\u2011\u2012\u2013\u2014\u2015\u2212\u2796\ufe58"}})
-WORD = re.compile(r"(?:(?<![^\W_])-(?=\d))?[^\W_]+(?:[.,'][^\W_]+)*")
-NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*")
+WORD = re.compile(r"(?:(?<![^\W_])-(?=\d))?[^\W_]+(?:[.,'][^\W_]+)*%?")
+NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*%?")
 GATE_NAME = re.compile(r"[a-z0-9-]+")
 MIN_QUOTE_WORDS = 3
+
+# Draft lines and quotes are plain text, a closed format: ASCII letters and digits, the Latin-1 letters
+# (so other scripts and their look-alike letters fail), the space and this punctuation. Every other
+# character fails, so the Check never has to guess how markup, entities or invisible characters render.
+PLAIN = frozenset(string.ascii_letters + string.digits + " .,;:!?'\"()-/%$+"
+                  + "".join(chr(c) for c in range(0xC0, 0x100) if c not in (0xD7, 0xF7)))
 
 REQUIRED = {
     "id": (str, None),
@@ -49,9 +56,10 @@ class Line(NamedTuple):
     """One content line of a Draft, parsed once. Every Draft guard reads these fields and nothing else."""
     number: int
     part: str | None
-    mark: str
+    heading: str
     words: tuple[str, ...]
     claims: tuple[str, ...]
+    problem: str | None
 
 
 MEASURES = {
@@ -65,10 +73,30 @@ class Unreadable(Exception):
     pass
 
 
-def words(text):
-    """The reader's words: Unicode NFKC, minus signs as "-", emphasis and HTML deleted, other symbols as breaks, lowercased."""
-    text = unicodedata.normalize("NFKC", text).translate(SYMBOLS)
-    return tuple(WORD.findall(MARKUP.sub("", text).casefold()))
+def not_plain(text):
+    """The first character outside plain text, named by its code point, or None."""
+    bad = next((c for c in text if c not in PLAIN), None)
+    if bad is None:
+        return None
+    name = unicodedata.name(bad, "")
+    return f"has the character U+{ord(bad):04X}{' ' + name if name else ''}, which plain text does not allow"
+
+
+def plain_words(text):
+    """Words of text already checked to be plain: only case is folded."""
+    return tuple(WORD.findall(text.casefold()))
+
+
+def source_words(text):
+    """Words of untrusted source text: a Snapshot, Owner sources or a Do not say phrase.
+
+    Each step turns markup into a space, so it can split a word but never join two words: every tag and
+    comment becomes a space, entities are decoded, every format or control character becomes a space,
+    then NFKC and casefold. A quote that depends on markup to match therefore fails closed.
+    """
+    text = html.unescape(MARKUP.sub(" ", text))
+    text = "".join(" " if unicodedata.category(c) in ("Cf", "Cc") else c for c in text)
+    return tuple(WORD.findall(unicodedata.normalize("NFKC", text).casefold()))
 
 
 def find_run(haystack, needle):
@@ -100,21 +128,38 @@ def read_json(text, invalid):
 def parse_draft(text):
     lines, part = [], None
     for number, raw in enumerate(text.split("\n"), 1):
-        line = raw.strip()
-        marker = PART.match(line)
+        line = raw.removesuffix("\r").strip(" ")
+        marker = PART.fullmatch(line)
         if marker:
             part = marker.group(1)
         elif line:
             cited = CITATIONS.search(line)
             body = line[:cited.start()] if cited else line
-            mark = MARK.match(body)
-            lines.append(Line(number, part, mark.group(0) if mark else "", words(body),
-                              tuple(CLAIM_ID.findall(cited.group(0))) if cited else ()))
+            heading = HEADING.match(body)
+            body = body[heading.end():] if heading else body
+            lines.append(Line(number, part, heading.group(0) if heading else "", plain_words(body),
+                              tuple(CLAIM_ID.findall(cited.group(0))) if cited else (), not_plain(body)))
     return lines
 
 
-def numbers(line_words):
-    return [n for word in line_words for n in NUMBER.findall(word)]
+def numbers(words):
+    """Each number with its label, the word after it when that word holds no digit."""
+    pairs = []
+    for i, word in enumerate(words):
+        label = words[i + 1] if i + 1 < len(words) and not any(c.isdigit() for c in words[i + 1]) else None
+        pairs += [(number, label) for number in NUMBER.findall(word)]
+    return pairs
+
+
+def number_failures(gate, line, quotes):
+    claimed = {pair for c in line.claims for pair in numbers(quotes.get(c, ()))}
+    failures = []
+    for value, label in numbers(line.words):
+        if value not in {v for v, _ in claimed}:
+            failures.append(f"{gate} line {line.number}: number {value} is not in its cited claims {', '.join(line.claims)}")
+        elif label and (value, label) not in claimed:
+            failures.append(f"{gate} line {line.number}: number {value} {label} is not in its cited claims {', '.join(line.claims)}")
+    return failures
 
 
 def do_not_say(gate, lines, banned):
@@ -129,7 +174,7 @@ def do_not_say(gate, lines, banned):
     return failures
 
 
-def check_gate(run, gate, lines, skill, quotes, banned):
+def check_gate(run, gate, lines, skill, quotes, banned, owner):
     path = skill / "gates" / f"{gate}.md"
     if not path.is_file():
         return [f"unknown gate {gate}: no contract gates/{gate}.md"], None
@@ -140,14 +185,17 @@ def check_gate(run, gate, lines, skill, quotes, banned):
     parts = [p for p in contract["parts"] if any(line.part == p for line in lines)]
     failures = [] if lines else [f"{gate} has zero lines"]
     failures += [] if cited else [f"{gate} cites zero claims"]
+    failures += [f"{gate} line {line.number} {line.problem}" for line in lines if line.problem]
+    failures += [f"{gate} line {line.number} is a heading, which {gate} does not allow"
+                 for line in lines if line.heading and line.heading not in contract["uncited"]]
     failures += [f"{gate} line {line.number} has no words" for line in lines if not line.words]
     failures += [f"{gate} line {line.number} cites no claim: \"{' '.join(line.words)}\""
-                 for line in lines if line.words and not line.claims and line.mark not in contract["uncited"]]
+                 for line in lines if line.words and not line.claims and not line.heading]
     failures += [f"{gate} line {line.number} cites unknown claim {c}" for line in lines for c in line.claims if c not in quotes]
+    failures += [f"{gate} line {line.number} cites claim {c}, an owner claim of gate {owner[c]}"
+                 for line in lines for c in line.claims if owner.get(c, gate) != gate]
     failures += do_not_say(gate, lines, banned)
-    failures += [f"{gate} line {line.number}: number {number} is not in its cited claims {', '.join(line.claims)}"
-                 for line in lines for number in numbers(line.words)
-                 if number not in {n for c in line.claims for n in numbers(quotes.get(c, ()))}]
+    failures += [failure for line in lines for failure in number_failures(gate, line, quotes)]
     failures += [f"{gate} is missing the part {p}" for p in contract["parts"] if p not in parts]
     for measure, count in MEASURES.items():
         if measure in contract:
@@ -175,10 +223,43 @@ def record_problems(run):
                 problems.append(f"{path} is \"{value}\", expected one of {', '.join(allowed)}")
     if problems:
         return problems
-    problems += [] if all(isinstance(p, str) for p in run["source"]["do_not_say"]) else ["source.do_not_say must be a list of text"]
-    problems += [f"claim {n} must have a text id and quote" for n, c in enumerate(run["claims"], 1)
-                 if not (isinstance(c, dict) and isinstance(c.get("id"), str) and isinstance(c.get("quote"), str))]
+    source = run["source"]
+    problems += [f"source.{field} must be a list of text" for field in ("do_not_say", "open_questions")
+                 if not all(isinstance(item, str) for item in source[field])]
+    for n, claim in enumerate(run["claims"], 1):
+        if not (isinstance(claim, dict) and isinstance(claim.get("id"), str) and isinstance(claim.get("quote"), str)):
+            problems.append(f"claim {n} must have a text id and quote")
+        elif not isinstance(claim.get("gate", ""), str):
+            problems.append(f"claim {n} gate must be text")
+    for name, entry in run["gates"].items():
+        if not isinstance(entry, dict):
+            problems.append(f"gates.{name} must be an object")
+        elif not isinstance(entry.get("owner_sources", ""), str):
+            problems.append(f"gates.{name}.owner_sources must be text")
     return problems
+
+
+def quote_failures(run, snapshot):
+    """Each claim's quote is plain text of at least 3 words, found as a run of whole words in the Snapshot,
+    or, for an owner claim, in the Owner sources of its one gate."""
+    failures = []
+    for claim in run["claims"]:
+        cid, quote, gate = claim["id"], claim["quote"], claim.get("gate")
+        problem = not_plain(quote)
+        if problem:
+            failures.append(f"claim {cid}: quote {problem}")
+            continue
+        words = plain_words(quote)
+        if len(words) < MIN_QUOTE_WORDS:
+            failures.append(f"claim {cid}: quote \"{quote}\" is shorter than {MIN_QUOTE_WORDS} words")
+        if gate is None:
+            if find_run(snapshot, words) < 0:
+                failures.append(f"claim {cid}: quote not found in the Snapshot: \"{quote}\"")
+        elif gate not in run["gates"]:
+            failures.append(f"claim {cid} belongs to gate {gate}, which run {run['id']} does not open")
+        elif find_run(source_words(run["gates"][gate].get("owner_sources", "")), words) < 0:
+            failures.append(f"claim {cid}: quote not found in the Owner sources of gate {gate}: \"{quote}\"")
+    return failures
 
 
 def check(folder, gate, skill):
@@ -187,21 +268,18 @@ def check(folder, gate, skill):
         for name in [*run["gates"], *([gate] if gate else [])] if not GATE_NAME.fullmatch(name)]
     if problems:
         return problems, []
-    banned = {phrase: words(phrase) for phrase in run["source"]["do_not_say"]}
+    banned = {phrase: source_words(phrase) for phrase in run["source"]["do_not_say"]}
     empty = [f"Do not say phrase \"{phrase}\" has no words" for phrase, key in banned.items() if not key]
     if empty:
         return empty, []
-    snapshot = words(read_text(folder / "snapshot.md", f"run {run['id']} has no snapshot.md"))
+    snapshot = source_words(read_text(folder / "snapshot.md", f"run {run['id']} has no snapshot.md"))
     ids = [c["id"] for c in run["claims"]]
     twice = sorted({i for i in ids if ids.count(i) > 1})
     if twice:
         return [f"claim id {i} is used by {ids.count(i)} claims" for i in twice], []
-    quotes = {c["id"]: words(c["quote"]) for c in run["claims"]}
-    failures = VERDICT_RULES[run["verdict"]["decision"]](run)
-    failures += [f"claim {c['id']}: quote \"{c['quote']}\" is shorter than {MIN_QUOTE_WORDS} words"
-                 for c in run["claims"] if len(quotes[c["id"]]) < MIN_QUOTE_WORDS]
-    failures += [f"claim {c['id']}: quote not found in the Snapshot: \"{c['quote']}\""
-                 for c in run["claims"] if find_run(snapshot, quotes[c["id"]]) < 0]
+    quotes = {c["id"]: plain_words(c["quote"]) for c in run["claims"]}
+    owner = {c["id"]: c["gate"] for c in run["claims"] if "gate" in c}
+    failures = VERDICT_RULES[run["verdict"]["decision"]](run) + quote_failures(run, snapshot)
     missing = [f"gate {name} has no draft.md" for name in run["gates"]
                if not (folder / "gates" / name / "draft.md").is_file()]
     if missing:
@@ -213,7 +291,7 @@ def check(folder, gate, skill):
         return failures + [f"gate {gate} is not opened by run {run['id']}"], []
     stamps = []
     for name in [gate] if gate else list(run["gates"]):
-        problems, stamp = check_gate(run, name, drafts[name], skill, quotes, banned)
+        problems, stamp = check_gate(run, name, drafts[name], skill, quotes, banned, owner)
         failures += problems
         stamps += [stamp] if stamp else []
     stamps.append(f"run {run['id']}: {len(run['claims'])} claims verified")
