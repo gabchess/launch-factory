@@ -1,0 +1,11 @@
+{
+  "review_surface": "notion",
+  "posting": "manager",
+  "manager": "social-manager",
+  "roles": {
+    "content-lead": {"display_name": "Content lead", "notion_person": "owner@example.com"},
+    "product-marketer": {"display_name": "Product marketer", "notion_person": "owner@example.com"},
+    "social-manager": {"display_name": "Social manager", "notion_person": "owner@example.com"},
+    "support-lead": {"display_name": "Support lead", "notion_person": "owner@example.com"}
+  }
+}

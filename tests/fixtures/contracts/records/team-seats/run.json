@@ -1,0 +1,47 @@
+{
+  "id": "brief-team-seats",
+  "source": {
+    "kind": "briefing",
+    "title": "Team seats for sales managers",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T13:02:00Z",
+    "do_not_say": ["per-seat pricing", "unlimited seats", "available on every plan", "results for all customers", "now live"],
+    "open_questions": [
+      "Pricing and plans. Which plans include team seats and how seats are priced.",
+      "Maximum team size at general release.",
+      "Whether the weekly report can be sent to people outside the team."
+    ]
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "write",
+    "tier": "launch",
+    "rule": 5,
+    "quote": "A manager sends invites.",
+    "reason": "A new capability a user can name, with labelled beta proof."
+  },
+  "claims": [
+    {"id": "s1", "quote": "a weekly team report breaks when one person builds it alone"},
+    {"id": "s2", "quote": "Nadia runs a team of six reps."},
+    {"id": "s3", "quote": "She pastes it all into a sheet and builds the page at 9 pm on Sunday."},
+    {"id": "s4", "quote": "A manager sends invites."},
+    {"id": "s5", "quote": "Each rep connects their own export once, on a refresh schedule the rep picks."},
+    {"id": "s6", "quote": "the manager sees one weekly report for the whole team that still reads in two minutes"},
+    {"id": "s7", "quote": "Managers reported that building the weekly team page took 52 minutes before team seats and 11 minutes with them."},
+    {"id": "s8", "quote": "The beta group was self selected."},
+    {"id": "s9", "quote": "Team seats are in closed beta. General release is planned for February 24, 2027."},
+    {"id": "s10", "quote": "Team seats are in closed beta."},
+    {"id": "s11", "quote": "A manager invites reps, each rep connects their own pipeline export"},
+    {"id": "s12", "quote": "Shown when an export is older than a week"},
+    {"id": "s13", "quote": "A manager who wants numbers from five reps has to ask each rep for an export and combine them by hand."},
+    {"id": "s14", "quote": "A rep sees their own deals and the team summary, never another rep's deal notes."},
+    {"id": "s15", "quote": "A notice lists reps whose export is older than a week."}
+  ],
+  "gates": {
+    "blog": {"contract": "gates/blog.md", "owner_role": "content-lead"},
+    "changelog": {"contract": "gates/changelog.md", "owner_role": "product-marketer"},
+    "social": {"contract": "gates/social.md", "owner_role": "social-manager"},
+    "faq": {"contract": "gates/faq.md", "owner_role": "support-lead"}
+  }
+}
