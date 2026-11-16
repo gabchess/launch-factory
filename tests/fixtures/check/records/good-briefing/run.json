@@ -1,0 +1,59 @@
+{
+  "id": "brief-seats",
+  "source": {
+    "kind": "briefing",
+    "title": "Team seats",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T13:02:00Z",
+    "do_not_say": [
+      "price of a seat",
+      "per seat"
+    ],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "write",
+    "tier": "launch",
+    "rule": 5,
+    "quote": "A manager sends invites.",
+    "reason": "A new capability a user can see."
+  },
+  "claims": [
+    {
+      "id": "b1",
+      "quote": "A manager sends invites."
+    },
+    {
+      "id": "b2",
+      "quote": "Each rep connects their own export once."
+    },
+    {
+      "id": "b3",
+      "quote": "The manager sees one weekly report for the whole team."
+    }
+  ],
+  "gates": {
+    "test-card": {
+      "contract": "gates/test-card.md",
+      "owner_role": "test-owner",
+      "branch": "claude/lf-pr-csv-test-card",
+      "pr": null,
+      "baseline": "runs/pr-csv/gates/test-card/draft.agent.md",
+      "baseline_sha256": "",
+      "check": {}
+    }
+  },
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-18T13:02:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}

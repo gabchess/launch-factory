@@ -1,0 +1,36 @@
+{
+  "id": "brief-dashboards",
+  "source": {
+    "kind": "briefing",
+    "title": "Faster dashboards",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T13:02:00Z",
+    "do_not_say": [
+      "price of a seat",
+      "per seat"
+    ],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "ask",
+    "tier": null,
+    "rule": 2,
+    "quote": "Which plans get the faster dashboards?",
+    "reason": "Product has open questions."
+  },
+  "claims": [],
+  "gates": {},
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-18T13:02:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}

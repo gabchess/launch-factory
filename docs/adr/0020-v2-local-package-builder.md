@@ -1,8 +1,8 @@
 # 0020: One local builder for v2
 
-Status: implemented; human asset approval remains separate.
+Status: superseded in B-01. The version 2 builder was removed, and it lives at the v2.0.0 tag.
 
-The old command copied adapter instructions into output folders and printed DONE. Its structural tests could not prove that a social video or popup existed. V2 replaces that path with `launch_factory.py`.
+The old command copied adapter instructions into output folders and printed DONE. Its structural tests could not prove that a social video or popup existed. V2 replaced that path with `launch_factory.py`.
 
 The AI host prepares source-grounded copy through the existing specialist protocols. A person locks claims. Python checks source spans and references, FFmpeg cuts footage and burns captions, and native HTML/CSS/SVG provide the remaining previews. Every build writes a new directory. Files and source records travel together.
 
