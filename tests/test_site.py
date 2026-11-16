@@ -13,13 +13,14 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "skills/launch-content/scripts/build_site.py"
 FIXTURES = ROOT / "tests/fixtures/site"
+SHIPPED = ROOT / "skills/launch-content"
 
 
-def build(out, notion=None, runs=None):
+def build(out, notion=None, runs=None, owners=None, skill=None):
     args = [sys.executable, str(BUILD), str(runs or FIXTURES / "records"),
             "--notion", str(notion or FIXTURES / "notion.json"),
-            "--owners", str(FIXTURES / "owners.json"),
-            "--skill", str(FIXTURES / "skill"),
+            "--owners", str(owners or SHIPPED / "owners.json"),
+            "--skill", str(skill or FIXTURES / "skill"),
             "--out", str(out)]
     return subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
 
@@ -93,6 +94,24 @@ def test_board_is_a_grid_of_sources_by_the_four_gates(board):
     assert rows == ["row/pr-csv", "row/brief-seats", "row/pr-rounding", "row/pr-pdf", "row/brief-dashboards", "row/pr-refactor"]
     assert [k for k in text if k.startswith("cell/pr-csv/")] == [f"cell/pr-csv/{g}" for g in ("blog", "changelog", "social", "faq")]
     assert "Thu 14:06" in text["row/pr-csv"]
+
+
+def test_the_shipped_owners_and_gate_contracts_build_a_board_with_owner_names(tmp_path):
+    result = build(tmp_path, skill=SHIPPED)
+    assert result.returncode == 0, result.stderr
+    text, _, _ = parse(tmp_path / "index.html")
+    assert text["head/blog"] == "Blog post Sandbox owner · Content lead"
+    assert text["head/changelog"] == "Changelog Sandbox owner · Product marketer"
+    assert text["head/social"] == "Social post Sandbox owner · Social manager"
+    assert text["head/faq"] == "FAQ update Sandbox owner · Support lead"
+
+
+def test_the_board_and_every_post_page_name_the_sample_company(site):
+    assert "<title>Launch desk, Harbor Reports</title>" in (site / "index.html").read_text(encoding="utf-8")
+    for page in ("blog/pr-csv/index.html", "changelog/index.html", "faq/index.html", "social/index.html"):
+        html = (site / page).read_text(encoding="utf-8")
+        assert ", Harbor Reports</title>" in html, page
+        assert "Harbor Reports is a sample company." in html, page
 
 
 def test_board_keeps_the_desk_log_look(site):
@@ -213,7 +232,8 @@ def test_a_blog_page_shows_each_line_next_to_its_quote(site):
     ]:
         assert re.search(re.escape(sentence) + rf'<a class="ref" href="#{claim}"', html), sentence
         assert f'"{quote}"' in text[f"quote/{claim}"]
-    assert "Ready to post" in page and "approved by Sandbox owner" in page
+    assert "Ready to post" in page and "approved by Sandbox owner, Content lead" in page
+    assert "Content-lead" not in page
 
 
 def test_an_owner_claim_names_the_owner_sources_on_the_blog_page_and_the_slip(tmp_path):

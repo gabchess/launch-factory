@@ -93,9 +93,13 @@ def owner_role(skill, gate):
     return json.loads(block.group(1)).get("owner_role", "") if block else ""
 
 
+def role_label(role):
+    return role.replace("-", " ").capitalize()
+
+
 def owner(owners, role):
-    name = owners.get("roles", {}).get(role, "")
-    return " · ".join(part for part in (name, role.capitalize()) if part)
+    name = owners.get("roles", {}).get(role, {}).get("display_name", "")
+    return " · ".join(part for part in (name, role_label(role)) if part)
 
 
 def page_state(notion, key):
@@ -314,7 +318,7 @@ def blog_page(folder, cell, owners, also, nav_links):
              (("changelog", "changelog", "changelog"), ("faq", "faq", "FAQ")) if gate in also]
     via_also = f'\n    <span class="via-also">Also in {" and ".join(links)}</span>' if links else ""
     role = run["gates"]["blog"].get("owner_role", "")
-    name = owners.get("roles", {}).get(role, "")
+    name = owners.get("roles", {}).get(role, {}).get("display_name", "")
     main = f"""  <p class="meta"><b>{escape(str(run['verdict'].get('tier') or 'Launch').capitalize())}</b>, arrived {when(run['source'].get('received'), '%A at %H:%M')}</p>
   <h1>{escape(title)}</h1>
 
@@ -326,7 +330,7 @@ def blog_page(folder, cell, owners, also, nav_links):
 
   <p class="via">
     <span class="via-ok">{escape(cell.stamp.capitalize())}</span>
-    <span>Blog post · approved by <b>{escape(name)}</b>, {escape(role.capitalize())}</span>{via_also}
+    <span>Blog post · approved by <b>{escape(name)}</b>, {escape(role_label(role))}</span>{via_also}
   </p>
 
   <aside class="sources" aria-labelledby="src-h">
