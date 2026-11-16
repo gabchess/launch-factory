@@ -8,4 +8,4 @@ Provide a command-line entry point and a host-agent skill for the same release w
 
 ## Consequences
 
-A host without the required runtime can prepare a draft, but must state which steps remain unexecuted. Installation in a host does not establish that a complete run passed there. V2 uses `launch_factory.py` for local builds and verification.
+A host without the required runtime can prepare a draft, but must state which steps remain unexecuted. Installation in a host does not establish that a complete run passed there. Version 2 used `launch_factory.py` for local builds and verification. B-01 removed it, and it lives at the v2.0.0 tag.
