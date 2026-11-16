@@ -1,0 +1,1 @@
+write | changelog | 4 | The total now adds the exact amounts and rounds once, to two decimals. | A visible fix to existing behaviour of the pipeline report.

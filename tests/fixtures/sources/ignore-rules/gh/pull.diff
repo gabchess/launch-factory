@@ -1,0 +1,10 @@
+diff --git a/harbor/settings.py b/harbor/settings.py
+index 52690a0..c5bd2e4 100644
+--- a/harbor/settings.py
++++ b/harbor/settings.py
+@@ -2,4 +2,5 @@
+     "refresh": "Refresh schedule",
+     "currency": "Report currancy",
+     "week_start": "Week starts on",
++    "export_folder": "Export folder",
+ }

@@ -1,0 +1,32 @@
+diff --git a/harbor/report.py b/harbor/report.py
+index 22ccaef..272d0a9 100644
+--- a/harbor/report.py
++++ b/harbor/report.py
+@@ -9,7 +9,7 @@ def read_export(path):
+ 
+ 
+ def pipeline_total(rows):
+-    return sum(round(float(row["amount"])) for row in rows)
++    return round(sum(float(row["amount"]) for row in rows), 2)
+ 
+ 
+ def weekly_report(rows):
+diff --git a/tests/test_report.py b/tests/test_report.py
+index 74dfcc1..7067c7a 100644
+--- a/tests/test_report.py
++++ b/tests/test_report.py
+@@ -1,4 +1,4 @@
+-from harbor.report import weekly_report
++from harbor.report import pipeline_total, weekly_report
+ 
+ ROWS = [
+     {"deal": "Pier 4 renewal", "stage": "won", "amount": "1200.00", "close_date": "2026-11-16"},
+@@ -12,3 +12,8 @@ def test_weekly_report_counts_deals_by_stage():
+     assert report["by_stage"] == {"won": 1, "open": 1}
+     assert report["total"] == 2000
+     assert report["week"] == "Nov 16 to Nov 22"
++
++
++def test_pipeline_total_rounds_once_after_adding():
++    rows = [{"amount": "0.50"}, {"amount": "0.50"}]
++    assert pipeline_total(rows) == 1.0
