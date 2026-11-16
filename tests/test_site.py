@@ -276,3 +276,17 @@ def test_every_reference_on_a_published_page_reaches_a_target_on_that_page(site)
         targets = set(re.findall(r'\bid="([^"]+)"', html))
         anchors = re.findall(r'href="#([^"]+)"', html)
         assert all(anchor in targets for anchor in anchors), (page, anchors, targets)
+
+
+@pytest.mark.parametrize("entry, problem", [
+    ({"status": "Drafted", "round": "two"}, 'pr-csv/blog has the round "two", expected a whole number'),
+    ({"status": "Drafted", "round": None}, 'pr-csv/blog has the round "None", expected a whole number'),
+    ("Drafted", "pr-csv/blog must be an object with status, round and url"),
+])
+def test_a_malformed_notion_page_state_fails_the_build_with_its_key(tmp_path, entry, problem):
+    notion = json.loads((FIXTURES / "notion.json").read_text(encoding="utf-8"))
+    notion["pr-csv/blog"] = entry
+    (tmp_path / "notion.json").write_text(json.dumps(notion), encoding="utf-8")
+    result = build(tmp_path / "out", notion=tmp_path / "notion.json")
+    assert result.returncode == 1
+    assert f"FAIL {problem}" in result.stderr

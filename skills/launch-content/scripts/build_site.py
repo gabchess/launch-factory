@@ -102,9 +102,14 @@ def page_state(notion, key):
     state = notion.get(key)
     if state is None:
         return None
+    if not isinstance(state, dict):
+        raise BuildError(f"{key} must be an object with status, round and url")
     if state.get("status") not in STATUS:
         raise BuildError(f"{key} has the Notion Status \"{state.get('status')}\", expected one of {', '.join(STATUS)}")
-    return state
+    rounds = state.get("round", 1)
+    if isinstance(rounds, bool) or not isinstance(rounds, int) or rounds < 1:
+        raise BuildError(f"{key} has the round \"{rounds}\", expected a whole number")
+    return {"status": state["status"], "round": rounds, "url": str(state.get("url") or "")}
 
 
 def resolve(folder, run, gate, skill, notion):
@@ -116,8 +121,8 @@ def resolve(folder, run, gate, skill, notion):
     state = page_state(notion, f"{run['id']}/{gate}")
     found = COUNTS.search(stamps[0]) if stamps else None
     counts = " · ".join((plural(found[1], "line"), plural(found[2], "claim"), f"{found[3]} parts")) if found else ""
-    url = state.get("url", "") if state else ""
-    rounds = int(state.get("round", 1)) if state else 1
+    url = state["url"] if state else ""
+    rounds = state["round"] if state else 1
     if failures:
         return Cell(run, gate, "HELD BY THE CHECK", "back", False, counts, rounds, url, failures[0])
     if state is None:
