@@ -41,6 +41,9 @@ class RecordedNotion:
         return {"page_id": page_id, "url": f"https://notion.so/{page_id}", "created": True}
 
     def comment(self, step):
+        same = [c for c in self.comments if (c["page_id"], c["markdown"]) == (step["page_id"], step["markdown"])]
+        if same:
+            return {"comment_id": same[0]["id"]}
         comment_id = f"comment-{len(self.comments) + 1}"
         self.comments.append({"id": comment_id, "page_id": step["page_id"], "mention": step["mention"],
                               "markdown": step["markdown"]})
@@ -356,7 +359,7 @@ def test_a_second_run_on_the_same_source_creates_zero_pages_when_pages_exist_in_
     folder = start("csv-export", tmp_path / "second")
     drive(folder, "csv-export", notion)
     assert (notion.creates, len(notion.comments)) == (4, comments)
-    assert {g: s["r1"] for g, s in read_run(folder)["steps"]["gates"].items()} == dict.fromkeys(OWNERS, "exists")
+    assert {g: s["r1"] for g, s in read_run(folder)["steps"]["gates"].items()} == dict.fromkeys(OWNERS, "pinged")
 
 
 # State rule 3. The run record stores, per gate, the id of the last comment it handled.
@@ -396,7 +399,9 @@ def test_state_rule_4_a_page_written_but_not_recorded_is_found_and_not_created_t
     notion.page(step)
     drive(folder, "csv-export", notion)
     assert notion.creates == 4
-    assert read_run(folder)["gates"]["blog"]["notion_page"] == "page-1"
+    blog = read_run(folder)["gates"]["blog"]
+    assert blog["notion_page"] == "page-1"
+    assert [c["id"] for c in notion.comments if c["page_id"] == "page-1"] == [blog["last_comment_id"]]
 
 
 def test_the_command_prints_the_next_step_and_takes_an_answer_file(tmp_path):

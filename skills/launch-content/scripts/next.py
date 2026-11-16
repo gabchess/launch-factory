@@ -18,6 +18,7 @@ launch-log before any Notion write, and every wake continues at the first step t
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -45,8 +46,9 @@ PAGE_FORMAT = ("Search the database \"Launch gates\" for a page whose Key is the
                "create nothing and answer {\"page_id\": \"<its id>\", \"url\": \"<its url>\", \"created\": false}. "
                "Otherwise create the page with exactly these properties and content, the Owner set to the Notion "
                "user with that email, and answer {\"page_id\": \"<id>\", \"url\": \"<url>\", \"created\": true}.")
-COMMENT_FORMAT = ("Add one page level comment to page_id: a mention of the Notion user with the mention email, "
-                  "then the markdown. Answer {\"comment_id\": \"<the new comment's id>\"}.")
+COMMENT_FORMAT = ("Read the comments on page_id. If one already holds the markdown, add nothing and answer its id. "
+                  "Otherwise add one page level comment: a mention of the Notion user with the mention email, then "
+                  "the markdown. Answer {\"comment_id\": \"<the comment's id>\"}.")
 
 
 class StepFailed(Exception):
@@ -78,7 +80,10 @@ def load(folder):
 
 
 def save(folder, run):
-    (folder / "run.json").write_text(json.dumps(run, indent=2, ensure_ascii=False) + "\n", "utf-8", newline="\n")
+    """Write a temporary file, then replace run.json, so a cut-off write never leaves a broken record."""
+    temporary = folder / "run.json.tmp"
+    temporary.write_text(json.dumps(run, indent=2, ensure_ascii=False) + "\n", "utf-8", newline="\n")
+    os.replace(temporary, folder / "run.json")
 
 
 def policy(skill):
@@ -300,7 +305,7 @@ def apply(folder, run, step, text, skill):
     elif kind == "notion_page":
         reply = parse_reply(text, {"page_id": str, "url": str, "created": bool})
         run["gates"][step["gate"]].update(notion_page=reply["page_id"], notion_url=reply["url"])
-        steps["gates"][step["gate"]]["r1"] = "paged" if reply["created"] else "exists"
+        steps["gates"][step["gate"]]["r1"] = "paged"
     elif kind == "notion_comment":
         reply = parse_reply(text, {"comment_id": str})
         run["gates"][step["gate"]]["last_comment_id"] = reply["comment_id"]
