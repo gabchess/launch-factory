@@ -1,0 +1,45 @@
+{
+  "id": "pr-refactor",
+  "source": {
+    "kind": "pull_request",
+    "title": "Refactor date helpers",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T13:02:00Z",
+    "do_not_say": [
+      "beta price"
+    ],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "skip",
+    "tier": null,
+    "rule": 1,
+    "quote": "Refactor date helpers",
+    "reason": "No change a user can see."
+  },
+  "claims": [],
+  "gates": {
+    "test-card": {
+      "contract": "gates/test-card.md",
+      "owner_role": "test-owner",
+      "branch": "claude/lf-pr-csv-test-card",
+      "pr": null,
+      "baseline": "runs/pr-csv/gates/test-card/draft.agent.md",
+      "baseline_sha256": "",
+      "check": {}
+    }
+  },
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-18T13:02:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}

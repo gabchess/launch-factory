@@ -6,22 +6,26 @@ Turn a merged pull request or a product briefing into content your team can appr
 
 Being rebuilt. Version 2 is kept at the [v2.0.0 tag](https://github.com/gabchess/launch-factory/tree/v2.0.0).
 
-Besides the license and the test setup, this branch holds `launch_factory.py`, whose claim checking is kept as prior art, its tests, and the decision records in `docs/adr/`. Nothing on this branch reads a pull request or a briefing yet.
+This branch holds the Check, its tests and the decision records in `docs/adr/`. Nothing on this branch reads a pull request or a briefing yet.
 
-## What the new version will do
+## The Check
 
-- Two intakes: a merged pull request and a product briefing.
-- An agent will give each one a verdict of write, skip or ask, with a reason.
-- A quote check in code: every drafted sentence must match its source text exactly.
-- Approval by a person before anything leaves the system.
-- Publish on merge.
+The Check confirms a run record against its gate contracts and fails closed.
+
+    python skills/launch-content/scripts/check.py RUN_FOLDER [GATE] [--skill SKILL_FOLDER]
+
+A run folder holds `run.json`, the Source saved as `snapshot.md`, and one `gates/<gate>/draft.md` per opened gate. A gate contract is `gates/<gate>.md` in the skill folder, with a JSON block that lists its parts and its limits on lines, words and characters.
+
+On a pass, the Check prints one line per gate, such as `test-post: 4 lines, 3 claims, 3/3 parts`, and exits 0. On a fail, it prints one `FAIL` line per problem, naming the claim, line, part or phrase, and exits 1.
+
+It fails a run when a claim's quote is not in the Snapshot, when a line cites no claim or an unknown claim, when a number is not in the claims a line cites, when a line holds a Do not say phrase, when a part is missing, when a Draft is outside its contract's limits or has zero lines or zero claims, when a claim is cited by no opened gate, and when a skip or ask verdict opens a gate. It normalises Windows line endings and runs of whitespace before it matches quotes.
+
+The contracts in `tests/fixtures/check/skill/gates/` exist for the tests only.
 
 ## Tests
 
-    pip install pytest tzdata
+    pip install pytest
     python -m pytest
-
-`tzdata` is needed on Windows, which ships no time zone data. The tests that build media need `ffmpeg` and `ffprobe` and are skipped without them.
 
 ## License
 
