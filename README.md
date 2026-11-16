@@ -18,7 +18,7 @@ A run folder holds `run.json`, the Source saved as `snapshot.md`, and one `gates
 
 On a pass, the Check prints one line per gate, such as `test-post: 4 lines, 3 claims, 3/3 parts`, and exits 0. On a fail, it prints one `FAIL` line per problem, naming the claim, line, part or phrase, and exits 1.
 
-It fails a run when a claim's quote is not in the Snapshot, when a line cites no claim or an unknown claim, when a number is not in the claims a line cites, when a line holds a Do not say phrase, when a part is missing, when a Draft is outside its contract's limits or has zero lines or zero claims, when a claim is cited by no opened gate, and when a skip or ask verdict opens a gate. It normalises Windows line endings and runs of whitespace before it matches quotes.
+It fails a run when a claim's quote is empty or not in the Snapshot, when a line cites no claim or an unknown claim, when a line holds only a citation, when a number, sign included, is not in the claims a line cites, when a Draft holds a Do not say phrase on one line or across lines, when a part is missing, when a gate has no draft.md, when a gate name is not a plain name, when a Draft is outside its contract's limits or has zero lines or zero claims, when a claim is cited by no opened gate, and when a skip or ask verdict opens a gate. It normalises Windows line endings and runs of whitespace before it matches quotes.
 
 The contracts in `tests/fixtures/check/skill/gates/` exist for the tests only.
 

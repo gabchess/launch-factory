@@ -14,7 +14,8 @@ from pathlib import Path
 CITATION = re.compile(r"\s*\[([A-Za-z0-9_-]+(?:\s*,\s*[A-Za-z0-9_-]+)*)\]\s*$")
 PART = re.compile(r"^<!--\s*part:\s*([A-Za-z0-9_-]+)\s*-->$")
 CONTRACT = re.compile(r"```json\s*\n(.*?)\n```", re.S)
-NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*")
+GATE_NAME = re.compile(r"[a-z0-9-]+")
 WORD = re.compile(r"[\w'’-]+")
 
 REQUIRED = {
@@ -81,10 +82,14 @@ def check_gate(run, gate, lines, skill):
     failures += [] if cited else [f"{gate} cites zero claims"]
     failures += [f"{gate} line {n} cites no claim: \"{text}\""
                 for n, _, text, ids in lines if not ids and not text.startswith(tuple(contract["uncited"]))]
+    failures += [f"{gate} line {n} has no text" for n, _, text, _ in lines if not text]
     failures += [f"{gate} line {n} cites unknown claim {c}" for n, _, _, ids in lines for c in ids if c not in quotes]
-    failures += [f"{gate} line {n} contains the Do not say phrase \"{phrase}\""
-                 for n, _, text, _ in lines for phrase in run["source"]["do_not_say"]
-                 if flat(phrase).casefold() in flat(text).casefold()]
+    banned = {phrase: flat(phrase).casefold() for phrase in run["source"]["do_not_say"]}
+    hits = [(n, phrase) for n, _, text, _ in lines for phrase, key in banned.items() if key in flat(text).casefold()]
+    failures += [f"{gate} line {n} contains the Do not say phrase \"{phrase}\"" for n, phrase in hits]
+    joined = flat(" ".join(text for _, _, text, _ in lines)).casefold()
+    failures += [f"{gate} contains the Do not say phrase \"{phrase}\" across lines"
+                 for phrase, key in banned.items() if key in joined and phrase not in {p for _, p in hits}]
     failures += [f"{gate} line {n}: number {number} is not in its cited claims {', '.join(ids)}"
                  for n, _, text, ids in lines for number in NUMBER.findall(text)
                  if number not in {x for c in ids for x in NUMBER.findall(quotes.get(c, ""))}]
@@ -116,13 +121,19 @@ def record_problems(run):
 
 def check(folder, gate, skill):
     run = json.loads(read_text(folder / "run.json"))
-    problems = record_problems(run)
+    problems = record_problems(run) or [f"gate name \"{name}\" is not a plain name"
+        for name in [*run["gates"], *([gate] if gate else [])] if not GATE_NAME.fullmatch(name)]
     if problems:
         return problems, []
     snapshot = flat(read_text(folder / "snapshot.md"))
     failures = VERDICT_RULES[run["verdict"]["decision"]](run)
+    failures += [f"claim {c['id']}: empty quote" for c in run["claims"] if not flat(c["quote"])]
     failures += [f"claim {c['id']}: quote not found in the Snapshot: \"{c['quote']}\""
                 for c in run["claims"] if flat(c["quote"]) not in snapshot]
+    missing = [f"gate {name} has no draft.md" for name in run["gates"]
+               if not (folder / "gates" / name / "draft.md").is_file()]
+    if missing:
+        return failures + missing, []
     drafts = {name: parse_draft(read_text(folder / "gates" / name / "draft.md")) for name in run["gates"]}
     used = {c for lines in drafts.values() for _, _, _, ids in lines for c in ids}
     failures += [f"claim {c['id']} is cited by no opened gate" for c in run["claims"] if c["id"] not in used]

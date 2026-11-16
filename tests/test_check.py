@@ -39,6 +39,12 @@ def test_good_records_pass_and_print_counts():
     assert "test-card: 2 lines, 3 claims, 2/2 parts" in result.stdout
 
 
+def test_naming_a_gate_counts_claims_cited_only_by_another_gate():
+    result = check("good-pr", "test-card")
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == ["test-card: 2 lines, 2 claims, 2/2 parts", "run pr-csv: 3 claims verified"]
+
+
 def test_skip_and_ask_open_no_gate_and_pass():
     for record, run_id in (("skip", "pr-refactor"), ("ask", "brief-dashboards")):
         result = check(record)
@@ -70,6 +76,16 @@ BAD = [
     ("unknown-values", None, "verdict.decision is \"publish\", expected one of ask, skip, write"),
     ("unknown-values", None, "source.kind is \"email\", expected one of briefing, pull_request"),
     ("number-uncited", "test-card", "test-card line 4: number 50000 is not in its cited claims c1"),
+    ("claim-unused", "test-post", "claim c4 is cited by no opened gate"),
+    ("quote-empty", None, "claim c2: empty quote"),
+    ("line-only-citation", "test-card", "test-card line 2 has no text"),
+    ("do-not-say-split", None, "test-post contains the Do not say phrase \"export   MENU\" across lines"),
+    ("do-not-say-split", None, "test-post contains the Do not say phrase \"the export menu\" across lines"),
+    ("number-sign", "test-post", "test-post line 9: number -10 is not in its cited claims c3"),
+    ("draft-missing", None, "gate test-card has no draft.md"),
+    ("gate-name", None, "gate name \"../x\" is not a plain name"),
+    ("good-pr", "../x", "gate name \"../x\" is not a plain name"),
+    ("missing-gates", None, "run.json is missing gates"),
 ]
 
 
@@ -79,3 +95,8 @@ def test_bad_record_fails_naming_the_problem(record, gate, message):
     assert result.returncode == 1
     assert f"FAIL {message}" in result.stderr.splitlines()
     assert result.stdout == ""
+
+
+def test_do_not_say_on_one_line_is_reported_once():
+    result = check("do-not-say")
+    assert result.stderr.splitlines() == ['FAIL test-post line 5 contains the Do not say phrase "export   MENU"']
