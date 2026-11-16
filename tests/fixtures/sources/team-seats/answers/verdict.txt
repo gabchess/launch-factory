@@ -1,0 +1,1 @@
+write | launch | 5 | A manager sends invites. | A new capability a user can name, with labelled beta proof.
