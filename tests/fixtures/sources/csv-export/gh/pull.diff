@@ -1,0 +1,35 @@
+diff --git a/harbor/export.py b/harbor/export.py
+new file mode 100644
+index 0000000..d4bffda
+--- /dev/null
++++ b/harbor/export.py
+@@ -0,0 +1,10 @@
++import csv
++
++
++def write_csv(report, path):
++    with open(path, "w", newline="", encoding="utf-8") as handle:
++        writer = csv.writer(handle)
++        writer.writerow(["stage", "deals"])
++        for stage, deals in sorted(report["by_stage"].items()):
++            writer.writerow([stage, deals])
++        writer.writerow(["total", report["total"]])
+diff --git a/tests/test_export.py b/tests/test_export.py
+new file mode 100644
+index 0000000..a55ad02
+--- /dev/null
++++ b/tests/test_export.py
+@@ -0,0 +1,13 @@
++import csv
++
++from harbor.export import write_csv
++from harbor.report import weekly_report
++from tests.test_report import ROWS
++
++
++def test_write_csv_has_a_row_per_stage_and_a_total(tmp_path):
++    path = tmp_path / "weekly.csv"
++    write_csv(weekly_report(ROWS), path)
++    with open(path, newline="", encoding="utf-8") as handle:
++        rows = list(csv.reader(handle))
++    assert rows == [["stage", "deals"], ["open", "1"], ["won", "1"], ["total", "2000"]]
