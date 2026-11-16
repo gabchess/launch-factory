@@ -522,3 +522,10 @@ def test_a_contract_of_the_wrong_shape_fails_with_a_fail_line(tmp_path, block):
     result = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
     assert result.returncode == 1
     assert result.stderr.splitlines() == ["FAIL contract gates/test-card.md must list parts and uncited, and give each limit as two numbers"]
+
+
+@pytest.mark.parametrize("minus", ["-", "\u02d7", "\u2010", "\u2011", "\u2012", "\u2013", "\u2014", "\u2015", "\u2212", "\u2796"])
+def test_a_snapshot_minus_sign_is_kept_on_its_number(tmp_path, minus):
+    result = run_check(snapshot_variant(tmp_path, "under 10 seconds", f"under {minus}10 seconds", {}))
+    quote = "Exports up to 50000 rows finish in under 10 seconds in our tests."
+    assert f'FAIL claim c3: quote not found in the Snapshot: "{quote}"' in result.stderr.splitlines()

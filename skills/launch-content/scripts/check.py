@@ -24,6 +24,7 @@ MARKUP = re.compile(r"<!--.*?-->|<[^<>]*>", re.S)
 WORD = re.compile(r"(?:(?<![^\W_])-(?=\d))?[^\W_]+(?:[.,'][^\W_]+)*%?")
 NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*%?")
 GATE_NAME = re.compile(r"[a-z0-9-]+")
+MINUS_SIGNS = str.maketrans(dict.fromkeys("\u02d7\u2010\u2011\u2012\u2013\u2014\u2015\u2212\u2796", "-"))
 MIN_QUOTE_WORDS = 3
 
 # Draft lines and quotes are plain text, a closed format: ASCII letters and digits, the Latin-1 letters
@@ -92,9 +93,10 @@ def source_words(text):
 
     Each step turns markup into a space, so it can split a word but never join two words: every tag and
     comment becomes a space, entities are decoded, every format or control character becomes a space,
-    then NFKC and casefold. A quote that depends on markup to match therefore fails closed.
+    then NFKC and casefold. A quote that depends on markup to match therefore fails closed. Minus signs
+    and dashes are read as "-", so a number keeps its sign and a quote that drops it fails.
     """
-    text = html.unescape(MARKUP.sub(" ", text))
+    text = html.unescape(MARKUP.sub(" ", text)).translate(MINUS_SIGNS)
     text = "".join(" " if unicodedata.category(c) in ("Cf", "Cc") else c for c in text)
     return tuple(WORD.findall(unicodedata.normalize("NFKC", text).casefold()))
 
