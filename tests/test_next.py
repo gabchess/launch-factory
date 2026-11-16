@@ -123,8 +123,8 @@ def test_code_owns_the_order_of_steps(tmp_path):
     steps = drive(start("csv-export", tmp_path), "csv-export", RecordedNotion())
     assert kinds(steps) == [
         "verdict", "claims", "draft:blog", "draft:changelog", "draft:social", "draft:faq", "push",
-        "notion_page:blog", "notion_page:changelog", "notion_page:social", "notion_page:faq",
-        "notion_comment:blog", "notion_comment:changelog", "notion_comment:social", "notion_comment:faq",
+        "notion_page:blog", "notion_comment:blog", "notion_page:changelog", "notion_comment:changelog",
+        "notion_page:social", "notion_comment:social", "notion_page:faq", "notion_comment:faq",
         "final_push", "done"]
 
 
@@ -402,9 +402,9 @@ def test_state_rule_4_a_page_written_but_not_recorded_is_found_and_not_created_t
 def test_the_command_prints_the_next_step_and_takes_an_answer_file(tmp_path):
     folder = start("csv-export", tmp_path)
     script = str(SKILL / "scripts/next.py")
-    shown = subprocess.run([sys.executable, script, str(folder)], capture_output=True, text=True, encoding="utf-8")
+    shown = subprocess.run([sys.executable, "-I", script, str(folder)], capture_output=True, text=True, encoding="utf-8")
     assert json.loads(shown.stdout)["step"] == "verdict"
-    answered = subprocess.run([sys.executable, script, str(folder), "--answer", str(RUNS / "csv-export/answers/verdict.txt")],
+    answered = subprocess.run([sys.executable, "-I", script, str(folder), "--answer", str(RUNS / "csv-export/answers/verdict.txt")],
                               capture_output=True, text=True, encoding="utf-8")
     assert answered.returncode == 0, answered.stderr
     assert json.loads(answered.stdout)["step"] == "claims"

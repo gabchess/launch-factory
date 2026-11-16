@@ -99,7 +99,7 @@ def test_the_blog_page_creates_eleven_blocks():
 
 
 def test_the_command_prints_the_page_payload():
-    result = subprocess.run([sys.executable, str(SKILL / "scripts/render_page.py"), str(PAGES / "pr-3"), "blog"],
+    result = subprocess.run([sys.executable, "-I", str(SKILL / "scripts/render_page.py"), str(PAGES / "pr-3"), "blog"],
                             capture_output=True, text=True, encoding="utf-8")
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["key"] == "pr-3/blog"

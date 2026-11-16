@@ -14,7 +14,9 @@ import re
 import sys
 from pathlib import Path
 
-import check
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # python -I leaves the script folder off the path
+
+import check  # noqa: E402
 
 DRAFTED = "Drafted"
 DATABASE = "Launch gates"

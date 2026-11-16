@@ -23,8 +23,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-import check
-import render_page
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # python -I leaves the script folder off the path
+
+import check  # noqa: E402
+import render_page  # noqa: E402
 
 STATUSES = ("Drafted", "Needs changes", "Ready to post", "Posted", "Rejected")
 DECISIONS = ("write", "skip", "ask")
@@ -214,7 +216,6 @@ def gate_step(folder, run, skill):
             page = render_page.notion_write(render_page.render(folder, gate, skill))
             return {"step": "notion_page", "gate": gate, "key": page["key"], "database": render_page.DATABASE,
                     "page": page, "answer": PAGE_FORMAT}
-    for gate, state in gates.items():
         if state["r1"] == "paged":
             entry = run["gates"][gate]
             name, person = render_page.owner(skill, entry["owner_role"])
