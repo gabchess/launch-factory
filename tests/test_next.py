@@ -88,6 +88,13 @@ def kinds(steps):
     return [s["step"] + (f":{s['gate']}" if "gate" in s else "") for s in steps]
 
 
+def owner_name(gate):
+    """The display name the shipped owners.json gives the owner role of the gate's contract."""
+    contract = (SKILL / "gates" / f"{gate}.md").read_text("utf-8")
+    role = json.loads(contract.split("```json", 1)[1].split("```", 1)[0])["owner_role"]
+    return json.loads((SKILL / "owners.json").read_text("utf-8"))["roles"][role]["display_name"]
+
+
 def read_run(folder):
     return json.loads((folder / "run.json").read_text("utf-8"))
 
@@ -109,7 +116,7 @@ def test_the_blog_page_gets_one_comment_that_mentions_its_owner(tmp_path):
     drive(start("csv-export", tmp_path), "csv-export", notion)
     blog = [c for c in notion.comments if c["page_id"] == notion.pages["pr-3/blog"]["id"]]
     assert [c["mention"] for c in blog] == ["owner@example.com"]
-    assert blog[0]["markdown"].startswith("Content lead, round 1 of the blog Draft")
+    assert blog[0]["markdown"].startswith(f"{owner_name('blog')}, round 1 of the blog Draft")
 
 
 def test_code_owns_the_order_of_steps(tmp_path):
@@ -138,7 +145,7 @@ def test_the_run_record_keeps_the_verdict_claims_and_an_untouched_baseline(tmp_p
     assert (blog["notion_page"], blog["notion_url"], blog["round"]) == ("page-1", "https://notion.so/page-1", 1)
 
 
-OWNERS = {"blog": "Content lead", "changelog": "Product marketer", "social": "Social manager", "faq": "Support lead"}
+OWNERS = ("blog", "changelog", "social", "faq")
 
 
 def test_a_csv_export_run_creates_four_pages_each_with_its_owner_round_and_ping(tmp_path):
@@ -146,13 +153,13 @@ def test_a_csv_export_run_creates_four_pages_each_with_its_owner_round_and_ping(
     folder = start("csv-export", tmp_path)
     drive(folder, "csv-export", notion)
     assert sorted(notion.pages) == ["pr-3/blog", "pr-3/changelog", "pr-3/faq", "pr-3/social"]
-    for gate, name in OWNERS.items():
+    for gate in OWNERS:
         page = notion.pages[f"pr-3/{gate}"]
         assert (page["properties"]["Status"], page["properties"]["Round"]) == ("Drafted", 1)
         assert page["properties"]["Owner"] == "owner@example.com"
         pings = [c for c in notion.comments if c["page_id"] == page["id"]]
         assert len(pings) == 1 and pings[0]["mention"] == "owner@example.com"
-        assert pings[0]["markdown"].startswith(f"{name}, round 1 of the {gate} Draft")
+        assert pings[0]["markdown"].startswith(f"{owner_name(gate)}, round 1 of the {gate} Draft")
 
 
 @pytest.mark.parametrize("gate", OWNERS)
