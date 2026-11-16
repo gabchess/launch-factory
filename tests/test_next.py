@@ -560,3 +560,43 @@ def test_a_snapshot_cut_off_halfway_leaves_no_run_record_so_the_next_wake_starts
     monkeypatch.undo()
     assert not (tmp_path / "pr-3/run.json").exists()
     assert runner.current(start("csv-export", tmp_path), SKILL)["step"] == "verdict"
+
+
+def test_a_skip_run_stores_no_open_question(tmp_path):
+    folder = start("date-helpers-refactor", tmp_path)
+    assert kinds(drive(folder, "date-helpers-refactor", RecordedNotion())) == ["verdict", "final_push", "done"]
+    run = read_run(folder)
+    assert run["verdict"]["decision"] == "skip"
+    assert run["source"]["open_questions"] == []
+
+
+def launch_log(tmp_path, with_remote):
+    """A launch-log checkout like the one the agent pushes from, with or without an origin remote."""
+    remote, log = tmp_path / "remote.git", tmp_path / "log"
+    git("init", "-q", "-b", "launch-log", str(log), cwd=tmp_path)
+    for key, value in (("user.name", "test"), ("user.email", "test@example.com"), ("commit.gpgsign", "false")):
+        git("config", key, value, cwd=log)
+    if with_remote:
+        git("init", "-q", "--bare", str(remote), cwd=tmp_path)
+        git("remote", "add", "origin", str(remote), cwd=log)
+    return remote, log
+
+
+def test_a_push_that_fails_exits_nonzero_so_the_agent_cannot_answer_pushed(tmp_path):
+    _, log = launch_log(tmp_path, with_remote=False)
+    folder = start("date-helpers-refactor", log / "runs")
+    drive(folder, "date-helpers-refactor", RecordedNotion(), stop_at="final_push")
+    done = subprocess.run([sys.executable, "-I", str(SKILL / "scripts/next.py"), str(folder), "--push", "final_push"],
+                          capture_output=True, text=True, encoding="utf-8", errors="replace")
+    assert done.returncode != 0, done.stdout + done.stderr
+    assert "origin" in done.stderr
+
+
+def test_a_push_commits_only_the_run_folder_and_leaves_a_stray_file_out(tmp_path):
+    remote, log = launch_log(tmp_path, with_remote=True)
+    folder = start("date-helpers-refactor", log / "runs")
+    step = drive(folder, "date-helpers-refactor", RecordedNotion(), stop_at="final_push")[-1]
+    (log / "stray.txt").write_text("not part of the run\n", "utf-8")
+    run_commands(step, "default")
+    pushed = git("ls-tree", "-r", "--name-only", "launch-log", cwd=remote).split()
+    assert pushed and all(path.startswith("runs/pr-5/") for path in pushed), pushed
