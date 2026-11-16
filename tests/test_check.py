@@ -187,6 +187,55 @@ def test_a_decimal_is_one_number(tmp_path):
     assert "FAIL test-post line 9: number 10.50000 is not in its cited claims c3" in result.stderr.splitlines()
 
 
+def test_emphasis_does_not_split_a_sign_from_its_number(tmp_path):
+    result = run_check(variant(tmp_path, post=("under 10 seconds", "under −**10** seconds")), "test-post")
+    assert "FAIL test-post line 9: number -10 is not in its cited claims c3" in result.stderr.splitlines()
+
+
+def test_a_claim_id_used_twice_fails(tmp_path):
+    folder = variant(tmp_path)
+    run = json.loads((folder / "run.json").read_text("utf-8"))
+    run["claims"].insert(0, {"id": "c2", "quote": "This quote is completely fabricated."})
+    (folder / "run.json").write_text(json.dumps(run), "utf-8")
+    result = run_check(folder)
+    assert result.returncode == 1
+    assert "FAIL claim id c2 is used by 2 claims" in result.stderr.splitlines()
+
+
+def test_a_run_json_that_is_not_utf8_fails_with_a_fail_line(tmp_path):
+    folder = variant(tmp_path)
+    (folder / "run.json").write_bytes(b'{"id": "\xff"}')
+    result = run_check(folder)
+    assert result.returncode == 1
+    assert result.stderr.splitlines() == ["FAIL run.json is not UTF-8 text"]
+
+
+WRONG_TYPES = {
+    "gates-null": (("gates",), None, "gates must be an object"),
+    "claims-object": (("claims",), {}, "claims must be a list"),
+    "claim-no-quote": (("claims",), [{"id": "c1"}], "claim 1 must have a text id and quote"),
+    "claim-number-id": (("claims",), [{"id": 1, "quote": "Any report now exports as CSV"}], "claim 1 must have a text id and quote"),
+    "do-not-say-null": (("source", "do_not_say"), None, "source.do_not_say must be a list"),
+    "do-not-say-number":(("source", "do_not_say"), [3], "source.do_not_say must be a list of text"),
+    "decision-list": (("verdict", "decision"), ["write"], "verdict.decision must be text"),
+}
+
+
+@pytest.mark.parametrize("keys, value, message", WRONG_TYPES.values(), ids=WRONG_TYPES.keys())
+def test_a_field_of_the_wrong_type_fails_with_a_fail_line(tmp_path, keys, value, message):
+    folder = variant(tmp_path)
+    run = json.loads((folder / "run.json").read_text("utf-8"))
+    parent = run
+    for key in keys[:-1]:
+        parent = parent[key]
+    parent[keys[-1]] = value
+    (folder / "run.json").write_text(json.dumps(run), "utf-8")
+    result = run_check(folder)
+    assert result.returncode == 1
+    assert f"FAIL {message}" in result.stderr.splitlines()
+    assert "Traceback" not in result.stderr
+
+
 def test_a_number_glued_to_a_word_is_still_checked(tmp_path):
     result = run_check(variant(tmp_path, post=("50000 rows", "50001rows")), "test-post")
     assert "FAIL test-post line 9: number 50001 is not in its cited claims c3" in result.stderr.splitlines()
@@ -198,6 +247,9 @@ HIDDEN = {
     "zero-width-space": "at the beta\u200bprice.",
     "html-comment": "at the beta <!-- x --> price.",
     "fullwidth": "at the ｂｅｔａ price.",
+    "emphasis-inside-a-word": "at the beta pri**ce**.",
+    "tag-inside-a-word": "at the beta pri<span>ce</span>.",
+    "code-inside-a-word": "at the beta pri`ce`.",
 }
 
 

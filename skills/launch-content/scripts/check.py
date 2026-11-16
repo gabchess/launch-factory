@@ -19,23 +19,24 @@ PART = re.compile(r"^<!--\s*part:\s*([A-Za-z0-9_-]+)\s*-->$")
 MARK = re.compile(r"#{1,6} |[-*+>] ")
 CONTRACT = re.compile(r"```json\s*\n(.*?)\n```", re.S)
 MARKUP = re.compile(r"<!--.*?-->|<[^<>\n]*>", re.S)
-MINUS = str.maketrans({c: "-" for c in "\u2010\u2011\u2012\u2013\u2014\u2015\u2212\u2796\ufe58"})
+SYMBOLS = str.maketrans({**dict.fromkeys("*~`"), **{c: "-" for c in "\u2010\u2011\u2012\u2013\u2014\u2015\u2212\u2796\ufe58"}})
 WORD = re.compile(r"(?:(?<![^\W_])-(?=\d))?[^\W_]+(?:[.,'][^\W_]+)*")
 NUMBER = re.compile(r"-?\d+(?:[.,]\d+)*")
 GATE_NAME = re.compile(r"[a-z0-9-]+")
 MIN_QUOTE_WORDS = 3
 
 REQUIRED = {
-    "id": None,
-    "mode": None,
-    "source.kind": ("briefing", "pull_request"),
-    "source.title": None,
-    "source.do_not_say": None,
-    "source.open_questions": None,
-    "verdict.decision": ("ask", "skip", "write"),
-    "claims": None,
-    "gates": None,
+    "id": (str, None),
+    "mode": (str, None),
+    "source.kind": (str, ("briefing", "pull_request")),
+    "source.title": (str, None),
+    "source.do_not_say": (list, None),
+    "source.open_questions": (list, None),
+    "verdict.decision": (str, ("ask", "skip", "write")),
+    "claims": (list, None),
+    "gates": (dict, None),
 }
+KINDS = {str: "text", list: "a list", dict: "an object"}
 
 VERDICT_RULES = {
     "write": lambda run: [] if run["claims"] else ["verdict write has zero claims"],
@@ -65,9 +66,9 @@ class Unreadable(Exception):
 
 
 def words(text):
-    """The reader's words: Unicode NFKC, minus signs as "-", markup and other symbols dropped, lowercased."""
-    text = unicodedata.normalize("NFKC", text).translate(MINUS)
-    return tuple(WORD.findall(MARKUP.sub(" ", text).casefold()))
+    """The reader's words: Unicode NFKC, minus signs as "-", emphasis and HTML deleted, other symbols as breaks, lowercased."""
+    text = unicodedata.normalize("NFKC", text).translate(SYMBOLS)
+    return tuple(WORD.findall(MARKUP.sub("", text).casefold()))
 
 
 def find_run(haystack, needle):
@@ -83,7 +84,10 @@ def shut(run):
 def read_text(path, missing):
     if not path.is_file():
         raise Unreadable(missing)
-    return path.read_bytes().decode("utf-8")
+    try:
+        return path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        raise Unreadable(f"{path.name} is not UTF-8 text") from None
 
 
 def read_json(text, invalid):
@@ -157,7 +161,7 @@ def check_gate(run, gate, lines, skill, quotes, banned):
 
 def record_problems(run):
     problems = []
-    for path, allowed in REQUIRED.items():
+    for path, (kind, allowed) in REQUIRED.items():
         value = run
         for key in path.split("."):
             if not isinstance(value, dict) or key not in value:
@@ -165,8 +169,15 @@ def record_problems(run):
                 break
             value = value[key]
         else:
-            if allowed and value not in allowed:
+            if not isinstance(value, kind):
+                problems.append(f"{path} must be {KINDS[kind]}")
+            elif allowed and value not in allowed:
                 problems.append(f"{path} is \"{value}\", expected one of {', '.join(allowed)}")
+    if problems:
+        return problems
+    problems += [] if all(isinstance(p, str) for p in run["source"]["do_not_say"]) else ["source.do_not_say must be a list of text"]
+    problems += [f"claim {n} must have a text id and quote" for n, c in enumerate(run["claims"], 1)
+                 if not (isinstance(c, dict) and isinstance(c.get("id"), str) and isinstance(c.get("quote"), str))]
     return problems
 
 
@@ -181,6 +192,10 @@ def check(folder, gate, skill):
     if empty:
         return empty, []
     snapshot = words(read_text(folder / "snapshot.md", f"run {run['id']} has no snapshot.md"))
+    ids = [c["id"] for c in run["claims"]]
+    twice = sorted({i for i in ids if ids.count(i) > 1})
+    if twice:
+        return [f"claim id {i} is used by {ids.count(i)} claims" for i in twice], []
     quotes = {c["id"]: words(c["quote"]) for c in run["claims"]}
     failures = VERDICT_RULES[run["verdict"]["decision"]](run)
     failures += [f"claim {c['id']}: quote \"{c['quote']}\" is shorter than {MIN_QUOTE_WORDS} words"
