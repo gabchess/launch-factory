@@ -5,6 +5,9 @@ Usage:
   python next.py RUN_FOLDER --answer FILE   give the answer to that step (FILE or - for stdin), then
                                             print the step after it
   python next.py RUN_FOLDER --push KIND      the one command a push step prints: git add, commit, push
+  python next.py RUN_FOLDER --read           print the gate pages a wake reads from Notion
+  python next.py RUN_FOLDER --sweep FILE     give the reading of those pages (FILE or - for stdin), then
+                                            print the next step of the redraft loop
 
 Start a run with snapshot.py, then call this until it prints {"step": "done"} or {"step": "stopped"}.
 The model answers the verdict, the claim list and each Draft. Code parses every answer, runs the Check
@@ -395,12 +398,13 @@ def latest(state):
 
 
 def read(folder, skill):
-    """The pages a wake reads, one per gate whose round 1 is pinged. The run's own next step comes first."""
+    """The pages a wake reads, one per gate whose round 1 is pinged. The run's own steps come first; a sweep
+    cut off by a stop is read again, so its Notion writes wait on the Status the page shows now."""
     folder = Path(folder)
     step = current(folder, skill)
-    if step["step"] != "done":
-        return step
     run = load(folder)
+    if step["step"] == "stopped" or run["steps"].get("final_push") != "done":
+        return step
     pages = {gate: run["gates"][gate]["notion_page"] for gate, state in run["steps"].get("gates", {}).items()
              if state.get("r1") == "pinged"}
     return {"step": "notion_read", "pages": pages, "answer": READ_FORMAT}
@@ -454,6 +458,10 @@ def sweep(folder, text, skill):
     except StepFailed as problem:
         return {"step": "stopped", "reason": f"notion_read: {problem}"}
     if not gates:
+        held = [g for g in run["steps"].get("sweep", []) if run["steps"]["gates"][g][latest(run["steps"]["gates"][g])] not in FINISHED]
+        if held:
+            run["steps"]["sweep"] = []
+            save(folder, run)
         return {"step": "done"}
     run["steps"].update(sweep=gates, sweep_push="pending", sweep_final_push="pending")
     save(folder, run)

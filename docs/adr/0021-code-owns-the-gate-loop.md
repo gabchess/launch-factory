@@ -1,6 +1,6 @@
 # 0021: Code will own the gate loop, and the model will fill only the judgment steps
 
-Status: proposed on 2026-11-16. Nothing in this ADR is built yet. It changes the scope of build ticket B-04.
+Status: accepted, and built in build ticket B-04. `skills/launch-content/scripts/next.py` owns the order of steps, parses the verdict, the claim list and each Draft, and allows at most two repairs per Draft. Build ticket B-14 adds the redraft loop to the same script. Point 4 is not built: gate status comes from the Notion Status property, as the spec says, and ADR 0022 (planned) will replace that point.
 
 ## What the spec says today
 
