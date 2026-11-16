@@ -101,6 +101,7 @@ def test_the_shipped_owners_and_gate_contracts_build_a_board_with_owner_names(tm
     assert result.returncode == 0, result.stderr
     text, _, _ = parse(tmp_path / "index.html")
     assert "Content lead" in text["head/blog"]
+    assert text["head/blog"].endswith("· Content lead")
     assert "Support lead" in text["head/faq"]
 
 

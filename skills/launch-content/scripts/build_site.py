@@ -95,7 +95,7 @@ def owner_role(skill, gate):
 
 def owner(owners, role):
     name = owners.get("roles", {}).get(role, {}).get("display_name", "")
-    return " · ".join(part for part in (name, role.capitalize()) if part)
+    return " · ".join(part for part in (name, role.replace("-", " ").capitalize()) if part)
 
 
 def page_state(notion, key):
