@@ -1,0 +1,67 @@
+{
+  "id": "pr-csv",
+  "source": {
+    "kind": "pull_request",
+    "title": "Add CSV export",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T13:02:00Z",
+    "do_not_say": [
+      "export   MENU"
+    ],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "write",
+    "tier": "launch",
+    "rule": 5,
+    "quote": "Any report now exports as CSV",
+    "reason": "A new capability a user can see."
+  },
+  "claims": [
+    {
+      "id": "c1",
+      "quote": "Any report now exports as CSV from the Export menu."
+    },
+    {
+      "id": "c2",
+      "quote": "The export keeps the filters the user picked."
+    },
+    {
+      "id": "c3",
+      "quote": "Exports up to 50000 rows finish in under 10 seconds in our tests."
+    }
+  ],
+  "gates": {
+    "test-post": {
+      "contract": "gates/test-post.md",
+      "owner_role": "test-owner",
+      "branch": "claude/lf-pr-csv-test-post",
+      "pr": null,
+      "baseline": "runs/pr-csv/gates/test-post/draft.agent.md",
+      "baseline_sha256": "",
+      "check": {}
+    },
+    "test-card": {
+      "contract": "gates/test-card.md",
+      "owner_role": "test-owner",
+      "branch": "claude/lf-pr-csv-test-card",
+      "pr": null,
+      "baseline": "runs/pr-csv/gates/test-card/draft.agent.md",
+      "baseline_sha256": "",
+      "check": {}
+    }
+  },
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-18T13:02:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}
