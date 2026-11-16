@@ -261,8 +261,7 @@ def slip_html(folder, cell, owners):
 {chr(10).join(first)}
         </ol>
 {more}{ban}        <div class="slip-foot">
-          <p class="fine">Publishing cannot be undone.</p>
-          <a class="btn" href="{escape(cell.url or '#')}">Review and approve</a>
+          <a class="btn" href="{escape(cell.url or '#')}">Review in Notion</a>
         </div>
       </article>"""
 

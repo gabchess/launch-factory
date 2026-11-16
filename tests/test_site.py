@@ -195,6 +195,12 @@ def test_the_headline_counts_the_week(board):
     assert "6 arrived" in page and "4 drafted · 1 asked · 1 skipped" in page
 
 
+def test_the_open_slip_sends_the_reader_to_notion_and_makes_no_undo_claim(board):
+    _, _, page = board
+    assert "Review in Notion" in page
+    assert "cannot be undone" not in page
+
+
 def test_a_blog_page_shows_each_line_next_to_its_quote(site):
     text, _, page = parse(site / "blog/pr-csv/index.html")
     html = (site / "blog/pr-csv/index.html").read_text(encoding="utf-8")
