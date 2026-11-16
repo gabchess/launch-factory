@@ -1,0 +1,70 @@
+{
+  "id": "brief-seats",
+  "source": {
+    "kind": "briefing",
+    "title": "Team seats for sales managers",
+    "link": "",
+    "author": "",
+    "received": "2026-11-18T15:33:00Z",
+    "do_not_say": [
+      "per-seat pricing",
+      "unlimited seats"
+    ],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "write",
+    "tier": "launch",
+    "rule": 1,
+    "quote": "Team seats for sales managers",
+    "reason": ""
+  },
+  "claims": [
+    {
+      "id": "s1",
+      "quote": "Team seats let a manager invite each rep."
+    },
+    {
+      "id": "s2",
+      "quote": "Each rep connects their own export once."
+    },
+    {
+      "id": "s3",
+      "quote": "The manager sees one weekly report for the whole team."
+    }
+  ],
+  "gates": {
+    "blog": {
+      "contract": "gates/blog.md",
+      "owner_role": "content",
+      "check": {}
+    },
+    "changelog": {
+      "contract": "gates/changelog.md",
+      "owner_role": "marketing",
+      "check": {}
+    },
+    "social": {
+      "contract": "gates/social.md",
+      "owner_role": "social",
+      "check": {}
+    },
+    "faq": {
+      "contract": "gates/faq.md",
+      "owner_role": "support",
+      "check": {}
+    }
+  },
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-18T15:33:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}

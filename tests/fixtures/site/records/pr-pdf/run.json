@@ -1,0 +1,44 @@
+{
+  "id": "pr-pdf",
+  "source": {
+    "kind": "pull_request",
+    "title": "Add PDF export",
+    "link": "",
+    "author": "",
+    "received": "2026-11-17T17:02:00Z",
+    "do_not_say": [],
+    "open_questions": []
+  },
+  "mode": "suggest",
+  "verdict": {
+    "decision": "write",
+    "tier": "changelog",
+    "rule": 1,
+    "quote": "Add PDF export",
+    "reason": ""
+  },
+  "claims": [
+    {
+      "id": "p1",
+      "quote": "Any report now exports as PDF from the Export menu."
+    }
+  ],
+  "gates": {
+    "changelog": {
+      "contract": "gates/changelog.md",
+      "owner_role": "marketing",
+      "check": {}
+    }
+  },
+  "steps": {
+    "snapshot": "done",
+    "verdict": "done",
+    "claims": "done",
+    "gates": {}
+  },
+  "times": {
+    "received": "2026-11-17T17:02:00Z",
+    "verdict": "",
+    "proposed": ""
+  }
+}
