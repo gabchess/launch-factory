@@ -24,6 +24,9 @@ def build(out, notion=None, runs=None):
     return subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
 
 
+VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+
 class Keyed(HTMLParser):
     """Collects the visible text of every element that carries data-key, and the text of the whole page."""
 
@@ -33,8 +36,9 @@ class Keyed(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if tag == "br":
+        if tag in VOID:
             self.handle_data(" ")
+            return
         if "data-key" in attrs:
             self.open.append([attrs["data-key"], 0])
             self.text[attrs["data-key"]] = ""
@@ -246,3 +250,29 @@ def test_a_passing_gate_with_no_notion_page_is_not_shown_as_drafted(tmp_path):
     text, _, _ = parse(tmp_path / "out/index.html")
     assert "NO PAGE YET" in text["cell/brief-seats/social"]
     assert "DRAFTED" not in text["cell/brief-seats/social"]
+
+
+def test_the_text_reader_closes_a_keyed_element_that_holds_a_line_break():
+    parser = Keyed()
+    parser.feed('<div data-key="a">A<br>B</div><div data-key="b">C</div>')
+    assert squash(parser.text["a"]) == "A B"
+    assert squash(parser.text["b"]) == "C"
+
+
+def test_a_rebuild_removes_a_blog_page_whose_gate_is_no_longer_published(tmp_path):
+    out = tmp_path / "out"
+    assert build(out).returncode == 0
+    assert (out / "blog/pr-csv/index.html").is_file()
+    notion = json.loads((FIXTURES / "notion.json").read_text(encoding="utf-8"))
+    notion["pr-csv/blog"]["status"] = "Rejected"
+    (tmp_path / "notion.json").write_text(json.dumps(notion), encoding="utf-8")
+    assert build(out, notion=tmp_path / "notion.json").returncode == 0
+    assert not (out / "blog/pr-csv").exists()
+
+
+def test_every_reference_on_a_published_page_reaches_a_target_on_that_page(site):
+    for page in ("blog/pr-csv/index.html", "changelog/index.html", "faq/index.html"):
+        html = (site / page).read_text(encoding="utf-8")
+        targets = set(re.findall(r'\bid="([^"]+)"', html))
+        anchors = re.findall(r'href="#([^"]+)"', html)
+        assert all(anchor in targets for anchor in anchors), (page, anchors, targets)

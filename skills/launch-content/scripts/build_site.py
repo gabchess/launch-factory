@@ -9,6 +9,7 @@ A gate's Status is read only from it, never from run.json, and a gate whose Draf
 import argparse
 import json
 import re
+import shutil
 import sys
 from datetime import datetime
 from html import escape
@@ -261,13 +262,16 @@ def slip_html(folder, cell, owners):
       </article>"""
 
 
-def ref(claims, claim_id, root):
-    number = claims.get(claim_id, ("?",))[0]
-    return f'<a class="ref" href="{root}#{escape(claim_id)}" aria-label="Source for claim {escape(claim_id)}">{number}</a>'
+def ref(claims, claim_id, linked):
+    """A link to the quote list on a blog page; elsewhere the quote rides in the title, since no quote list is on the page."""
+    number, quote = claims.get(claim_id, ("?", ""))
+    if linked:
+        return f'<a class="ref" href="#{escape(claim_id)}" aria-label="Source for claim {escape(claim_id)}">{number}</a>'
+    return f'<span class="ref" title="{escape(quote)}">{number}</span>'
 
 
-def sentence(line, claims, root=""):
-    return f"<p>{escape(line.text)}{''.join(ref(claims, c, root) for c in line.claims)}</p>"
+def sentence(line, claims, linked=True):
+    return f"<p>{escape(line.text)}{''.join(ref(claims, c, linked) for c in line.claims)}</p>"
 
 
 def post_page(owners, title, root, current, main, nav_links, script=""):
@@ -336,7 +340,7 @@ def list_page(owners, title, current, entries, nav_links, script=""):
 def changelog_entry(folder, run):
     claims = {c["id"]: (n, c["quote"]) for n, c in enumerate(run["claims"], 1)}
     lines = shown_lines((folder / "gates/changelog/draft.md").read_text(encoding="utf-8"))
-    body = "\n".join("        " + sentence(line, claims) for line in lines)
+    body = "\n".join("        " + sentence(line, claims, linked=False) for line in lines)
     return f"""    <li data-key="changelog/{escape(run['id'])}">
       <p class="entry-when">{when(run['source'].get('received'), '%a %d %b %Y')}</p>
       <h2>{escape(run['source']['title'])}</h2>
@@ -357,7 +361,7 @@ def faq_entries(folder, run):
     return "\n".join(f"""    <li data-key="faq/{escape(run['id'])}/{n}">
       <h2>{escape(question)}</h2>
       <div class="body">
-{chr(10).join('        ' + sentence(line, claims) for line in answer)}
+{chr(10).join('        ' + sentence(line, claims, linked=False) for line in answer)}
       </div>
     </li>""" for n, (question, answer) in enumerate(groups, 1))
 
@@ -415,6 +419,7 @@ def build(runs_folder, notion_path, owners_path, skill, out):
         slip=slip_html(folders[selected.run["id"]], selected, owners) if selected else ""))
 
     published = {g: [c for _, run in runs for c in [cells[run["id"]].get(g)] if c and c.published] for g in GATES}
+    shutil.rmtree(out / "blog", ignore_errors=True)
     nav_links = {"blog": f"blog/{published['blog'][0].run['id']}/index.html"} if published["blog"] else {}
     for cell in published["blog"]:
         also = {g for g, c in cells[cell.run["id"]].items() if c.published}
