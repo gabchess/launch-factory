@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Explainer</title>
+<style>
+:root {
+  --bg: #f6f5f1; --panel: #ffffff; --ink: #1b1b1f; --muted: #5b5b66;
+  --accent: #1f5fd1; --accent-ink: #ffffff; --line: #d9d7cf; --err: #b00020; --err-bg: #fdecef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121316; --panel: #1c1e23; --ink: #f1f0ec; --muted: #a6a7b2;
+    --accent: #7aa7ff; --accent-ink: #0b1020; --line: #34363d; --err: #ff8a9b; --err-bg: #2c1519;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121316; --panel: #1c1e23; --ink: #f1f0ec; --muted: #a6a7b2;
+  --accent: #7aa7ff; --accent-ink: #0b1020; --line: #34363d; --err: #ff8a9b; --err-bg: #2c1519;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 18px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100vh; padding: 24px 16px; }
+main { max-width: 960px; margin: 0 auto; display: grid; gap: 16px; }
+.title { margin: 0; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.stage {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  min-height: 340px; padding: clamp(20px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; gap: 20px;
+}
+.count { margin: 0 0 12px; font-size: 14px; color: var(--muted); }
+h2 { margin: 0 0 16px; line-height: 1.15; font-size: clamp(28px, 6vw, 56px); overflow-wrap: anywhere; }
+.caption { margin: 0; font-size: clamp(18px, 3vw, 28px); line-height: 1.4; overflow-wrap: anywhere; }
+.source { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
+.controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+button {
+  font: inherit; font-weight: 600; min-height: 44px; min-width: 96px; padding: 0 20px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+}
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.bar { flex: 1 1 200px; height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.bar > div { height: 100%; width: 0; background: var(--accent); }
+.time { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); }
+.error { background: var(--err-bg); color: var(--err); border: 2px solid var(--err); border-radius: 12px; padding: 16px; font-weight: 600; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <p class="title" id="title"></p>
+  <div id="error" class="error" role="alert" hidden></div>
+  <section class="stage" id="stage" aria-live="polite">
+    <div id="scene">
+      <p class="count" id="count"></p>
+      <h2 id="headline"></h2>
+      <p class="caption" id="caption"></p>
+      <p class="source" id="source" hidden></p>
+    </div>
+    <div id="endcard" hidden>
+      <h2 id="end-headline"></h2>
+      <p class="caption" id="end-caption"></p>
+    </div>
+  </section>
+  <div class="controls">
+    <button id="play" type="button">Play</button>
+    <div class="bar" id="bar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill"></div></div>
+    <span class="time" id="time">0.0 / 0.0 s</span>
+  </div>
+</main>
+
+<!-- LF:SPEC-BEGIN -->
+<script type="application/json" id="launch-spec">
+{
+  "title": "Replace this title",
+  "scenes": [
+    {"headline": "Replace this headline", "caption": "Replace this caption with the line a person would read aloud.", "duration": 4, "source": 1}
+  ],
+  "end": {"headline": "Replace the end card headline", "caption": "Replace the end card line."}
+}
+</script>
+<!-- LF:SPEC-END -->
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fail(msg) {
+    var e = $('error');
+    e.textContent = 'Spec error: ' + msg;
+    e.hidden = false;
+    $('stage').hidden = true;
+    $('play').disabled = true;
+  }
+
+  function isText(v) { return typeof v === 'string' && v.trim() !== ''; }
+
+  // Returns an error string naming the field, or '' when the spec is valid.
+  function validate(s) {
+    if (!s || typeof s !== 'object') return 'spec must be a JSON object';
+    if (!isText(s.title)) return 'title must be non-empty text';
+    if (!Array.isArray(s.scenes) || s.scenes.length === 0) return 'scenes must be a non-empty list';
+    for (var i = 0; i < s.scenes.length; i++) {
+      var sc = s.scenes[i], p = 'scenes[' + i + '].';
+      if (!sc || typeof sc !== 'object') return 'scenes[' + i + '] must be an object';
+      if (!isText(sc.headline)) return p + 'headline must be non-empty text';
+      if (!isText(sc.caption)) return p + 'caption must be non-empty text';
+      if (typeof sc.duration !== 'number' || !isFinite(sc.duration) || sc.duration <= 0) return p + 'duration must be a number of seconds above 0';
+      if (sc.source !== undefined && typeof sc.source !== 'number' && !isText(sc.source)) return p + 'source must be a number or text';
+    }
+    if (!s.end || typeof s.end !== 'object') return 'end must be an object';
+    if (!isText(s.end.headline)) return 'end.headline must be non-empty text';
+    if (!isText(s.end.caption)) return 'end.caption must be non-empty text';
+    return '';
+  }
+
+  var spec;
+  try { spec = JSON.parse($('launch-spec').textContent); }
+  catch (e) { fail('the JSON block is not valid JSON (' + e.message + ')'); return; }
+  var problem = validate(spec);
+  if (problem) { fail(problem); return; }
+
+  document.title = spec.title;
+  $('title').textContent = spec.title;
+
+  var starts = [], total = 0;
+  spec.scenes.forEach(function (sc) { starts.push(total); total += sc.duration; });
+
+  // Pure mapping from time to scene. A scene owns [start, start + duration). At or past the total, the end card.
+  function locate(t) {
+    if (!(t >= 0)) t = 0;
+    if (t >= total) return -1;
+    for (var i = spec.scenes.length - 1; i >= 0; i--) if (t >= starts[i]) return i;
+    return 0;
+  }
+
+  var now = 0;
+  function draw(seconds) {
+    var t = Number(seconds);
+    if (!(t >= 0)) t = 0;
+    if (t > total) t = total;
+    now = t;
+    var i = locate(t), isEnd = i < 0;
+    $('scene').hidden = isEnd;
+    $('endcard').hidden = !isEnd;
+    document.body.dataset.scene = isEnd ? 'end' : String(i + 1);
+    if (isEnd) {
+      $('end-headline').textContent = spec.end.headline;
+      $('end-caption').textContent = spec.end.caption;
+    } else {
+      var sc = spec.scenes[i];
+      $('count').textContent = 'Scene ' + (i + 1) + ' of ' + spec.scenes.length;
+      $('headline').textContent = sc.headline;
+      $('caption').textContent = sc.caption;
+      var src = $('source');
+      if (sc.source !== undefined) { src.textContent = 'Source ' + sc.source; src.hidden = false; } else { src.hidden = true; }
+    }
+    var pct = total > 0 ? (t / total) * 100 : 0;
+    $('fill').style.width = pct + '%';
+    $('bar').setAttribute('aria-valuenow', String(Math.round(pct)));
+    $('time').textContent = t.toFixed(1) + ' / ' + total.toFixed(1) + ' s';
+    return { scene: isEnd ? 'end' : i + 1, time: t };
+  }
+
+  var playing = false, raf = 0, startedAt = 0, startedFrom = 0, btn = $('play');
+  function setBtn() { btn.textContent = playing ? 'Pause' : (now >= total ? 'Replay' : 'Play'); }
+  function tick(ts) {
+    if (!playing) return;
+    var t = startedFrom + (ts - startedAt) / 1000;
+    if (t >= total) { draw(total); playing = false; setBtn(); return; }
+    draw(t);
+    raf = requestAnimationFrame(tick);
+  }
+  function play() {
+    if (now >= total) now = 0;
+    playing = true; startedFrom = now; startedAt = performance.now(); setBtn();
+    raf = requestAnimationFrame(tick);
+  }
+  function pause() { playing = false; cancelAnimationFrame(raf); setBtn(); }
+  btn.addEventListener('click', function () { if (playing) pause(); else play(); });
+
+  // Public: draw the page as it looks at this second. If playing, the clock continues from there.
+  window.renderAt = function (seconds) {
+    var r = draw(seconds);
+    if (playing) { startedFrom = now; startedAt = performance.now(); }
+    else setBtn();
+    return r;
+  };
+
+  draw(0);
+  setBtn();
+})();
+</script>
+</body>
+</html>

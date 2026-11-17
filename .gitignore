@@ -1,4 +1,4 @@
-.playwright-mcp/
-launch/
-.launch-factory/
-*.zip
+/.playwright-mcp/
+/launch/
+/.launch-factory/
+/*.zip
