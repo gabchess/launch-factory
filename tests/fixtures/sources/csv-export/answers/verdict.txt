@@ -1,1 +1,0 @@
-write | launch | 5 | The weekly report can now be saved as a CSV file | A new capability a user can name, a CSV download of the weekly report.

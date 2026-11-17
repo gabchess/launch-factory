@@ -1,7 +1,0 @@
-[
-  {"id": "c1", "quote": "Managers asked for a way to send the weekly report to their director or load it into a spreadsheet."},
-  {"id": "c2", "quote": "The weekly report can now be saved as a CSV file with one row per stage and a total row at the end."},
-  {"id": "c3", "quote": "The file has the columns stage and deals, then a total row with the pipeline total."},
-  {"id": "c4", "quote": "Adds a CSV download of the weekly report."},
-  {"id": "c5", "quote": "Merged on 18 November 2026."}
-]
