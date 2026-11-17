@@ -62,8 +62,8 @@ It sends nothing to anyone and posts nothing. Your text goes only to the Claude 
 
 ## Tested on
 
-- Claude Code: not verified
-- Cowork: not verified
+- Claude Code: verified 2026-11-17, one run of the first prompt without its example link, with `--plugin-dir`
+- Cowork: verified 2026-11-17, uploaded as a zip and run with the first prompt without its example link
 
 ## Rollback
 
