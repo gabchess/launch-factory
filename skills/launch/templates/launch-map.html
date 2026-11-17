@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch map</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #f6f5f1; --panel: #ffffff; --ink: #1d2128; --muted: #5b6470; --line: #b9bfc8;
+  --accent: #2f5fd0; --accent-ink: #ffffff; --chip: #e8edf9; --err-bg: #fdecea; --err-ink: #8a1f17; --err-line: #e0877f;
+  --shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c; --panel: #1e232b; --ink: #eceef2; --muted: #a2abb8; --line: #3d4653;
+    --accent: #7a9cf2; --accent-ink: #10151f; --chip: #2a3550; --err-bg: #3a1d1b; --err-ink: #ffb4ad; --err-line: #8a4640;
+    --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171c; --panel: #1e232b; --ink: #eceef2; --muted: #a2abb8; --line: #3d4653;
+  --accent: #7a9cf2; --accent-ink: #10151f; --chip: #2a3550; --err-bg: #3a1d1b; --err-ink: #ffb4ad; --err-line: #8a4640;
+  --shadow: none;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 4px; overflow-wrap: anywhere; }
+.sub { color: var(--muted); margin: 0 0 24px; overflow-wrap: anywhere; }
+.map { position: relative; display: flex; flex-direction: column; gap: 14px; }
+.col { display: contents; }
+.center { order: -1; background: var(--accent); color: var(--accent-ink); border-radius: 16px; padding: 18px 20px; text-align: center; box-shadow: var(--shadow); min-width: 0; }
+.center .label { font-size: 1.25rem; font-weight: 700; overflow-wrap: anywhere; }
+.center .note { margin-top: 4px; font-size: .95rem; overflow-wrap: anywhere; }
+.branch { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); min-width: 0; }
+.branch .label { font-weight: 650; overflow-wrap: anywhere; }
+.branch .note { color: var(--muted); font-size: .92rem; margin-top: 2px; overflow-wrap: anywhere; }
+.items { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.item { background: var(--chip); border-radius: 8px; padding: 6px 10px; min-width: 0; }
+.item .label { font-weight: 600; font-size: .94rem; }
+.item .note { font-size: .86rem; margin-top: 0; }
+.src { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: .72rem; font-weight: 700; vertical-align: 1px; }
+.center .src { background: var(--accent-ink); color: var(--accent); }
+svg.wires { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; display: none; overflow: visible; }
+svg.wires path { fill: none; stroke: var(--line); stroke-width: 2; }
+.sources { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
+.sources h2 { font-size: 1rem; margin: 0 0 8px; }
+.sources h2.nt { margin-top: 16px; }
+.sources ol, .sources ul { margin: 0; padding-left: 22px; color: var(--muted); overflow-wrap: anywhere; }
+.sources .none { margin: 0; color: var(--muted); }
+[role="alert"] { background: var(--err-bg); color: var(--err-ink); border: 2px solid var(--err-line); border-radius: 12px; padding: 16px 18px; }
+[role="alert"] h2 { margin: 0 0 8px; font-size: 1.15rem; }
+[role="alert"] ul { margin: 8px 0; padding-left: 20px; overflow-wrap: anywhere; }
+[role="alert"] p { margin: 8px 0 0; }
+/* Wide screens: center in the middle, branches in a column on each side, joined by curves. */
+@media (min-width: 900px) {
+  .map { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px) minmax(0, 1fr); gap: 56px; align-items: center; }
+  .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .center { order: 0; }
+  svg.wires { display: block; }
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<!-- LAUNCH-SPEC-START -->
+<script type="application/json" id="launch-spec">
+{
+  "title": "Replace this title",
+  "subtitle": "Replace this line, or delete it",
+  "center": { "label": "Replace this with the launch", "note": "Replace this note, or delete it" },
+  "branches": [
+    { "label": "Replace this branch", "note": "Replace this note, or delete it", "source": 1,
+      "items": [ { "label": "Replace this item", "note": "Replace this note, or delete it" } ] }
+  ],
+  "sources": [ "Replace this with the first source" ],
+  "notTraced": []
+}
+</script>
+<!-- LAUNCH-SPEC-END -->
+
+<script>
+(function () {
+  "use strict";
+  var app = document.getElementById("app");
+
+  function isObj(v) { return v !== null && typeof v === "object" && !Array.isArray(v); }
+  function isText(v) { return typeof v === "string" && v.trim().length > 0; }
+
+  // Returns a list of plain messages. An empty list means the spec can be drawn.
+  function validate(spec) {
+    var errs = [];
+    if (!isObj(spec)) return ["The spec must be a JSON object."];
+    if (!isText(spec.title)) errs.push("title is missing (a non-empty text)");
+    if (spec.subtitle !== undefined && typeof spec.subtitle !== "string") errs.push("subtitle must be text");
+    if (!isObj(spec.center)) errs.push("center is missing (an object with a label)");
+    else {
+      if (!isText(spec.center.label)) errs.push("center.label is missing (a non-empty text)");
+      if (spec.center.note !== undefined && typeof spec.center.note !== "string") errs.push("center.note must be text");
+    }
+    var nSrc = 0, hasList = false;
+    if (!Array.isArray(spec.sources)) errs.push("sources is missing (a list of text, one per source)");
+    else {
+      hasList = true;
+      nSrc = spec.sources.length;
+      spec.sources.forEach(function (s, i) { if (!isText(s)) errs.push("sources[" + i + "] must be a non-empty text"); });
+    }
+    if (!Array.isArray(spec.notTraced)) errs.push("notTraced is missing (a list of text, empty when nothing is untraced)");
+    else spec.notTraced.forEach(function (s, i) { if (!isText(s)) errs.push("notTraced[" + i + "] must be a non-empty text"); });
+    function checkSource(n, path) {
+      if (n.source === undefined) return;
+      if (!Number.isInteger(n.source) || n.source < 1) errs.push(path + ".source must be a whole number from 1");
+      else if (!hasList) errs.push(path + ".source " + n.source + " has no sources list to point to");
+      else if (n.source > nSrc) errs.push(path + ".source " + n.source + " has no entry in sources (" + nSrc + " listed)");
+    }
+    if (isObj(spec.center)) checkSource(spec.center, "center");
+    function checkNode(n, path, canHaveItems) {
+      if (!isObj(n)) { errs.push(path + " must be an object"); return; }
+      if (!isText(n.label)) errs.push(path + ".label is missing (a non-empty text)");
+      if (n.note !== undefined && typeof n.note !== "string") errs.push(path + ".note must be text");
+      checkSource(n, path);
+      if (n.items !== undefined) {
+        if (!canHaveItems) errs.push(path + ".items is not allowed here (only branches have items)");
+        else if (!Array.isArray(n.items)) errs.push(path + ".items must be a list");
+        else {
+          if (n.items.length > 6) errs.push(path + ".items has " + n.items.length + " entries (6 at most)");
+          n.items.forEach(function (it, j) { checkNode(it, path + ".items[" + j + "]", false); });
+        }
+      }
+    }
+    if (!Array.isArray(spec.branches)) errs.push("branches is missing (a list of 1 to 8 branches)");
+    else {
+      if (spec.branches.length < 1 || spec.branches.length > 8) errs.push("branches has " + spec.branches.length + " entries (1 to 8 allowed)");
+      spec.branches.forEach(function (b, i) { checkNode(b, "branches[" + i + "]", true); });
+    }
+    return errs;
+  }
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function showErrors(list) {
+    document.title = "Launch map: spec error";
+    app.textContent = "";
+    var box = el("div"); box.setAttribute("role", "alert");
+    box.appendChild(el("h2", null, "This launch map cannot be drawn"));
+    box.appendChild(el("p", null, list.length === 1 ? "1 problem in the spec:" : list.length + " problems in the spec:"));
+    var ul = el("ul");
+    list.forEach(function (m) { ul.appendChild(el("li", null, m)); });
+    box.appendChild(ul);
+    box.appendChild(el("p", null, "Fix the JSON block between the LAUNCH-SPEC-START and LAUNCH-SPEC-END markers, then reload."));
+    app.appendChild(box);
+  }
+
+  function nodeBox(cls, n) {
+    var d = el(cls === "item" ? "li" : "div", cls);
+    var l = el("div", "label", n.label);
+    if (n.source) l.appendChild(el("span", "src", "[" + n.source + "]"));
+    d.appendChild(l);
+    if (n.note) d.appendChild(el("div", "note", n.note));
+    return d;
+  }
+
+  var wires = null, centerEl = null, branchEls = [], mapEl = null;
+
+  function drawWires() {
+    if (!wires || getComputedStyle(wires).display === "none") return;
+    var m = mapEl.getBoundingClientRect(), c = centerEl.getBoundingClientRect();
+    var cy = c.top + c.height / 2 - m.top, d = "";
+    branchEls.forEach(function (b) {
+      var r = b.getBoundingClientRect();
+      var onLeft = r.left + r.width / 2 < c.left + c.width / 2;
+      var bx = (onLeft ? r.right : r.left) - m.left, by = r.top + r.height / 2 - m.top;
+      var sx = (onLeft ? c.left : c.right) - m.left, mx = (sx + bx) / 2;
+      d += "M" + sx + " " + cy + " C" + mx + " " + cy + " " + mx + " " + by + " " + bx + " " + by + " ";
+    });
+    wires.setAttribute("viewBox", "0 0 " + m.width + " " + m.height);
+    wires.firstChild.setAttribute("d", d);
+  }
+
+  function draw(spec) {
+    document.title = spec.title + " - launch map";
+    app.textContent = "";
+    app.appendChild(el("h1", null, spec.title));
+    if (spec.subtitle) app.appendChild(el("p", "sub", spec.subtitle));
+
+    mapEl = el("div", "map");
+    var ns = "http://www.w3.org/2000/svg";
+    wires = document.createElementNS(ns, "svg");
+    wires.setAttribute("class", "wires");
+    wires.setAttribute("aria-hidden", "true");
+    wires.appendChild(document.createElementNS(ns, "path"));
+    mapEl.appendChild(wires);
+
+    var left = el("div", "col"), right = el("div", "col");
+    centerEl = nodeBox("center", spec.center);
+    branchEls = [];
+    var half = Math.ceil(spec.branches.length / 2);
+    spec.branches.forEach(function (b, i) {
+      var box = nodeBox("branch", b);
+      if (b.items && b.items.length) {
+        var ul = el("ul", "items");
+        b.items.forEach(function (it) { ul.appendChild(nodeBox("item", it)); });
+        box.appendChild(ul);
+      }
+      branchEls.push(box);
+      (i < half ? left : right).appendChild(box);
+    });
+    mapEl.appendChild(left); mapEl.appendChild(centerEl); mapEl.appendChild(right);
+    app.appendChild(mapEl);
+
+    var sec = el("section", "sources");
+    sec.appendChild(el("h2", null, "Sources"));
+    if (spec.sources.length) {
+      var ol = el("ol");
+      spec.sources.forEach(function (s) { ol.appendChild(el("li", null, s)); });
+      sec.appendChild(ol);
+    } else sec.appendChild(el("p", "none", "None listed."));
+    sec.appendChild(el("h2", "nt", "Not traced"));
+    if (spec.notTraced.length) {
+      var ul2 = el("ul");
+      spec.notTraced.forEach(function (s) { ul2.appendChild(el("li", null, s)); });
+      sec.appendChild(ul2);
+    } else sec.appendChild(el("p", "none", "None."));
+    app.appendChild(sec);
+    if (window.ResizeObserver) new ResizeObserver(drawWires).observe(mapEl);
+    window.addEventListener("resize", drawWires);
+    drawWires();
+  }
+
+  function run() {
+    var node = document.getElementById("launch-spec"), spec;
+    if (!node) return showErrors(["The JSON block with id launch-spec is missing."]);
+    try { spec = JSON.parse(node.textContent); }
+    catch (e) { return showErrors(["The spec is not valid JSON: " + e.message]); }
+    var errs = validate(spec);
+    if (errs.length) return showErrors(errs);
+    draw(spec);
+  }
+  try { run(); }
+  catch (e) { showErrors(["Unexpected problem while drawing: " + e.message]); }
+})();
+</script>
+</body>
+</html>

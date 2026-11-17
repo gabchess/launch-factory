@@ -1,0 +1,8 @@
+{
+  "name": "launch-factory",
+  "description": "Turn a briefing and a few links into six launch drafts in one chat, then redraft from your notes.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Gabriel Abreu"
+  }
+}
