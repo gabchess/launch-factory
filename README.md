@@ -4,9 +4,9 @@ Turn a briefing and a few links into six launch drafts in one chat, then redraft
 
 ## What it does
 
-You type one command and give it a briefing, links, a pasted team thread, or all three. Launch Factory reads each source, shows you a plan, and writes six drafts: a blog post, a changelog entry, an FAQ update, social posts, a launch map and an explainer. The last two are single HTML files you open in a browser. It saves them in a `launch/<name>/` folder, shows them in the chat and waits for your feedback.
+You type one command and give it a briefing, links, a pasted team thread, or all three. Launch Factory reads each source, shows you a plan, and writes six drafts: a blog post, a changelog entry, an FAQ update, social posts, a launch map and an explainer. The last two are single HTML files you open in a browser. In the explainer you press Play to start it. It saves them in a `launch/<name>/` folder, shows them in the chat and waits for your feedback.
 
-Every claim in a draft carries a number that points to a Sources list, and a "Not traced" list shows what it could not match to a source. Ask for a change and it writes a new version next to the old one, such as `blog-v2.md` beside `blog.md`, and leaves everything else alone. It never publishes, posts, sends, merges or spends. A person does that.
+Every claim in a draft carries a number that points to a Sources list, and a "Not traced" list shows what it could not match to a source. The two HTML files draw both lists on the page. Ask for a change and it writes a new version next to the old one, such as `blog-v2.md` beside `blog.md` or `launch-map-v2.html` beside `launch-map.html`. A changed explainer comes as `explainer-v2.html` and `explainer-script-v2.md` together. It leaves everything else alone. It never publishes, posts, sends, merges or spends. A person does that.
 
 ## Install in Claude Code
 
@@ -40,7 +40,7 @@ Then type `/launch-factory:launch`. You should see Claude ask what you are launc
 3. Go to **Customize > Plugins**.
 4. Select **Add > Upload plugin** and choose `launch-factory.zip`.
 5. Start a new Cowork task. The plugin loads when the task starts.
-6. Type `/launch-factory:launch`, or describe the job and let Claude pick the skill.
+6. Type `/launch-factory:launch`. That command is the only way to start a run.
 
 ## First prompt
 
@@ -50,7 +50,7 @@ Copy this into Claude after the install:
 /launch-factory:launch Briefing: Ledgerly, a small invoicing app for freelancers, ships "Recurring invoices" on 3 December. Freelancers can set an invoice to repeat weekly or monthly and Ledgerly sends it for them. It is free on every plan. Audience: freelance designers and writers. Tone: friendly and plain. Link: https://github.com/example/ledgerly/pull/42
 ```
 
-You should see Claude read your briefing, try the link, show a short plan, then show six drafts with a status line each. It ends by asking what you think, and it puts what waits on you first. If the example link cannot be read, Claude asks you to paste its text.
+You should see Claude read your briefing, try the link, show a short plan, then show six drafts with a status line each. The message starts with what waits on you, and it ends by asking what you think. If the example link cannot be read, Claude lists it there and asks you to paste its text.
 
 ## Data
 

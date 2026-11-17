@@ -43,6 +43,12 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .bar > div { height: 100%; width: 0; background: var(--accent); }
 .time { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); }
 .error { background: var(--err-bg); color: var(--err); border: 2px solid var(--err); border-radius: 12px; padding: 16px; font-weight: 600; }
+.prov { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+.prov h3 { margin: 0 0 8px; font-size: 16px; }
+.prov h3 + ol, .prov h3 + ul, .prov h3 + p { margin-top: 0; }
+.prov h3.nt { margin-top: 16px; }
+.prov ol, .prov ul { margin: 0; padding-left: 22px; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+.prov p { margin: 0; font-size: 15px; color: var(--muted); }
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -67,19 +73,27 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     <div class="bar" id="bar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill"></div></div>
     <span class="time" id="time">0.0 / 0.0 s</span>
   </div>
+  <section class="prov" id="prov">
+    <h3>Sources</h3>
+    <div id="sources"></div>
+    <h3 class="nt">Not traced</h3>
+    <div id="nottraced"></div>
+  </section>
 </main>
 
-<!-- LF:SPEC-BEGIN -->
+<!-- LAUNCH-SPEC-START -->
 <script type="application/json" id="launch-spec">
 {
   "title": "Replace this title",
   "scenes": [
     {"headline": "Replace this headline", "caption": "Replace this caption with the line a person would read aloud.", "duration": 4, "source": 1}
   ],
-  "end": {"headline": "Replace the end card headline", "caption": "Replace the end card line."}
+  "end": {"headline": "Replace the end card headline", "caption": "Replace the end card line."},
+  "sources": ["Replace this with the first source"],
+  "notTraced": []
 }
 </script>
-<!-- LF:SPEC-END -->
+<!-- LAUNCH-SPEC-END -->
 
 <script>
 (function () {
@@ -91,6 +105,7 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     e.textContent = 'Spec error: ' + msg;
     e.hidden = false;
     $('stage').hidden = true;
+    $('prov').hidden = true;
     $('play').disabled = true;
   }
 
@@ -107,11 +122,19 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
       if (!isText(sc.headline)) return p + 'headline must be non-empty text';
       if (!isText(sc.caption)) return p + 'caption must be non-empty text';
       if (typeof sc.duration !== 'number' || !isFinite(sc.duration) || sc.duration <= 0) return p + 'duration must be a number of seconds above 0';
-      if (sc.source !== undefined && typeof sc.source !== 'number' && !isText(sc.source)) return p + 'source must be a number or text';
+      if (sc.source !== undefined) {
+        if (!Number.isInteger(sc.source) || sc.source < 1) return p + 'source must be a whole number from 1';
+        if (!Array.isArray(s.sources)) return p + 'source ' + sc.source + ' has no sources list to point to';
+        if (sc.source > s.sources.length) return p + 'source ' + sc.source + ' has no entry in sources (' + s.sources.length + ' listed)';
+      }
     }
     if (!s.end || typeof s.end !== 'object') return 'end must be an object';
     if (!isText(s.end.headline)) return 'end.headline must be non-empty text';
     if (!isText(s.end.caption)) return 'end.caption must be non-empty text';
+    if (!Array.isArray(s.sources)) return 'sources must be a list of text, one per source';
+    for (var j = 0; j < s.sources.length; j++) if (!isText(s.sources[j])) return 'sources[' + j + '] must be non-empty text';
+    if (!Array.isArray(s.notTraced)) return 'notTraced must be a list of text (empty when nothing is untraced)';
+    for (var k = 0; k < s.notTraced.length; k++) if (!isText(s.notTraced[k])) return 'notTraced[' + k + '] must be non-empty text';
     return '';
   }
 
@@ -123,6 +146,16 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
   document.title = spec.title;
   $('title').textContent = spec.title;
+
+  function fillList(id, items, tag, emptyText) {
+    var host = $(id);
+    if (!items.length) { var p = document.createElement('p'); p.textContent = emptyText; host.appendChild(p); return; }
+    var list = document.createElement(tag);
+    items.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; list.appendChild(li); });
+    host.appendChild(list);
+  }
+  fillList('sources', spec.sources, 'ol', 'None listed.');
+  fillList('nottraced', spec.notTraced, 'ul', 'None.');
 
   var starts = [], total = 0;
   spec.scenes.forEach(function (sc) { starts.push(total); total += sc.duration; });
