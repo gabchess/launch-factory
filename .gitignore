@@ -1,8 +1,0 @@
-*.pyc
-.venv/
-__pycache__/
-.pytest_cache/
-runs/
-.DS_Store
-.env
-.env.*
