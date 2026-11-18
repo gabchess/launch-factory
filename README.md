@@ -28,17 +28,17 @@ From the GitHub repository:
 
 From a local folder or a zip:
 
-1. Unzip the file. You now have a folder named `launch-factory`.
-2. Start Claude Code with it, as above. Claude Code also takes the zip itself: `claude --plugin-dir ./launch-factory.zip`.
+1. Unzip the file. A zip named `launch-factory.zip` gives a folder named `launch-factory`. GitHub's **Code > Download ZIP** button gives `launch-factory-main` instead, so use that name in the next step.
+2. Start Claude Code with the folder, as above. Claude Code also takes the zip itself: `claude --plugin-dir ./launch-factory.zip`.
 
 Then type `/launch-factory:launch`. You should see Claude ask what you are launching, or start on what you gave it. The folder loads for that session only.
 
 ## Install in Cowork
 
-1. Download the zip of this repository, or the zip you were sent.
+1. Use the `launch-factory.zip` you were sent. GitHub's **Code > Download ZIP** button gives a different zip, `launch-factory-main.zip`, which has not been tested in Cowork.
 2. Open the Claude desktop app or claude.ai and sign in.
 3. Go to **Customize > Plugins**.
-4. Select **Add > Upload plugin** and choose `launch-factory.zip`.
+4. Select **Add > Upload plugin** and choose the zip.
 5. Start a new Cowork task. The plugin loads when the task starts.
 6. Type `/launch-factory:launch`. That command is the only way to start a run.
 

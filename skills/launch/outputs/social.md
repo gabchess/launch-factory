@@ -11,13 +11,13 @@ Write three post options for the same change. Each option has these parts in thi
 1. Problem. The pain the reader knows. If no source names one, write "none in the sources".
 2. Change. What is new, in plain words.
 3. Proof. One number or example, labelled with where it comes from. If no source has one, write "none in the sources".
-4. Status. Whether it is released, in beta or planned.
+4. Status. Whether it is released, in beta or planned. If no source says which, leave it out and ask "Is it out yet?" at the end of the turn.
 
 No link, no hashtags and no emoji in the post text. Any link the user gave goes in the Sources list only. Put a source marker such as [1] after the proof line and after any other claim. A "none in the sources" line carries no marker.
 
 ## Length
 
-Each option is exactly 4 lines, and each option is 80 to 280 characters in total. Markers, the Sources list and the Not traced list are not counted.
+Each option is 4 lines, or 3 when the status is left out, and each option is 80 to 280 characters in total. Markers, the Sources list and the Not traced list are not counted.
 
 ## Sources
 

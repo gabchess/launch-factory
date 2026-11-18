@@ -86,7 +86,7 @@ Done when: six outputs exist or have a stated failure reason, every claim carrie
 
 ## Step 6. Present
 
-Save the outputs in a folder named `launch/<name>/` inside the user's working folder, where `<name>` is a short lowercase name for the launch, with letters, digits and hyphens only. If that folder already exists, use `<name>-2`. Use these file names: `blog.md`, `changelog.md`, `faq.md`, `social.md`, `launch-map.html`, `explainer.html` and `explainer-script.md`. If this surface cannot save files, say so and show the drafts in the chat.
+Save the outputs in a folder named `launch/<name>/` inside the user's working folder, where `<name>` is a short lowercase name for the launch, with letters, digits and hyphens only. If that folder already exists, use the next free one: `<name>-2`, then `<name>-3`, and so on. Never write into a folder that already exists. Use these file names: `blog.md`, `changelog.md`, `faq.md`, `social.md`, `launch-map.html`, `explainer.html` and `explainer-script.md`. If this surface cannot save files, say so and show the drafts in the chat.
 
 Write one chat message in this order:
 

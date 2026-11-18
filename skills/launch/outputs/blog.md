@@ -13,7 +13,7 @@ Write these parts in this order, one line each unless noted.
 3. Change. Two or three lines on what is new and what the user can now do.
 4. Proof. One line with a number or an example, labelled with where it comes from, such as "measured in the beta" or "from the release notes". If no source has one, write "none in the sources".
 5. Caveat. One line on what the change does not do yet, or a limit the user should know. If no source names one, write "none in the sources".
-6. Status and next step. One line that says whether it is released, in beta or planned, and what the reader can do next.
+6. Status and next step. One line that says whether it is released, in beta or planned, and what the reader can do next. If no source says which, leave the status out and ask "Is it out yet?" at the end of the turn.
 
 Put a source marker such as [1] after every claim in parts 2 to 6. The title carries no marker. A "none in the sources" line carries no marker.
 
