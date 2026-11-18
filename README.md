@@ -91,7 +91,7 @@ It sends nothing to anyone and posts nothing. Your text goes only to the Claude 
 
 - Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `--plugin-dir`
 - Cowork: verified 2026-11-17, uploaded as a zip and run with the first prompt without its example link
-- Skill in Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `/launch-factory` loaded from a project `.claude/skills` folder, and one run from a pasted briefing without the command, which asked one yes and wrote nothing
+- Skill in Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `/launch-factory` loaded from a project `.claude/skills` folder, and one run from a pasted briefing alone, which asked one yes and wrote nothing
 - Skill on claude.ai: not verified
 
 ## Rollback
