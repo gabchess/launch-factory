@@ -8,6 +8,33 @@ You type one command and give it a briefing, links, a pasted team thread, or all
 
 Every claim in a draft carries a number that points to a Sources list, and a "Not traced" list shows what it could not match to a source. The two HTML files draw both lists on the page. Ask for a change and it writes a new version next to the old one, such as `blog-v2.md` beside `blog.md` or `launch-map-v2.html` beside `launch-map.html`. A changed explainer comes as `explainer-v2.html` and `explainer-script-v2.md` together. It leaves everything else alone. It never publishes, posts, sends, merges or spends. A person does that.
 
+## Two ways to install
+
+Launch Factory comes as a plugin or as a skill. Both write the same six drafts. Pick one.
+
+| | Plugin | Skill |
+|---|---|---|
+| File | `launch-factory.zip` | `launch-factory-skill.zip` |
+| Works in | Claude Code and Cowork | Claude Code and claude.ai |
+| Command | `/launch-factory:launch` | `/launch-factory` |
+| Starts | only when you type the command | when you type the command, or when you paste a briefing and ask for launch drafts. It then asks one yes before it writes them. |
+
+Both zips are on the Releases page of this repository. The plugin steps follow below. The skill steps are here.
+
+Skill in Claude Code:
+
+1. Unzip `launch-factory-skill.zip` into your personal skills folder, so that you have `~/.claude/skills/launch-factory/SKILL.md`.
+2. Start a new Claude Code session and type `/launch-factory`.
+3. To remove it, delete the `~/.claude/skills/launch-factory` folder.
+
+Skill on claude.ai:
+
+1. Turn on code execution in your settings. Skills need it.
+2. Open **Customize > Skills**, click **+**, then **Create skill**, then **Upload a skill**.
+3. Choose `launch-factory-skill.zip`. Do not unzip it first.
+4. Start a new chat and type `/launch-factory`, or paste a briefing and ask for launch drafts.
+5. To remove it, open **Customize > Skills** and turn it off or delete it.
+
 ## Install in Claude Code
 
 You need a Claude Code account. The plugin runs nothing when you install it.
