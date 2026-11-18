@@ -85,7 +85,7 @@ It reads what you give it: the text of your briefing, any text you paste, the li
 
 It writes files to `launch/<name>/` in your working folder.
 
-It sends nothing to anyone and posts nothing. Your text goes only to the Claude session you are already using, and to the connected tools you chose to read links. The plugin holds no keys and asks for none.
+It sends nothing to anyone and posts nothing. Your text goes only to the Claude session you are already using, and to the connected tools you chose to read links. Launch Factory holds no keys and asks for none.
 
 ## Tested on
 

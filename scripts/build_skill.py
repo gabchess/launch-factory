@@ -8,6 +8,7 @@ Standard library only. Exits 1 with a message, and writes nothing, when the sour
 what the build expects.
 """
 import argparse
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -23,10 +24,13 @@ ZIP_TIME = (1980, 1, 1, 0, 0, 0)  # fixed, so the same source gives the same zip
 FRONTMATTER = [
     ("name: launch\n", f"name: {NAME}\n"),
     ("disable-model-invocation: true\n", ""),
-    (f" Starts only when the user types {PLUGIN_COMMAND}.",
-     f" Use when the user types {SKILL_COMMAND}, or pastes a briefing, links or a team thread about a product launch"
-     " and asks for launch drafts."),
 ]
+# The skill gets its own description, short enough for a claude.ai upload (200 characters at most).
+DESCRIPTION = (f"Turns a launch briefing and links into six launch drafts. Use when the user types {SKILL_COMMAND} or pastes"
+               " a launch briefing and asks for drafts. Not for publishing, posting or one-off writing.")
+DESCRIPTION_MAX = 200
+DESCRIPTION_LINE = re.compile(r"(?m)^description: .*\n")
+TEXT_SUFFIXES = (".md", ".html")
 
 
 class BuildError(Exception):
@@ -42,6 +46,11 @@ def skill_text(text):
         if head.count(old) != 1:
             raise BuildError(f"SKILL.md frontmatter must hold {old.strip()!r} exactly once")
         head = head.replace(old, new)
+    if len(DESCRIPTION_LINE.findall(head)) != 1:
+        raise BuildError("SKILL.md frontmatter must hold one description line")
+    if len(DESCRIPTION) > DESCRIPTION_MAX:
+        raise BuildError(f"the skill description has {len(DESCRIPTION)} characters, the cap is {DESCRIPTION_MAX}")
+    head = DESCRIPTION_LINE.sub(lambda m: f"description: {DESCRIPTION}\n", head)
     return head + rest
 
 
@@ -54,11 +63,12 @@ def converted_files():
     for src in sorted((p for p in SOURCE.rglob("*") if p.is_file()), key=lambda p: (p != top, p.as_posix())):  # SKILL.md first
         rel = src.relative_to(SOURCE).as_posix()
         data = src.read_bytes()
-        if src.suffix == ".md":
-            text = data.decode("utf-8")
+        if src.suffix in TEXT_SUFFIXES:
+            text = data.decode("utf-8").replace("\r\n", "\n")  # a Windows checkout may hold CRLF line ends
             if rel == "SKILL.md":
                 text = skill_text(text)
-            text = text.replace(PLUGIN_COMMAND, SKILL_COMMAND)
+            if src.suffix == ".md":
+                text = text.replace(PLUGIN_COMMAND, SKILL_COMMAND)
             data = text.encode("utf-8")
         out.append((rel, data))
     return out
