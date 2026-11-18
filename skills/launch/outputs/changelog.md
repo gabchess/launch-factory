@@ -13,7 +13,7 @@ Write these parts in this order, one line each unless noted.
 3. Summary. One line on what changed for the user.
 4. Changes. Up to three short lines, each one visible change.
 
-Put a source marker such as [1] after every claim in parts 2 to 4. The heading carries no marker.
+Put a source marker such as [1] after every claim in parts 2 to 4. The heading and an unknown status tag carry no marker.
 
 ## Length
 

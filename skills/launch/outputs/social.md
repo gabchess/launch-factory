@@ -17,7 +17,7 @@ No link, no hashtags and no emoji in the post text. Any link the user gave goes 
 
 ## Length
 
-Each option is exactly 4 lines, and each option is 80 to 280 characters in total. Markers, the Sources list and the Not traced list are not counted.
+Each option is 4 lines, or 3 when the status is left out, and each option is 80 to 280 characters in total. Markers, the Sources list and the Not traced list are not counted.
 
 ## Sources
 
