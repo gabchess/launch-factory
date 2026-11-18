@@ -46,7 +46,7 @@ Fields not listed here are ignored. Keep labels short, because they sit in boxes
     { "label": "Audience", "note": "Existing mobile customers on the Team plan", "source": 1,
       "items": [
         { "label": "Field teams", "note": "Work with poor signal", "source": 2 },
-        { "label": "Admins", "note": "Need the rollout switch" }
+        { "label": "Admins" }
       ] },
     { "label": "Message", "note": "Edit anywhere, sync when you are back online", "source": 1 },
     { "label": "Content", "note": "Six drafts, one per channel",
