@@ -10,7 +10,7 @@ Every claim in a draft carries a number that points to a Sources list, and a "No
 
 ## Two ways to install
 
-Launch Factory comes as a plugin or as a skill. Both write the same six drafts. Pick one.
+Launch Factory comes as a plugin or as a skill. Both write the same six drafts. Pick one. On claude.ai, install one or the other, because both use the name launch-factory; remove the plugin before uploading the skill.
 
 | | Plugin | Skill |
 |---|---|---|
@@ -92,7 +92,8 @@ It sends nothing to anyone and posts nothing. Your text goes only to the Claude 
 - Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `--plugin-dir`
 - Cowork: verified 2026-11-17, uploaded as a zip and run with the first prompt without its example link
 - Skill in Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `/launch-factory` loaded from a project `.claude/skills` folder, and one run from a pasted briefing alone, which asked one yes and wrote nothing
-- Skill on claude.ai: not verified
+- Skill on claude.ai: verified 2026-11-18, uploaded as a zip and run with `/launch-factory`
+- Plugin 0.2.0 on claude.ai: verified 2026-11-18, uploaded as a zip over 0.1.0 and run with `/launch-factory:launch`
 
 ## Rollback
 
