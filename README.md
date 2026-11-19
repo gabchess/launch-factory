@@ -8,6 +8,33 @@ You type one command and give it a briefing, links, a pasted team thread, or all
 
 Every claim in a draft carries a number that points to a Sources list, and a "Not traced" list shows what it could not match to a source. The two HTML files draw both lists on the page. Ask for a change and it writes a new version next to the old one, such as `blog-v2.md` beside `blog.md` or `launch-map-v2.html` beside `launch-map.html`. A changed explainer comes as `explainer-v2.html` and `explainer-script-v2.md` together. It leaves everything else alone. It never publishes, posts, sends, merges or spends. A person does that.
 
+## Two ways to install
+
+Launch Factory comes as a plugin or as a skill. Both write the same six drafts. Pick one.
+
+| | Plugin | Skill |
+|---|---|---|
+| File | `launch-factory.zip` | `launch-factory-skill.zip` |
+| Made for | Claude Code and Cowork | Claude Code and claude.ai |
+| Command | `/launch-factory:launch` | `/launch-factory` |
+| Starts | only when you type the command | when you type the command, or when you paste a briefing and ask for launch drafts. It then asks one yes before it writes them. |
+
+Both zips are attached to the v0.2.0 release on the Releases page of this repository. A release page also offers "Source code (zip)", which is not either of these. The plugin steps follow below. The skill steps are here.
+
+Skill in Claude Code:
+
+1. Unzip `launch-factory-skill.zip` into your personal skills folder, so that you have `~/.claude/skills/launch-factory/SKILL.md`.
+2. Start a new Claude Code session and type `/launch-factory`.
+3. To remove it, delete the `~/.claude/skills/launch-factory` folder.
+
+Skill on claude.ai:
+
+1. Turn on code execution in your settings. Skills need it.
+2. Open **Customize > Skills**, click **+**, then **Create skill**, then **Upload a skill**.
+3. Choose `launch-factory-skill.zip`. Do not unzip it first.
+4. Start a new chat and type `/launch-factory`, or paste a briefing and ask for launch drafts.
+5. To remove it, open **Customize > Skills** and turn it off or delete it.
+
 ## Install in Claude Code
 
 You need a Claude Code account. The plugin runs nothing when you install it.
@@ -35,7 +62,7 @@ Then type `/launch-factory:launch`. You should see Claude ask what you are launc
 
 ## Install in Cowork
 
-1. Use the `launch-factory.zip` you were sent. GitHub's **Code > Download ZIP** button gives a different zip, `launch-factory-main.zip`, which has not been tested in Cowork.
+1. Download `launch-factory.zip` from the v0.2.0 release on the Releases page, or use the one you were sent. GitHub's **Code > Download ZIP** button gives a different zip, `launch-factory-main.zip`, which has not been tested in Cowork.
 2. Open the Claude desktop app or claude.ai and sign in.
 3. Go to **Customize > Plugins**.
 4. Select **Add > Upload plugin** and choose the zip.
@@ -58,12 +85,14 @@ It reads what you give it: the text of your briefing, any text you paste, the li
 
 It writes files to `launch/<name>/` in your working folder.
 
-It sends nothing to anyone and posts nothing. Your text goes only to the Claude session you are already using, and to the connected tools you chose to read links. The plugin holds no keys and asks for none.
+It sends nothing to anyone and posts nothing. Your text goes only to the Claude session you are already using, and to the connected tools you chose to read links. Launch Factory holds no keys and asks for none.
 
 ## Tested on
 
-- Claude Code: verified 2026-11-17, one run of the first prompt without its example link, with `--plugin-dir`
+- Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `--plugin-dir`
 - Cowork: verified 2026-11-17, uploaded as a zip and run with the first prompt without its example link
+- Skill in Claude Code: verified 2026-11-18, one run of the first prompt without its example link, with `/launch-factory` loaded from a project `.claude/skills` folder, and one run from a pasted briefing alone, which asked one yes and wrote nothing
+- Skill on claude.ai: not verified
 
 ## Rollback
 

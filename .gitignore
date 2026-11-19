@@ -1,3 +1,5 @@
 /launch/
 /.launch-factory/
 /*.zip
+/dist/
+__pycache__/
