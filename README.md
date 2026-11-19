@@ -97,6 +97,6 @@ It sends nothing to anyone and posts nothing. Your text goes only to the Claude 
 
 ## Rollback
 
-- Cowork and claude.ai: open **Customize > Plugins**, open `launch-factory`, then turn on **Disable plugin**, or choose **Remove** from its menu.
+- Cowork and claude.ai: open **Customize > Plugins**, open `launch-factory`, then turn on **Disable plugin**, or choose **Remove** from its menu. A claude.ai skill is removed under **Customize > Skills**.
 - Claude Code with `--plugin-dir`: close the session. Nothing was installed.
 - Delete the `launch-factory` folder and the zip to remove every file. Drafts in your `launch/` folder stay until you delete them.
