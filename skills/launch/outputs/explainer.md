@@ -1,6 +1,6 @@
 # Explainer
 
-One HTML file of captioned scenes, plus a script. It has no video and no voice. Each scene shows a headline and a caption, and each scene has one job and one idea. The viewer presses Play, and the scenes advance on a clock. Nothing moves inside a scene. The page also lists its Sources and what was Not traced.
+One HTML file of captioned scenes, plus a script. It has no video and no voice. Each scene shows a headline and a caption, and each scene has one job and one idea. A static flowchart shows the headlines in story order and marks the current scene. The viewer presses Play, and the scenes advance on a clock. Nothing moves inside a scene. A closing summary shows the takeaways, followed by the Sources and Not traced lists. Read `references/html-design.md` for the shared design, copy and inspection rules.
 
 ## Reader
 
@@ -29,7 +29,7 @@ The agent writes one JSON object.
 | `scenes[].takeaway` | whole number | A number from 1 that points to `takeaways[n-1]`. Leave it out only when the scene serves no takeaway, and add the warning line. The page does not show it or check it. |
 | `scenes[].duration` | number | Seconds the scene stays on screen. Above 0. Allow about 3 seconds for every 8 words of caption, rounded up to a whole second, and not less than 2. |
 | `scenes[].source` | whole number, optional | A number from 1 that points to `sources[n-1]`. Shown as "Source 1". Mark a scene only when a numbered source says it. |
-| `takeaways` | list of text | One to three things the viewer should remember. Required by this contract. The page does not show them or check them. |
+| `takeaways` | list of text | One to three non-empty things the viewer should remember, with inline source numbers such as `[1]`. Required for new drafts. The page validates and shows them in the closing Summary. Older specs without this field still render, using `end.caption` as their summary. |
 | `end.headline` | text | Headline of the end card. |
 | `end.caption` | text | One line on the end card, such as where to start. |
 | `sources` | list of text | One entry per source, in order. Required. It is drawn as the Sources list. Each entry is the link the user gave, or "pasted text: <first five words>". A link that was not used is listed as "not used, because <reason>" and no scene points to it. A new source from a redraft goes at the end. |
@@ -41,14 +41,16 @@ All text fields are plain text. Markup is not read.
 
 ### Example
 
+This fictional example assumes source 1 describes the repeated-filter problem and source 2 is an approved release note that supports saving, sharing and switching views from the sidebar. Its link is a placeholder.
+
 ```json
 {
   "title": "Saved views, in one minute",
-  "takeaways": ["Save a filter once instead of rebuilding it every week", "Switch views from the sidebar"],
+  "takeaways": ["Save a filter once instead of rebuilding it every week. [1][2]", "Switch views from the sidebar. [2]"],
   "scenes": [
     {"headline": "Teams lose their filters", "caption": "Every week, teams rebuild the same filters by hand.", "duration": 4, "source": 1, "job": "problem", "takeaway": 1},
     {"headline": "Saved views", "caption": "Now you save a filter once and share it with a link.", "duration": 4, "source": 2, "job": "what changed", "takeaway": 1},
-    {"headline": "One click to switch", "caption": "Switch between views from the sidebar.", "duration": 3, "job": "how to use it", "takeaway": 2}
+    {"headline": "One click to switch", "caption": "Switch between views from the sidebar.", "duration": 3, "source": 2, "job": "how to use it", "takeaway": 2}
   ],
   "end": {"headline": "Try saved views", "caption": "Open the sidebar and press Save view."},
   "sources": ["https://example.com/pull/12", "pasted text: Saved views let you"],
@@ -60,8 +62,10 @@ All text fields are plain text. Markup is not read.
 
 - Scene `n` is on screen from the sum of the earlier durations up to, but not including, the sum through `n`. After the last scene the end card shows and playback stops.
 - The page does not start by itself. The viewer presses Play. Play and Pause start and stop the clock. Replay starts again from 0. The progress bar shows position over total time.
+- The flowchart uses the exact scene headlines in their existing order. Its arrows mean "next part of the story", not product causality. The current scene has a visible outline and an accessible current-step marker. The flow becomes vertical on narrow screens or for more than six scenes.
 - The page shows scene, caption and end card as a pure function of time. `window.renderAt(seconds)` draws the page at that second. It is how a test or a still frame reads any moment.
-- The Sources list and the Not traced list sit under the controls and stay visible while it plays.
+- The Summary sits below the controls and stays visible. It adds no spoken lines. Sources and Not traced follow as an appendix and remain visible while it plays.
+- The standalone page always has a black-to-blue background gradient and high-contrast panels. It uses local Proxima Nova when available, otherwise a readable system sans; it fetches no fonts or other assets.
 - If the spec is wrong, the page shows "Spec error:" with the path of the bad field, for example `scenes[1].duration must be a number of seconds above 0`, and plays nothing.
 
 ## The script

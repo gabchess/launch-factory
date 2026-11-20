@@ -7,29 +7,28 @@
 <title>Explainer</title>
 <style>
 :root {
-  --bg: #f6f5f1; --panel: #ffffff; --ink: #1b1b1f; --muted: #5b5b66;
-  --accent: #1f5fd1; --accent-ink: #ffffff; --line: #d9d7cf; --err: #b00020; --err-bg: #fdecef;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #121316; --panel: #1c1e23; --ink: #f1f0ec; --muted: #a6a7b2;
-    --accent: #7aa7ff; --accent-ink: #0b1020; --line: #34363d; --err: #ff8a9b; --err-bg: #2c1519;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #121316; --panel: #1c1e23; --ink: #f1f0ec; --muted: #a6a7b2;
-  --accent: #7aa7ff; --accent-ink: #0b1020; --line: #34363d; --err: #ff8a9b; --err-bg: #2c1519;
+  color-scheme: dark;
+  --bg: #030711; --panel: #0d1930; --ink: #f5f8ff; --muted: #bdcce3;
+  --accent: #9ac6ff; --accent-ink: #071427; --line: #526d91; --err: #ffd2d8; --err-bg: #351c26;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--ink); }
-body { font: 18px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100vh; padding: 24px 16px; }
-main { max-width: 960px; margin: 0 auto; display: grid; gap: 16px; }
-.title { margin: 0; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+html, body { margin: 0; color: var(--ink); }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
+body { font: 18px/1.5 "Proxima Nova", "Segoe UI", Arial, sans-serif; min-height: 100vh; padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 48px); background: linear-gradient(145deg, #02040a 0%, #091d3e 55%, #113b77 100%); }
+main { max-width: 1184px; margin: 0 auto; display: grid; gap: 28px; }
+.title { max-width: 26ch; margin: 0; font-size: clamp(2rem, 4.5vw, 3.6rem); line-height: 1.08; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.section-title { margin: 0 0 16px; font-size: 1.15rem; letter-spacing: -.01em; }
+.story-list { display: flex; list-style: none; gap: 28px; margin: 0; padding: 0; }
+.story-step { flex: 1; min-width: 0; position: relative; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.story-step[data-active="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); background: #18345b; }
+.step-number { display: block; margin-bottom: 10px; font-size: .8rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .08em; color: var(--accent); }
+.step-label { display: block; font-size: 1rem; line-height: 1.3; font-weight: 600; overflow-wrap: anywhere; }
+.flow-arrow { position: absolute; right: -25px; top: calc(50% - 16px); color: var(--accent); font-size: 24px; line-height: 32px; }
 .stage {
-  background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+  background: linear-gradient(120deg, #101e36, #142f57); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 16px;
   min-height: 340px; padding: clamp(20px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; gap: 20px;
 }
-.count { margin: 0 0 12px; font-size: 14px; color: var(--muted); }
+.count { margin: 0 0 20px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 h2 { margin: 0 0 16px; line-height: 1.15; font-size: clamp(28px, 6vw, 56px); overflow-wrap: anywhere; }
 .caption { margin: 0; font-size: clamp(18px, 3vw, 28px); line-height: 1.4; overflow-wrap: anywhere; }
 .source { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
@@ -42,20 +41,40 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .bar { flex: 1 1 200px; height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; }
 .bar > div { height: 100%; width: 0; background: var(--accent); }
 .time { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); }
+.summary { border-left: 4px solid var(--accent); padding: 22px 26px; background: var(--panel); border-radius: 12px; }
+.summary ul { margin: 0; padding-left: 22px; }
+.summary li { overflow-wrap: anywhere; }
+.summary li + li { margin-top: 10px; }
 .error { background: var(--err-bg); color: var(--err); border: 2px solid var(--err); border-radius: 12px; padding: 16px; font-weight: 600; }
 .prov { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
 .prov h3 { margin: 0 0 8px; font-size: 16px; }
 .prov h3 + ol, .prov h3 + ul, .prov h3 + p { margin-top: 0; }
 .prov h3.nt { margin-top: 16px; }
-.prov ol, .prov ul { margin: 0; padding-left: 22px; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
-.prov p { margin: 0; font-size: 15px; color: var(--muted); }
+.prov ol, .prov ul { margin: 0; padding-left: 22px; font-size: 16px; color: var(--muted); overflow-wrap: anywhere; }
+.prov li + li { margin-top: 8px; }
+.prov p { margin: 0; font-size: 16px; color: var(--muted); }
+.story-list[data-layout="stacked"] { flex-direction: column; }
+.story-list[data-layout="stacked"] .flow-arrow { top: auto; bottom: -30px; right: calc(50% - 12px); transform: rotate(90deg); }
+@media (max-width: 800px) {
+  .story-list { flex-direction: column; }
+  .story-step { padding: 16px 20px; }
+  .flow-arrow { top: auto; bottom: -30px; right: calc(50% - 12px); transform: rotate(90deg); }
+  .stage { min-height: 320px; padding: 28px 24px; }
+  .summary { padding: 22px; }
+  .controls { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main>
-  <p class="title" id="title"></p>
+  <h1 class="title" id="title"></h1>
   <div id="error" class="error" role="alert" hidden></div>
+  <section class="story-flow" id="story-flow" aria-labelledby="flow-title">
+    <h2 class="section-title" id="flow-title">Story flow</h2>
+    <ol class="story-list" id="story-list"></ol>
+  </section>
   <section class="stage" id="stage" aria-live="polite">
     <div id="scene">
       <p class="count" id="count"></p>
@@ -73,6 +92,10 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     <div class="bar" id="bar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill"></div></div>
     <span class="time" id="time">0.0 / 0.0 s</span>
   </div>
+  <section class="summary" id="summary" aria-labelledby="summary-title">
+    <h2 class="section-title" id="summary-title">Summary</h2>
+    <div id="takeaways"></div>
+  </section>
   <section class="prov" id="prov">
     <h3>Sources</h3>
     <div id="sources"></div>
@@ -85,6 +108,7 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 <script type="application/json" id="launch-spec">
 {
   "title": "Replace this title",
+  "takeaways": ["Replace this with a supported takeaway. [1]"],
   "scenes": [
     {"headline": "Replace this headline", "caption": "Replace this caption with the line a person would read aloud.", "duration": 4, "source": 1}
   ],
@@ -105,6 +129,8 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     e.textContent = 'Spec error: ' + msg;
     e.hidden = false;
     $('stage').hidden = true;
+    $('story-flow').hidden = true;
+    $('summary').hidden = true;
     $('prov').hidden = true;
     $('play').disabled = true;
   }
@@ -135,6 +161,10 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     for (var j = 0; j < s.sources.length; j++) if (!isText(s.sources[j])) return 'sources[' + j + '] must be non-empty text';
     if (!Array.isArray(s.notTraced)) return 'notTraced must be a list of text (empty when nothing is untraced)';
     for (var k = 0; k < s.notTraced.length; k++) if (!isText(s.notTraced[k])) return 'notTraced[' + k + '] must be non-empty text';
+    if (s.takeaways !== undefined) {
+      if (!Array.isArray(s.takeaways) || s.takeaways.length < 1 || s.takeaways.length > 3) return 'takeaways must be a list of 1 to 3 summary sentences';
+      for (var n = 0; n < s.takeaways.length; n++) if (!isText(s.takeaways[n])) return 'takeaways[' + n + '] must be non-empty text';
+    }
     return '';
   }
 
@@ -156,6 +186,33 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
   }
   fillList('sources', spec.sources, 'ol', 'None listed.');
   fillList('nottraced', spec.notTraced, 'ul', 'None.');
+  fillList('takeaways', spec.takeaways || [spec.end.caption], 'ul', '');
+
+  // The arrows describe scene order, not a new claim about product behavior.
+  var storySteps = [];
+  function buildStoryFlow(scenes) {
+    var list = $('story-list');
+    if (scenes.length > 6) list.setAttribute('data-layout', 'stacked');
+    scenes.forEach(function (sc, i) {
+      var step = document.createElement('li'); step.className = 'story-step';
+      var number = document.createElement('span'); number.className = 'step-number';
+      number.textContent = String(i + 1).padStart(2, '0'); number.setAttribute('aria-hidden', 'true');
+      var label = document.createElement('span'); label.className = 'step-label'; label.textContent = sc.headline;
+      step.appendChild(number); step.appendChild(label);
+      if (i < scenes.length - 1) {
+        var arrow = document.createElement('span'); arrow.className = 'flow-arrow';
+        arrow.textContent = '\u2192'; arrow.setAttribute('aria-hidden', 'true'); step.appendChild(arrow);
+      }
+      list.appendChild(step); storySteps.push(step);
+    });
+  }
+  function markStoryFlow(index) {
+    storySteps.forEach(function (step, i) {
+      step.setAttribute('data-active', String(i === index));
+      step.setAttribute('aria-current', i === index ? 'step' : 'false');
+    });
+  }
+  buildStoryFlow(spec.scenes);
 
   var starts = [], total = 0;
   spec.scenes.forEach(function (sc) { starts.push(total); total += sc.duration; });
@@ -175,6 +232,7 @@ button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
     if (t > total) t = total;
     now = t;
     var i = locate(t), isEnd = i < 0;
+    markStoryFlow(i);
     $('scene').hidden = isEnd;
     $('endcard').hidden = !isEnd;
     document.body.dataset.scene = isEnd ? 'end' : String(i + 1);

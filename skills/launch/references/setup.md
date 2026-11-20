@@ -58,7 +58,7 @@ Official references, checked 2026-11-20:
 
 ## Files and privacy
 
-The six output types produce seven files: four Markdown drafts, a launch-map HTML file, and an explainer HTML file with its Markdown script. HTML files use bundled templates and make no network requests. The explainer has captions and playback controls, but no rendered video or audio.
+The six output types produce seven files: four Markdown drafts, a launch-map HTML file, and an explainer HTML file with its Markdown script. HTML files use bundled templates and make no network requests. Both include flowcharts and a summary on a black-to-blue background. They use Proxima Nova if available on the viewer's device, otherwise a system sans fallback; no font files or paid font setup are required. The explainer has captions and playback controls, but no rendered video or audio.
 
 Claude Code and Cowork can save files in an allowed working folder. Claude chat can offer downloadable files when file creation is available; otherwise show the supported drafts and explain the limitation. Never claim a file exists on the user's computer merely because it exists in a chat's file environment.
 

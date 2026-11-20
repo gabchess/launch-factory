@@ -6,7 +6,7 @@ Choose a meaningful product change, turn it and your brand context into six laun
 
 You give it a briefing, PRs, links, a pasted team thread, or a mix. Launch Factory reads the sources and your team's positioning and voice, then chooses a coherent launch story. It shows which changes belong, which need more evidence, and which do not need an announcement. A merged PR alone does not prove that a feature is available. If there is no supported launch, it explains that decision instead of producing filler.
 
-For a supported launch it shows a plan and writes six draft types: a short blog post, a changelog entry, an FAQ update, social posts, a launch map and an explainer. These are seven files because the explainer includes a script. The last two draft types use single HTML files you open in a browser. Press Play to start the explainer's captioned scenes. It has no rendered video or audio. Files go in `launch/<name>/` where the host can save files, or are offered as downloads in Claude chat. It then waits for your feedback.
+For a supported launch it shows a plan and writes six draft types: a short blog post, a changelog entry, an FAQ update, social posts, a launch map and an explainer. These are seven files because the explainer includes a script. The last two draft types use single HTML files you open in a browser, with clear flowcharts, closing summaries and a black-to-blue background. They use local Proxima Nova when available and a readable system fallback otherwise; no font files need to be installed. Press Play to start the explainer's captioned scenes and follow its active step in the story flow. It has no rendered video or audio. Files go in `launch/<name>/` where the host can save files, or are offered as downloads in Claude chat. It then waits for your feedback.
 
 Every claim in a draft carries a number that points to a Sources list, and a "Not traced" list shows what it could not match to a source. The two HTML files draw both lists on the page. Ask for a change and it writes a new version next to the old one, such as `blog-v2.md` beside `blog.md` or `launch-map-v2.html` beside `launch-map.html`. A changed explainer comes as `explainer-v2.html` and `explainer-script-v2.md` together. It leaves everything else alone. It never publishes, posts, sends, merges or spends. A person does that.
 
@@ -21,7 +21,7 @@ Launch Factory comes as a plugin or as a skill. Both write the same six drafts. 
 | Start | `/launch-factory:launch` | `/launch-factory` in Claude Code; explicit request in Claude chat/Cowork |
 | Starts | only when you type the command | when you type the command, or when you paste a briefing and ask for launch drafts. It then asks one yes before it writes them. |
 
-Use the packaged ZIP supplied with your release. A GitHub release page may also offer "Source code (zip)", which is not the standalone skill archive. Version 0.3.0 adds change selection and portable client context. A source version is not a claim that a matching GitHub release has been published.
+Use the packaged ZIP supplied with your release. A GitHub release page may also offer "Source code (zip)", which is not the standalone skill archive. Version 0.3.0 adds change selection, portable client context and the updated HTML visuals. A source version is not a claim that a matching GitHub release has been published.
 
 The standalone folder includes `QUICKSTART.md` and a fictional `examples/briefing.md` you can use without connecting any service.
 
