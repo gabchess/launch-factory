@@ -26,8 +26,8 @@ FRONTMATTER = [
     ("disable-model-invocation: true\n", ""),
 ]
 # The skill gets its own description, short enough for a claude.ai upload (200 characters at most).
-DESCRIPTION = (f"Turns a launch briefing and links into six launch drafts. Use when the user types {SKILL_COMMAND} or pastes"
-               " a launch briefing and asks for drafts. Not for publishing, posting or one-off writing.")
+DESCRIPTION = ("Selects launch-worthy product updates and writes six drafts using your brand context. "
+               f"Use {SKILL_COMMAND} or ask for launch drafts from a briefing or PRs. No publishing or monitoring.")
 DESCRIPTION_MAX = 200
 DESCRIPTION_LINE = re.compile(r"(?m)^description: .*\n")
 TEXT_SUFFIXES = (".md", ".html")
@@ -58,6 +58,9 @@ def converted_files():
     """Return (relative path, bytes) for every file of the skill, after the plugin-to-skill rewrite."""
     if not (SOURCE / "SKILL.md").is_file():
         raise BuildError(f"no SKILL.md in {SOURCE}")
+    license_path = REPO / "LICENSE"
+    if not license_path.is_file():
+        raise BuildError("the standalone package requires the repository LICENSE")
     out = []
     top = SOURCE / "SKILL.md"
     for src in sorted((p for p in SOURCE.rglob("*") if p.is_file()), key=lambda p: (p != top, p.as_posix())):  # SKILL.md first
@@ -67,10 +70,12 @@ def converted_files():
             text = data.decode("utf-8").replace("\r\n", "\n")  # a Windows checkout may hold CRLF line ends
             if rel == "SKILL.md":
                 text = skill_text(text)
-            if src.suffix == ".md":
                 text = text.replace(PLUGIN_COMMAND, SKILL_COMMAND)
             data = text.encode("utf-8")
         out.append((rel, data))
+    if any(rel == "LICENSE" for rel, _ in out):
+        raise BuildError("keep LICENSE at the repository root; the builder includes it")
+    out.append(("LICENSE", license_path.read_bytes()))
     return out
 
 

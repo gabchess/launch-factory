@@ -1,39 +1,65 @@
-# Setup
+# Setup and team context
 
-Launch Factory works with no connected tool at all. A connected tool lets it read a link on its own, so you do not have to paste the text. This page says what each kind adds and how to connect it. It never tests a connection. If a link cannot be read, Launch Factory asks you to paste its text.
+Launch Factory works from a pasted briefing with no connector. Links are optional: use the connected service that can read each supplied link, or ask for the text or an attachment. Do not enumerate unrelated missing tools or ask for credentials. A connector being listed is not proof that it can access a particular source.
 
-No product is required. Any tool of the right kind works.
+## Reuse the client's context
 
-| Tool kind | What it adds | Connect in Claude Code | Connect in Cowork |
-|---|---|---|---|
-| Code host | Reads a pull request, repository or commit link. | Add a connector (an MCP server) for your code host with the `/mcp` command or the `claude mcp add` command, then sign in when it asks. | Open Customize, then Connectors, add the connector for your code host and sign in. |
-| Issue tracker | Reads an issue link, its description and comments. | Same as above, with the connector for your issue tracker. | Same as above, with your issue tracker. |
-| Team chat | Reads a thread link from your team chat. | Same as above, with the connector for your team chat. | Same as above, with your team chat. |
-| Docs lookup | Reads current documentation for a library or service the launch names. | Same as above, with a documentation connector. | Same as above, with a documentation connector. |
-| Web search | Reads a public page and checks a public fact. | Web search is built in on most plans. If it is off, turn it on in settings. | Turn on web search in the task settings, or add a search connector under Customize. |
+Read context the user supplied or identified for this client. In a local project, the usual locations are `.launch-factory/preferences.md` and `.claude/product-marketing-context.md`. If both exist, use the product context for positioning and the preferences for writing constraints; explicit current instructions win over older preferences. Surface conflicting facts.
 
-Connector names and menu labels change over time. If a label differs, look for the connector or integration list in the app, or in the official Claude documentation.
+On Claude chat, accept an attached file or pasted equivalent. In Cowork, use the permitted working folder or attachments. If a path is inaccessible, say so; do not claim to have read it. Do not require people to recreate context their team agent already has. Never save client material inside the installed skill folder or carry it between clients.
 
-## Make a preferences file
+Useful context fields:
 
-A preferences file tells Launch Factory how your team writes. It is optional. If it is missing, the run goes ahead with a neutral voice.
+- Product, intended audience, problem solved and positioning.
+- Approved terms and product spellings; phrases or claims to avoid.
+- One or two approved writing samples and what to preserve about their voice.
+- Availability, eligibility, limitations and approved launch facts.
+- Preferred channels, CTA and CMS format constraints, if already known.
 
-1. In the folder you work in, make a folder named `.launch-factory`.
-2. In it, make a text file named `preferences.md`.
-3. Paste this and change the lines:
+Apply these within each output's contract. If a preferred channel or format falls outside a contract, flag the mismatch; do not silently rewrite the contract or promise channel readiness. For example, the supplied blog contract is a short launch post, not a long tutorial.
 
+With no context, continue from the briefing with neutral writing. Ask only for missing details that would change the work, at the end of the run. A missing metric stays unknown; a writing example never proves a product fact.
+
+## Optional preferences file
+
+Save `.launch-factory/preferences.md` in a local project, attach an equivalent file in Claude chat, or paste its contents. Offer this template when useful:
+
+```markdown
+# Client context
+Product and audience:
+Positioning and problem solved:
+Voice and spelling:
+Approved writing examples:
+Terms and claims to avoid:
+Preferred channels and next action:
+Known availability and limits:
 ```
-# Preferences
 
-## Brand voice
-Plain, warm, short sentences. Address the reader as "you".
+Empty fields mean unknown. Do not invent facts to populate them. Keep setup files intact so the skill can be reused or removed cleanly.
 
-## Product names to spell right
-- ExampleApp (one word, capital E and A)
+## Reading links
 
-## Phrases to avoid
-- game-changing
-- seamless
-```
+A code-host connector can read supplied PRs; an issue tracker can read issues; a team-chat connector can read a supplied thread; a page-fetch tool can read public pages. Use only sources supplied or specifically identified for this run. Do not start a background watcher or search across unrelated repositories, workspaces or clients.
 
-4. Save it. Launch Factory reads it at the start of every run and applies it to all six drafts.
+If a required private source cannot be read, offer a pasted excerpt or attachment. Users who prefer a connector can add it through Claude's Connectors settings or Claude Code's MCP settings. Follow current official help rather than guessing menu labels. Launch Factory does not install or authorize a connector.
+
+## Host installation
+
+- **Claude Code:** extract `launch-factory-skill.zip` and copy its entire `launch-factory` folder to `~/.claude/skills/` for personal use, or `.claude/skills/` in a project. If building from the repository, copy the generated folder: `dist/launch-factory/` by default, or `DIR/launch-factory/` when using `--out DIR`. The installed folder must contain `SKILL.md` directly. Start a new session and use `/launch-factory`. Preserve an existing folder before replacing it. Copying only `SKILL.md` loses required templates and references.
+- **Claude chat and Cowork:** enable file creation/code execution where available. Under **Customize > Skills > + > Create skill > Upload a skill**, upload the standalone ZIP and enable it. Start a fresh chat or Cowork task and explicitly ask to use Launch Factory. Without the slash command, the skill asks one yes before drafting. Menus and organization policies may differ; see official help below.
+- A local Claude Code installation alone does not install the skill for Cowork. Each teammate needs access to the account-enabled skill or their own copy; team sharing depends on the organization's settings.
+- Use either the skill or the same-named plugin in a given account/session to avoid ambiguous discovery. The plugin uses `/launch-factory:launch`; the standalone skill uses `/launch-factory` in Claude Code. Natural-language selection is the portable starting route for chat and Cowork.
+
+Official references, checked 2026-11-20:
+
+- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude)
+- [Create custom skills](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills)
+
+## Files and privacy
+
+The six output types produce seven files: four Markdown drafts, a launch-map HTML file, and an explainer HTML file with its Markdown script. HTML files use bundled templates and make no network requests. Both include flowcharts and a summary on a black-to-blue background. They use Proxima Nova if available on the viewer's device, otherwise a system sans fallback; no font files or paid font setup are required. The explainer has captions and playback controls, but no rendered video or audio.
+
+Claude Code and Cowork can save files in an allowed working folder. Claude chat can offer downloadable files when file creation is available; otherwise show the supported drafts and explain the limitation. Never claim a file exists on the user's computer merely because it exists in a chat's file environment.
+
+The briefing is processed by the Claude session and any connected tools used to read supplied sources. This is not an offline or local-only privacy guarantee. Launch Factory adds no credentials, telemetry, background jobs or publishing integration.
