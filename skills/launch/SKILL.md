@@ -1,6 +1,7 @@
 ---
 name: launch
-description: Turns a briefing, links or a pasted conversation into six launch drafts (blog post, changelog entry, FAQ update, social posts, a launch map and an explainer), shows them in the chat and redrafts any one from the user's notes. Starts only when the user types /launch-factory:launch. Not for publishing, posting or sending anything, and not for one-off writing that has no launch behind it.
+description: Selects a launch-worthy change from supplied product updates, then turns it and the team's brand context into six launch drafts. Starts only when the user types /launch-factory:launch. Not for monitoring repositories, publishing, or one-off writing unrelated to a launch.
+license: MIT
 disable-model-invocation: true
 ---
 
@@ -19,7 +20,7 @@ Every path in this file starts at this skill's folder, the folder that holds thi
 - State only what a source says. Mark each claim with a number that points to the output's Sources list. Do not invent figures, dates, names or quotes. When a source has no proof, caveat or problem for a line, the contract lets you write "none in the sources".
 - Write all six outputs yourself. Do not start helpers or parallel agents.
 - Write for the audience the briefing names. If it names none, write for a general user of the product and ask "Who is this for?" in Step 7.
-- Write in the voice and spelling set by the user's preferences file when it exists (Step 2). Without one, use the tone the briefing asks for, and otherwise plain and short. Follow `references/content-policy.md` for what every draft may and may not say.
+- Use the team's existing positioning, audience, voice examples and content constraints (Step 2). Follow `references/content-policy.md` for what every draft may and may not say. A merged PR proves a code change, not deployment, availability, customer demand or business impact.
 - Wait only at two points. First, at the start, when nothing came to work from or the run began without the command (Step 1). Second, at the end of the turn (Step 7). In between, draft what you can, and put every open question on the list for Step 7.
 
 ## Step 1. Intake
@@ -32,18 +33,17 @@ Done when: you can name what is launching in one sentence and you hold a numbere
 
 ## Step 2. Setup check
 
-1. Read `.launch-factory/preferences.md` in the user's working folder if it exists. It holds brand voice, product names to spell right and phrases to avoid. Apply it to every draft. If it is missing, carry on and say once, in plain words, that a preferences file is optional and how to make one: read `references/setup.md` yourself and explain its steps in the chat. A missing or empty file never blocks a run.
-2. List which tool kinds are connected in this chat: code host, issue tracker, team chat, docs lookup, web search. Judge from the tools you can see. A general tool that fetches a web page counts for reading a public page. Never test a connection and never call a tool only to see if it works.
-3. For each missing kind, say in one sentence what it would add and, from `references/setup.md`, explain in plain words how to connect it in Claude Code and in Cowork. Do not point the user to a file inside Launch Factory. Launch Factory cannot connect a tool for the user.
-4. Carry on. All six outputs need no connected tool.
+1. Reuse context already supplied for this client: briefing, attached preferences or writing samples, and named project/agent context. In a working folder, check `.launch-factory/preferences.md` and `.claude/product-marketing-context.md` when accessible. Read only this client's context; do not search unrelated clients or accounts. Number each context file or block with the other sources. Follow explicit current instructions over older preferences, and flag conflicting factual claims instead of silently picking one. Read `references/setup.md` for the context fields and host-specific fallback. With no context, use the briefing's tone or a neutral voice and flag the missing positioning or voice once at the end.
+2. Read supplied links with the relevant tools visible in this chat. A web-page fetch can read public pages; a private link may need its connected service. Never test a connection or call a tool just to see if it works. Explain a missing connection only when a supplied source needs it, with the option to paste or attach the source instead.
+3. Carry on with supported facts. No connector is required for a pasted briefing. In Claude chat, work from attachments and produce downloadable files when available; do not pretend to read a local desktop path.
 
-Done when: you have told the user which kinds are connected and which are not, whether a preferences file was found, and no output is blocked.
+Done when: the client context and accessible source routes are identified, and missing context or access is recorded without a setup detour.
 
 ## Step 3. Gather
 
 Read every source with the connected tool that fits it: a code host for a pull request or repository link, an issue tracker for an issue link, team chat for a thread link, web search, docs lookup or a page fetch for a public page. When no tool fits a link, do not stop. Mark it unreadable and add "Paste the text of <link>, or leave it out?" to the open questions for Step 7, with your recommendation. Pasted text is read as it is.
 
-For each source, keep a short note: what it is, the facts it holds that matter for the launch, and the exact words worth quoting. Do not start drafting yet.
+For each source, keep a short note: what it is, the facts it holds that matter for the launch, and the exact words worth quoting. Distinguish a proposed PR, a merged change, a release announcement and measured customer evidence. Do not start drafting yet.
 
 Every link the user gave must end up in each output's Sources list or be marked "not used, because <reason>".
 
@@ -51,8 +51,11 @@ Done when: every source on your list is read, pasted or marked unreadable with a
 
 ## Step 4. Plan
 
+First read `references/select-the-change.md`. When given multiple changes, select one coherent launch story from the supplied set and explain which changes you held or skipped. When the user already picked a launch, check that choice against the evidence without reopening a settled decision. If nothing supports a user-facing launch, return the short selection decision and the missing evidence instead of manufacturing six drafts. This is an intentional no-launch result, not a failed generation.
+
 Show the user a short plan in the chat before drafting:
 
+- The chosen change, affected audience and supported benefit; what is held or skipped, with a reason.
 - The sources you read, one line each, with what you took from it.
 - Which connected tools you used, and which you did not need.
 - The six outputs you will write: blog post, changelog entry, FAQ update, social posts, launch map, explainer.
@@ -60,7 +63,7 @@ Show the user a short plan in the chat before drafting:
 
 Do not ask now and do not wait. For each missing fact, add a question to the open list for Step 7, with your recommendation (for example, "Leave the date out of the drafts"). Draft what the sources support, leave out what they do not, and list the gap under Not traced.
 
-Done when: the plan is shown, every gap is on the open list with a recommendation, and you know what each output will say.
+Done when: the launch choice is explained, every gap is on the open list with a recommendation, and you know what each output will say, or have delivered a justified no-launch decision.
 
 ## Step 5. Draft
 
