@@ -14,4 +14,3 @@ Try the plugin from a clone with `claude --plugin-dir .`, then type `/launch-fac
 
 The source of truth for the skill's steps, contracts and templates is [`skills/marketing/launch-factory/`](https://github.com/gabchess/skills/tree/main/skills/marketing/launch-factory) in gabchess/skills, a private repo with invite-only access. Make every change there. `skills/launch/` here is frozen at 0.3.0: never edit or hand-copy files into it. Build the next plugin release from the gabchess/skills folder with its plugin-packager skill (`skills/marketplace/plugin-packager/`), which writes a complete plugin package, then run one test briefing on the result.
 
-One rule: change one output contract at a time, and run one test briefing after each change.
